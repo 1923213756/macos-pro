@@ -1,6 +1,7 @@
 package com.foodmap.dao;
 
 import com.foodmap.entity.Shop;
+import com.foodmap.entity.ShopAuthInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Bean;
@@ -39,4 +40,6 @@ public interface ShopMapper {
 
     //根据id删除
     int deleteShopById(Long shopId);
+
+    ShopAuthInfo selectShopAuthInfo(Long shopId);
 }

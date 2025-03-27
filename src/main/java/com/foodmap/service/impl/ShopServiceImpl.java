@@ -163,8 +163,30 @@ public class ShopServiceImpl implements ShopService {
 
     //删除商铺
     @Override
-    public void deleteShop(Long shopId) {
+    public void deleteShop(Long shopId, String shopName, String password) {
+        // 1. 查询店铺基本信息（仅用于验证）
+        Shop shop = shopMapper.selectById(shopId);
 
+        if (shop == null) {
+            throw new BusinessException("商铺不存在，无法删除");
+        }
+
+        // 2. 验证店铺名称
+        if (!shop.getShopName().equals(shopName)) {
+            throw new BusinessException("店铺名称不匹配，验证失败");
+        }
+
+        // 3. 验证密码
+        if (!SecurityUtil.checkPassword(password, shop.getPassword())) {
+            throw new BusinessException("密码验证失败，无法删除商铺");
+        }
+
+        // 4. 执行删除操作
+        int result = shopMapper.deleteShopById(shopId);
+
+        if (result != 1) {
+            throw new BusinessException("删除商铺失败");
+        }
     }
 
 }

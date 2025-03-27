@@ -15,5 +15,5 @@ public interface ShopService {
     void updateShopStatus(Long shopId, Integer status);
     void updateShopInfo(Shop shop);
 
-    void deleteShop(Long shopId);
+    void deleteShop(Long shopId, String shopName, String password);
 }

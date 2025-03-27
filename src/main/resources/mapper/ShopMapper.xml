@@ -73,4 +73,12 @@
         </set>
         WHERE shop_id = #{shopId}</update>
 
+    <select id="selectShopAuthInfo" resultType="com.foodmap.entity.ShopAuthInfo">
+        SELECT
+            shop_id,
+            shop_name,
+            password
+        FROM shop
+        WHERE shop_id = #{shopId}
+    </select>
 </mapper>
