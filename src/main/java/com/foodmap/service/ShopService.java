@@ -1,0 +1,19 @@
+package com.foodmap.service;
+
+import com.foodmap.entity.Shop;
+
+import java.util.List;
+
+public interface ShopService {
+    Shop login(String shopName, String rawPassword);
+    void validateRegistration(Shop shop);
+    public void register(Shop shop);
+
+    //新增内容（未测试）
+    List<Shop> queryShopList(String category, String district, String sortField);
+    Shop getShopById(Long shopId);
+    void updateShopStatus(Long shopId, Integer status);
+    void updateShopInfo(Shop shop);
+
+    void deleteShop(Long shopId);
+}

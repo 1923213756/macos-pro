@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.foodmap.dao.ShopMapper">
+
+    <!-- 插入商铺（主键回填） -->
+    <insert id="insertShop" useGeneratedKeys="true" keyProperty="shopId">
+        INSERT INTO shop (shop_name, password, address, contact_tel, business_hours)
+        VALUES (#{shopName}, #{password}, #{address}, #{contactTel}, #{businessHours})
+    </insert>
+
+    <!--根据id删除-->
+    <delete id="deleteShopById"></delete>
+
+    <!-- 根据商铺名查询 -->
+    <select id="selectByShopName" resultType="com.foodmap.entity.Shop">
+        SELECT * FROM shop WHERE shop_name = #{shopName}
+    </select>
+
+    <!-- 检查电话是否重复 -->
+    <select id="countByContactTel" resultType="int">
+        SELECT COUNT(*) FROM shop WHERE contact_tel = #{contactTel}
+    </select>
+
+    <!-- 检查商铺名是否重复 -->
+    <select id="countByShopName" resultType="int">
+        SELECT COUNT(*) FROM shop WHERE shop_name = #{shopName}
+    </select>
+
+    <!--根据分类返回结果-->
+    <select id="selectShopList" resultType="com.foodmap.entity.Shop">SELECT * FROM shop
+        <where>
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+            <if test="district != null and district != ''">
+                AND district = #{district}
+            </if>
+            AND status = 1
+        </where>
+        <choose>
+            <when test="sortField != null and sortField != ''">
+                ORDER BY ${sortField} DESC
+            </when>
+            <otherwise>
+                ORDER BY composite_score DESC
+            </otherwise>
+        </choose></select>
+
+    <!--根据id查询-->
+    <select id="selectById" resultType="com.foodmap.entity.Shop">SELECT * FROM shop WHERE shop_id = #{shopId}</select>
+
+
+    <!-- 更新评分 -->
+    <update id="updateScore">
+        UPDATE shop SET composite_score = #{compositeScore} WHERE shop_id = #{shopId}
+    </update>
+    <update id="updateShopStatus"> UPDATE shop SET status = #{status} WHERE shop_id = #{shopId}</update>
+
+
+    <!--更新商铺信息-->
+    <update id="updateShopInfo">UPDATE shop
+        <set>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="contactTel != null">contact_tel = #{contactTel},</if>
+            <if test="businessHours != null">business_hours = #{businessHours},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE shop_id = #{shopId}</update>
+
+</mapper>
