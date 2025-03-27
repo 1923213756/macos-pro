@@ -11,7 +11,7 @@
     </insert>
 
     <!--根据id删除-->
-    <delete id="deleteShopById"></delete>
+    <delete id="deleteShopById">    DELETE FROM shop WHERE shop_id = #{shopId}</delete>
 
     <!-- 根据商铺名查询 -->
     <select id="selectByShopName" resultType="com.foodmap.entity.Shop">
@@ -29,7 +29,8 @@
     </select>
 
     <!--根据分类返回结果-->
-    <select id="selectShopList" resultType="com.foodmap.entity.Shop">SELECT * FROM shop
+    <select id="selectShopList" resultType="com.foodmap.entity.Shop">
+        SELECT * FROM shop
         <where>
             <if test="category != null and category != ''">
                 AND category = #{category}
@@ -41,13 +42,21 @@
         </where>
         <choose>
             <when test="sortField != null and sortField != ''">
-                ORDER BY ${sortField} DESC
+                ORDER BY
+                <choose>
+                    <when test="sortField == 'composite_score'">composite_score</when>
+                    <when test="sortField == 'create_time'">create_time</when>
+                    <when test="sortField == 'taste_score'">taste_score</when>
+                    <when test="sortField == 'environment_score'">environment_score</when>
+                    <when test="sortField == 'service_score'">service_score</when>
+                    <otherwise>composite_score</otherwise>
+                </choose> DESC
             </when>
             <otherwise>
                 ORDER BY composite_score DESC
             </otherwise>
-        </choose></select>
-
+        </choose>
+    </select>
     <!--根据id查询-->
     <select id="selectById" resultType="com.foodmap.entity.Shop">SELECT * FROM shop WHERE shop_id = #{shopId}</select>
 

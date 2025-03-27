@@ -187,6 +187,7 @@ public class ShopServiceImpl implements ShopService {
         if (result != 1) {
             throw new BusinessException("删除商铺失败");
         }
+
     }
 
 }

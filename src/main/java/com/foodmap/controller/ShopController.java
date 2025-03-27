@@ -2,77 +2,95 @@ package com.foodmap.controller;
 
 import com.foodmap.entity.Shop;
 import com.foodmap.service.ShopService;
-import com.foodmap.vo.Result;
+import com.foodmap.vo.LoginRequest;
+import com.foodmap.vo.ResponseResult;
+import com.foodmap.vo.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/shops")
+@RequestMapping("/api/shops")
+@CrossOrigin(origins = "*")  // 用于开发阶段，生产环境应限制来源
 public class ShopController {
 
-    @Autowired
-    private ShopService shopService;
+    private final ShopService shopService;
 
-    // 商铺列表查询
+    @Autowired
+    public ShopController(ShopService shopService) {
+        this.shopService = shopService;
+    }
+
+    /**
+     * 商铺注册
+     */
+    @PostMapping("/register")
+    public ResponseResult register(@RequestBody Shop shop) {
+        shopService.register(shop);
+        return ResponseResult.success("注册成功");
+    }
+
+    /**
+     * 商铺登录
+     */
+    @PostMapping("/login")
+    public ResponseResult login(@RequestBody LoginRequest request) {
+        Shop shop = shopService.login(request.getShopName(), request.getPassword());
+        return ResponseResult.success("登录成功", shop);
+    }
+
+    /**
+     * 获取商铺列表
+     */
     @GetMapping
-    public Result<List<Shop>> queryShopList(
+    public ResponseResult getShopList(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String district,
             @RequestParam(required = false) String sortField) {
-        List<Shop> shopList = shopService.queryShopList(category, district, sortField);
-        return Result.success(shopList);
+        List<Shop> shops = shopService.queryShopList(category, district, sortField);
+        return ResponseResult.success(shops);
     }
 
-    // 商铺详情查询
-    @GetMapping("/{id}")
-    public Result<Shop> getShopDetail(@PathVariable("id") Long shopId) {
+    /**
+     * 获取商铺详情
+     */
+    @GetMapping("/{shopId}")
+    public ResponseResult getShopById(@PathVariable Long shopId) {
         Shop shop = shopService.getShopById(shopId);
-        return Result.success(shop);
+        return ResponseResult.success(shop);
     }
 
-    // 更新商铺状态
-    @PutMapping("/{id}/status")
-    public Result<Void> updateStatus(
-            @PathVariable("id") Long shopId,
+    /**
+     * 更新商铺信息
+     */
+    @PutMapping("/{shopId}")
+    public ResponseResult updateShop(@PathVariable Long shopId, @RequestBody Shop shop) {
+        shop.setShopId(shopId);  // 确保ID正确
+        shopService.updateShopInfo(shop);
+        return ResponseResult.success("更新成功");
+    }
+
+    /**
+     * 更新商铺状态（营业/休息）
+     */
+    @PutMapping("/{shopId}/status")
+    public ResponseResult updateStatus(
+            @PathVariable Long shopId,
             @RequestParam Integer status) {
         shopService.updateShopStatus(shopId, status);
-        return Result.success();
+        return ResponseResult.success("状态更新成功");
     }
 
-    // 更新商铺信息
-    @PutMapping("/{id}")
-    public Result<Void> updateShopInfo(
-            @PathVariable("id") Long shopId,
-            @RequestBody Shop shop) {
-        shop.setShopId(shopId);
-        shopService.updateShopInfo(shop);
-        return Result.success();
+    /**
+     * 删除商铺（需要验证）
+     */
+    @DeleteMapping("/{shopId}")
+    public ResponseResult deleteShop(
+            @PathVariable Long shopId,
+            @RequestParam String shopName,
+            @RequestParam String password) {
+        shopService.deleteShop(shopId, shopName, password);
+        return ResponseResult.success("删除成功");
     }
-
-    @PostMapping
-    public Result<Shop> register(@RequestBody Shop shop) {
-        void insertedShop = shopService.register(shop);
-        return Result.success();
-    }
-
-    @DeleteMapping("/{id}")
-    public Result<Void> deleteShop (@PathVariable("id") Long shopId){
-        shopService.deleteShop(shopId);
-        return Result.success();
-    }
-
-    //分页功能，防止数据过载（未完善）
-//    @GetMapping
-//    public Result<Page<Shop>> queryShopList(
-//            @RequestParam(required = false) String category,
-//            @RequestParam(required = false) String district,
-//            @RequestParam(required = false) String sortField,
-//            @RequestParam(defaultValue = "1") Integer page,
-//            @RequestParam(defaultValue = "10") Integer size) {
-//        Page<Shop> shopPage = shopService.queryShopList(category, district, sortField, page, size);
-//        return Result.success(shopPage);
-//    }
-
 }

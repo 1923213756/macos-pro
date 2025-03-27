@@ -4,7 +4,7 @@ import com.foodmap.entity.Shop;
 import com.foodmap.entity.ShopAuthInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.context.annotation.Bean;
+
 
 import java.util.List;
 
