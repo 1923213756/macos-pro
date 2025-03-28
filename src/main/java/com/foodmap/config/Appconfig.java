@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 // AppConfig.java
 @Configuration
-@ComponentScan(basePackages = "com.example")
+@ComponentScan(basePackages = "com.foodmap")
 @EnableTransactionManagement
 @ImportResource("classpath:applicationContext.xml")
 public class Appconfig {
