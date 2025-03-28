@@ -1,6 +1,6 @@
-const { defineConfig } = require('@vue/cli-service')
+const path = require('path');
 
-module.exports = defineConfig({
+module.exports = {
     transpileDependencies: true,
     // 输出到Spring Boot静态资源目录
     outputDir: '../resources/static',
@@ -12,5 +12,13 @@ module.exports = defineConfig({
                 changeOrigin: true
             }
         }
+    },
+    // 配置路径别名
+    configureWebpack: {
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, 'src')
+            }
+        }
     }
-})
+};
