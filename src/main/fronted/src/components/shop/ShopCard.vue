@@ -1,6 +1,5 @@
 <template>
   <div class="shop-card" @click="$emit('click')">
-    <img :src="shop.imageUrl || defaultImage" alt="商铺图片" class="shop-image">
     <div class="shop-info">
       <h3 class="shop-name">{{ shop.shopName }}</h3>
       <div class="shop-rating">
@@ -24,11 +23,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  data() {
-    return {
-      defaultImage: require('@/assets/default-shop.jpg')
-    };
   }
 };
 </script>
@@ -44,12 +38,6 @@ export default {
 
 .shop-card:hover {
   transform: translateY(-5px);
-}
-
-.shop-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
 }
 
 .shop-info {

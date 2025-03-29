@@ -1,6 +1,7 @@
 package com.foodmap.service;
 
 import com.foodmap.entity.Shop;
+import com.foodmap.entity.ShopAuthInfo;
 
 import java.util.List;
 
@@ -14,6 +15,5 @@ public interface ShopService {
     Shop getShopById(Long shopId);
     void updateShopStatus(Long shopId, Integer status);
     void updateShopInfo(Shop shop);
-
     void deleteShop(Long shopId, String shopName, String password);
 }

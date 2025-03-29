@@ -2,6 +2,7 @@ package com.foodmap.service.impl;
 
 import com.foodmap.dao.ShopMapper;
 import com.foodmap.entity.Shop;
+import com.foodmap.entity.ShopAuthInfo;
 import com.foodmap.exception.BusinessException;
 import com.foodmap.service.ShopService;
 import com.foodmap.util.SecurityUtil;
@@ -165,19 +166,19 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void deleteShop(Long shopId, String shopName, String password) {
         // 1. 查询店铺基本信息（仅用于验证）
-        Shop shop = shopMapper.selectById(shopId);
+        ShopAuthInfo Info = shopMapper.selectShopAuthInfo(shopId);
 
-        if (shop == null) {
+        if (Info == null) {
             throw new BusinessException("商铺不存在，无法删除");
         }
 
         // 2. 验证店铺名称
-        if (!shop.getShopName().equals(shopName)) {
+        if (!Info.getShopName().equals(shopName)) {
             throw new BusinessException("店铺名称不匹配，验证失败");
         }
 
         // 3. 验证密码
-        if (!SecurityUtil.checkPassword(password, shop.getPassword())) {
+        if (!SecurityUtil.checkPassword(password, Info.getPassword())) {
             throw new BusinessException("密码验证失败，无法删除商铺");
         }
 

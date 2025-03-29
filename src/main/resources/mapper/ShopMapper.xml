@@ -17,6 +17,7 @@
     <select id="selectByShopName" resultType="com.foodmap.entity.Shop">
         SELECT * FROM shop WHERE shop_name = #{shopName}
     </select>
+    <!--模糊查询-->
 
     <!-- 检查电话是否重复 -->
     <select id="countByContactTel" resultType="int">
