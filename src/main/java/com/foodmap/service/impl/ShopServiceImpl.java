@@ -3,7 +3,7 @@ package com.foodmap.service.impl;
 import com.foodmap.dao.ShopMapper;
 import com.foodmap.entity.Shop;
 import com.foodmap.entity.ShopAuthInfo;
-import com.foodmap.exception.BusinessException;
+import com.foodmap.exception.*;
 import com.foodmap.service.ShopService;
 import com.foodmap.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class ShopServiceImpl implements ShopService {
 
         // 插入数据库
         if (shopMapper.insertShop(shop) != 1) {
-            throw new BusinessException("商铺注册失败");
+            throw new BadRequestException("商铺注册失败");
         }
     }
 
@@ -48,11 +48,11 @@ public class ShopServiceImpl implements ShopService {
     public Shop login(String shopName, String rawPassword) {
         Shop shop = shopMapper.selectByShopName(shopName);
         if (shop == null) {
-            throw new BusinessException("商铺名不存在");
+            throw new UnauthorizedException("商铺名不存在");
         }
 
         if (!SecurityUtil.checkPassword(rawPassword, shop.getPassword())) {
-            throw new BusinessException("密码错误");
+            throw new UnauthorizedException("密码错误");
         }
         return shop;
     }
@@ -62,43 +62,43 @@ public class ShopServiceImpl implements ShopService {
     public void validateRegistration(Shop shop) {
         // 基础校验
         if (!StringUtils.hasText(shop.getShopName())) {
-            throw new BusinessException("商铺名不能为空");
+            throw new BadRequestException("商铺名不能为空");
         }
         if (!StringUtils.hasText(shop.getPassword())) {
-            throw new BusinessException("密码不能为空");
+            throw new BadRequestException("密码不能为空");
         }
 
         // 新增字段校验
         if (!StringUtils.hasText(shop.getAddress())) {
-            throw new BusinessException("商铺地址不能为空");
+            throw new BadRequestException("商铺地址不能为空");
         }
         if (!StringUtils.hasText(shop.getContactTel())) {
-            throw new BusinessException("联系电话不能为空");
+            throw new BadRequestException("联系电话不能为空");
         } else if (!shop.getContactTel().matches("^1[3-9]\\d{9}$")) {
-            throw new BusinessException("联系电话格式错误");
+            throw new BadRequestException("联系电话格式错误");
         }
 
         // 分类和地区校验
         if (!StringUtils.hasText(shop.getCategory())) {
-            throw new BusinessException("商铺分类不能为空");
+            throw new BadRequestException("商铺分类不能为空");
         }
         if (!StringUtils.hasText(shop.getDistrict())) {
-            throw new BusinessException("商铺所在地区不能为空");
+            throw new BadRequestException("商铺所在地区不能为空");
         }
 
         // 分类限制校验
         String category = shop.getCategory();
         if (!category.equals("甜品") && !category.equals("火锅") && !category.equals("料理")
                 && !category.equals("中餐") && !category.equals("西餐") && !category.equals("快餐")) {
-            throw new BusinessException("商铺分类不在允许范围内");
+            throw new BadRequestException("商铺分类不在允许范围内");
         }
 
         // 唯一性校验
         if (shopMapper.countByShopName(shop.getShopName()) > 0) {
-            throw new BusinessException("商铺名已存在");
+            throw new ConflictException("商铺名已存在");
         }
         if (shopMapper.countByContactTel(shop.getContactTel()) > 0) {
-            throw new BusinessException("联系电话已注册");
+            throw new ConflictException("联系电话已注册");
         }
     }
 
@@ -118,7 +118,7 @@ public class ShopServiceImpl implements ShopService {
     public Shop getShopById(Long shopId) {
         Shop shop = shopMapper.selectById(shopId);
         if (shop == null) {
-            throw new BusinessException("商铺不存在");
+            throw new NotFoundException("商铺不存在");
         }
         return shop;
     }
@@ -127,7 +127,12 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void updateShopStatus(Long shopId, Integer status) {
         if (status != 0 && status != 1) {
-            throw new BusinessException("无效的商铺状态");
+            throw new BadRequestException("无效的商铺状态");
+        }
+
+        // 先检查商铺是否存在
+        if (shopMapper.selectById(shopId) == null) {
+            throw new NotFoundException("商铺不存在");
         }
 
         Shop shop = new Shop();
@@ -135,7 +140,7 @@ public class ShopServiceImpl implements ShopService {
         shop.setStatus(status);
 
         if (shopMapper.updateShopStatus(shop) != 1) {
-            throw new BusinessException("更新商铺状态失败");
+            throw new BadRequestException("更新商铺状态失败");
         }
     }
 
@@ -144,7 +149,12 @@ public class ShopServiceImpl implements ShopService {
     public void updateShopInfo(Shop shop) {
         // 确保不会更新密码和敏感字段
         if (shop.getPassword() != null) {
-            throw new BusinessException("不允许通过此方法修改密码");
+            throw new ForbiddenException("不允许通过此方法修改密码");
+        }
+
+        // 检查商铺是否存在
+        if (shopMapper.selectById(shop.getShopId()) == null) {
+            throw new NotFoundException("要更新的商铺不存在");
         }
 
         // 如果更新分类，需要验证
@@ -152,12 +162,12 @@ public class ShopServiceImpl implements ShopService {
             String category = shop.getCategory();
             if (!category.equals("甜品") && !category.equals("火锅") && !category.equals("料理")
                     && !category.equals("中餐") && !category.equals("西餐") && !category.equals("快餐")) {
-                throw new BusinessException("商铺分类不在允许范围内");
+                throw new BadRequestException("商铺分类不在允许范围内");
             }
         }
 
         if (shopMapper.updateShopInfo(shop) != 1) {
-            throw new BusinessException("更新商铺信息失败");
+            throw new BadRequestException("更新商铺信息失败");
         }
     }
 
@@ -166,30 +176,27 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void deleteShop(Long shopId, String shopName, String password) {
         // 1. 查询店铺基本信息（仅用于验证）
-        ShopAuthInfo Info = shopMapper.selectShopAuthInfo(shopId);
+        ShopAuthInfo info = shopMapper.selectShopAuthInfo(shopId);
 
-        if (Info == null) {
-            throw new BusinessException("商铺不存在，无法删除");
+        if (info == null) {
+            throw new NotFoundException("商铺不存在，无法删除");
         }
 
         // 2. 验证店铺名称
-        if (!Info.getShopName().equals(shopName)) {
-            throw new BusinessException("店铺名称不匹配，验证失败");
+        if (!info.getShopName().equals(shopName)) {
+            throw new ForbiddenException("店铺名称不匹配，验证失败");
         }
 
         // 3. 验证密码
-        if (!SecurityUtil.checkPassword(password, Info.getPassword())) {
-            throw new BusinessException("密码验证失败，无法删除商铺");
+        if (!SecurityUtil.checkPassword(password, info.getPassword())) {
+            throw new ForbiddenException("密码验证失败，无法删除商铺");
         }
 
         // 4. 执行删除操作
         int result = shopMapper.deleteShopById(shopId);
 
         if (result != 1) {
-            throw new BusinessException("删除商铺失败");
+            throw new BadRequestException("删除商铺失败");
         }
-
     }
-
 }
-
