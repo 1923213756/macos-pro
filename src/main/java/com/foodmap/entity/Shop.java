@@ -21,7 +21,7 @@ public class Shop {
 
     @Schema(description = "商铺密码", example = "password123",
             hidden = true) // 密码字段在API文档中隐藏
-    private String password;
+    private String shopPassword;
 
     @Schema(description = "商铺地址", example = "广州市天河区天河路385号")
     private String address;

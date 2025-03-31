@@ -1,8 +1,6 @@
 package com.foodmap.controller;
 
-import com.foodmap.dto.request.UserLoginDTO;
 import com.foodmap.entity.User;
-import com.foodmap.dto.request.ShopLoginDTO;
 import com.foodmap.common.response.ResponseResult;
 import com.foodmap.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,10 +46,10 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "用户名或密码错误",
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
-    public ResponseResult<User> login(@RequestBody UserLoginDTO request) {
+    public ResponseResult<User> login(@RequestBody User request) {
         User user = userService.login(request.getUserName(), request.getUserPassword());
         // 出于安全考虑，可以在返回前清除密码
-        user.setPassword(null);
+        user.setUserPassword(null);
         return ResponseResult.success("登录成功", user);
     }
 

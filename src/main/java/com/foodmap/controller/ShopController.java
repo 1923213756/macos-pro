@@ -2,7 +2,6 @@ package com.foodmap.controller;
 
 import com.foodmap.entity.Shop;
 import com.foodmap.service.ShopService;
-import com.foodmap.dto.request.ShopLoginDTO;
 import com.foodmap.common.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -60,8 +59,8 @@ public class ShopController {
     @PostMapping("/login")
     public ResponseResult<Shop> login(
             @Parameter(description = "登录请求信息，包含商铺名和密码", required = true)
-            @RequestBody ShopLoginDTO request) {
-        Shop shop = shopService.login(request.getShopname(), request.getShopPassword());
+            @RequestBody Shop request) {
+        Shop shop = shopService.login(request.getShopName(), request.getShopPassword());
         return ResponseResult.success("登录成功", shop);
     }
 

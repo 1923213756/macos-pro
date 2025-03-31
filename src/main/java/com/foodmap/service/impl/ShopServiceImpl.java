@@ -29,8 +29,8 @@ public class ShopServiceImpl implements ShopService {
         validateRegistration(shop);
 
         // 密码加密、储存
-        String encryptedPwd = SecurityUtil.encryptPassword(shop.getPassword());
-        shop.setPassword(encryptedPwd);
+        String encryptedPwd = SecurityUtil.encryptPassword(shop.getShopPassword());
+        shop.setShopPassword(encryptedPwd);
 
         // 设置默认营业时间（可选）
         if (StringUtils.isEmpty(shop.getBusinessHours())) {
@@ -51,7 +51,7 @@ public class ShopServiceImpl implements ShopService {
             throw new UnauthorizedException("商铺名不存在");
         }
 
-        if (!SecurityUtil.checkPassword(rawPassword, shop.getPassword())) {
+        if (!SecurityUtil.checkPassword(rawPassword, shop.getShopPassword())) {
             throw new UnauthorizedException("密码错误");
         }
         return shop;
@@ -64,7 +64,7 @@ public class ShopServiceImpl implements ShopService {
         if (!StringUtils.hasText(shop.getShopName())) {
             throw new BadRequestException("商铺名不能为空");
         }
-        if (!StringUtils.hasText(shop.getPassword())) {
+        if (!StringUtils.hasText(shop.getShopName())) {
             throw new BadRequestException("密码不能为空");
         }
 
@@ -148,7 +148,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void updateShopInfo(Shop shop) {
         // 确保不会更新密码和敏感字段
-        if (shop.getPassword() != null) {
+        if (shop.getShopName() != null) {
             throw new ForbiddenException("不允许通过此方法修改密码");
         }
 
