@@ -61,7 +61,7 @@ public class ShopController {
     public ResponseResult<Shop> login(
             @Parameter(description = "登录请求信息，包含商铺名和密码", required = true)
             @RequestBody ShopLoginDTO request) {
-        Shop shop = shopService.login(request.getShopname(), request.getShopPassword());
+        Shop shop = shopService.login(request.getShopName(), request.getShopPassword());
         return ResponseResult.success("登录成功", shop);
     }
 

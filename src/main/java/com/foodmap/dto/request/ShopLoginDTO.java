@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ShopLoginDTO {
 
-    private String shopname;
+    private String shopName;
 
     private String shopPassword;
 
