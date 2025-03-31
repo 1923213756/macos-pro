@@ -1,6 +1,6 @@
 package com.foodmap.exception;
 
-import com.foodmap.vo.ResponseResult;
+import com.foodmap.common.response.ResponseResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
