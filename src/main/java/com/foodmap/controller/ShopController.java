@@ -1,6 +1,7 @@
 package com.foodmap.controller;
 
 import com.foodmap.entity.Shop;
+import com.foodmap.security.jwt.JwtTokenProvider;
 import com.foodmap.service.ShopService;
 import com.foodmap.common.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,10 +11,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/shops")
@@ -27,6 +36,12 @@ public class ShopController {
     public ShopController(ShopService shopService) {
         this.shopService = shopService;
     }
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     /**
      * 商铺注册
@@ -57,11 +72,45 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @PostMapping("/login")
-    public ResponseResult<Shop> login(
+    public ResponseResult<Map<String, Object>> login(
             @Parameter(description = "登录请求信息，包含商铺名和密码", required = true)
-            @RequestBody Shop request) {
+            @RequestBody Shop request,
+            HttpServletResponse response) {
+
+        // 保留原有的登录逻辑
         Shop shop = shopService.login(request.getShopName(), request.getShopPassword());
-        return ResponseResult.success("登录成功", shop);
+
+        if (shop != null) {
+            // 创建认证对象
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getShopName(),
+                            request.getShopPassword()
+                    )
+            );
+
+            // 设置认证信息到安全上下文
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 生成JWT令牌
+            String jwt = tokenProvider.generateToken(authentication);
+
+            // 设置JWT到Cookie
+            Cookie cookie = new Cookie("jwt", jwt);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(86400); // 24小时
+            response.addCookie(cookie);
+
+            // 构建响应数据，包含商铺信息和token
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("shop", shop);
+            responseData.put("token", jwt);
+
+            return ResponseResult.success("登录成功", responseData);
+        } else {
+            return ResponseResult.error(401, "商铺名或密码错误");
+        }
     }
 
     /**

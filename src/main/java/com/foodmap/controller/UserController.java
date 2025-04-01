@@ -10,9 +10,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -46,11 +54,49 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "用户名或密码错误",
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
-    public ResponseResult<User> login(@RequestBody User request) {
+    public ResponseResult<Map<String, Object>> login(@RequestBody User request, HttpServletResponse response) {
+        // 保留原有的登录逻辑
         User user = userService.login(request.getUserName(), request.getUserPassword());
-        // 出于安全考虑，可以在返回前清除密码
-        user.setUserPassword(null);
-        return ResponseResult.success("登录成功", user);
+
+        if (user != null) {
+            try {
+                // 创建认证对象
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getUserName(),
+                                request.getUserPassword()
+                        )
+                );
+
+                // 设置认证信息到安全上下文
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // 生成JWT令牌
+                String jwt = tokenProvider.generateToken(authentication);
+
+                // 设置JWT到Cookie
+                Cookie cookie = new Cookie("jwt", jwt);
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                cookie.setMaxAge(86400); // 24小时
+                response.addCookie(cookie);
+
+                // 出于安全考虑，清除密码
+                user.setUserPassword(null);
+
+                // 构建响应数据，包含用户信息和token
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("user", user);
+                responseData.put("token", jwt);
+
+                return ResponseResult.success("登录成功", responseData);
+            } catch (Exception e) {
+                // 记录异常，这里可以添加日志
+                return ResponseResult.error(500, "认证处理异常: " + e.getMessage());
+            }
+        } else {
+            return ResponseResult.error(401, "用户名或密码错误");
+        }
     }
 
     @GetMapping("/{id}")
