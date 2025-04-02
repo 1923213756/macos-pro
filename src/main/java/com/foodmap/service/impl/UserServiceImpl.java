@@ -48,6 +48,23 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Override
+    public User getUserByName(String username) {
+        // 参数校验
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("用户名不能为空");
+        }
+
+        // 从数据库查询用户信息
+        User user = userMapper.selectByUsername(username);
+
+        // 用户不存在时的处理
+        if (user == null) {
+            throw new IllegalArgumentException("用户不存在");
+        }
+
+        return user;
+    }
 
 
 }

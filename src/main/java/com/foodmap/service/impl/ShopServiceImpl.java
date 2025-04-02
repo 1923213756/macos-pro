@@ -171,6 +171,24 @@ public class ShopServiceImpl implements ShopService {
         }
     }
 
+    @Override
+    public Shop getShopByName(String shopName) {
+        // 参数校验
+        if (!StringUtils.hasText(shopName)) {
+            throw new BadRequestException("商铺名称不能为空");
+        }
+
+        // 从数据库查询商铺信息
+        Shop shop = shopMapper.selectByShopName(shopName);
+
+        // 商铺不存在时的处理
+        if (shop == null) {
+            throw new NotFoundException("商铺不存在");
+        }
+
+        return shop;
+    }
+
 
     //删除商铺
     @Override

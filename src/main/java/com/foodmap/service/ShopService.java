@@ -11,6 +11,7 @@ public interface ShopService {
     void register(Shop shop);
 
     //新增内容（未测试）
+    Shop getShopByName(String shopName);
     List<Shop> queryShopList(String category, String district, String sortField);
     Shop getShopById(Long shopId);
     void updateShopStatus(Long shopId, Integer status);

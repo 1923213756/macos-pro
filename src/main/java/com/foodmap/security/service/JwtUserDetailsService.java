@@ -24,20 +24,20 @@ public class JwtUserDetailsService implements UserDetailsService {
     private ShopService shopService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         // 检查是否是用户名
-        User user = userService.(username);
+        User user = userService.getUserByName(name);
         if (user != null) {
             return createUserDetails(user);
         }
 
         // 检查是否是商铺名
-        Shop shop = shopService.username);
+        Shop shop = shopService.getShopByName(name);
         if (shop != null) {
             return createShopDetails(shop);
         }
 
-        throw new UsernameNotFoundException("用户/商铺 " + username + " 不存在");
+        throw new UsernameNotFoundException("用户/商铺 " + name + " 不存在");
     }
 
     // 创建用户的UserDetails

@@ -46,14 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 尝试从Cookie获取
-        javax.servlet.http.Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (javax.servlet.http.Cookie cookie : cookies) {
-                if ("jwt".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
+//        javax.servlet.http.Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (javax.servlet.http.Cookie cookie : cookies) {
+//                if ("jwt".equals(cookie.getName())) {
+//                    return cookie.getValue();
+//                }
+//            }
+//        }
 
         return null;
     }

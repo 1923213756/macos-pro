@@ -8,4 +8,6 @@ public interface UserService {
 
     // 登录校验
     User login(String username, String rawPassword);
+
+    User getUserByName(String username);
 }
