@@ -16,13 +16,13 @@ public class User {
     private String userName;
 
     @Schema(description = "密码(加密后)", example = "********", accessMode = Schema.AccessMode.WRITE_ONLY)
-    private String userPassword;
+    private String password;
 
-    @Schema(description = "用户类型: 0-普通用户, 1-商家", example = "0", allowableValues = {"0", "1"})
-    private Integer userType;
+    @Schema(description = "是否为商铺管理员", example = "false")
+    private Boolean isShopAdmin = false;
 
     @Schema(description = "手机号码", example = "13812345678")
-    private Integer phone; // 改为String类型，因为手机号不用于计算且可能有前导零
+    private String phone; // 改为String类型，因为手机号不用于计算且可能有前导零
 
     @Schema(description = "注册时间", example = "2025-03-31T12:40:55")
     private LocalDateTime registerTime;

@@ -37,6 +37,10 @@ public class JwtTokenProvider {
     @Value("${jwt.prefix:Bearer }")
     private String jwtPrefix;
 
+    public JwtTokenProvider() {
+
+    }
+
     // 生成JWT令牌
     public String generateToken(Authentication authentication) {
         // 获取用户信息和权限
@@ -51,12 +55,12 @@ public class JwtTokenProvider {
 
         // 生成JWT
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(username)//主体标识
                 .claim("auth", authorities)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey())
-                .compact();
+                .compact();//生成最终令牌
     }
 
     // 从JWT提取用户名

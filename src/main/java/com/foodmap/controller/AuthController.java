@@ -1,13 +1,11 @@
 package com.foodmap.controller;
 
-
 import com.foodmap.common.response.ResponseResult;
 import com.foodmap.security.jwt.JwtTokenProvider;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,15 +18,18 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
 
     @Autowired
-    private JwtTokenProvider tokenProvider;
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest,
-                                              HttpServletResponse response) {
+    public ResponseResult<Map<String, Object>> authenticateUser(@RequestBody LoginRequest loginRequest,
+                                                                HttpServletResponse response) {
         // 验证用户名和密码
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -43,67 +44,28 @@ public class AuthController {
         // 生成JWT令牌
         String jwt = tokenProvider.generateToken(authentication);
 
-        // 如果请求需要在Cookie中保存令牌
-        if (loginRequest.isRememberMe()) {
-            Cookie cookie = new Cookie("jwt", jwt);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(86400); // 24小时
-            response.addCookie(cookie);
-        }
-
         // 返回JWT和用户信息
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("token", jwt);
         responseData.put("tokenType", "Bearer");
 
-        return ResponseEntity.ok(new ResponseResult<>(200, "登录成功", responseData));
+        return ResponseResult.success("登录成功", responseData);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(HttpServletResponse response) {
-        // 清除Cookie中的JWT
-        Cookie cookie = new Cookie("jwt", null);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0); // 立即过期
-        response.addCookie(cookie);
-
+    public ResponseResult<Object> logoutUser(HttpServletResponse response) {
         // 清除安全上下文
         SecurityContextHolder.clearContext();
 
-        return ResponseEntity.ok(new ResponseResult<>(200, "注销成功", null));
+        return ResponseResult.success("注销成功");
     }
 
     // 登录请求对象
+    @Setter
+    @Getter
     public static class LoginRequest {
         private String username;
         private String password;
         private boolean rememberMe;
-
-        // Getters and setters
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public boolean isRememberMe() {
-            return rememberMe;
-        }
-
-        public void setRememberMe(boolean rememberMe) {
-            this.rememberMe = rememberMe;
-        }
     }
 }

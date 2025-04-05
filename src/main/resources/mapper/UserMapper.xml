@@ -5,18 +5,18 @@
 <mapper namespace="com.foodmap.dao.UserMapper">
     <!-- 查询用户（根据用户名） -->
     <select id="selectByUsername" resultType="com.foodmap.entity.User">
-        SELECT * FROM users WHERE username = #{username}
+        SELECT * FROM users WHERE username = #{userName}
     </select>
 
     <!-- 插入用户（主键回填） -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (username, password, phone)
-        VALUES (#{username}, #{password}, #{phone})
+        VALUES (#{userName}, #{password}, #{phone})
     </insert>
 
     <!-- 检查用户名是否存在 -->
     <select id="countByUsername" resultType="int">
-        SELECT COUNT(*) FROM users WHERE username = #{username}
+        SELECT COUNT(*) FROM users WHERE username = #{userName}
     </select>
 
     <!-- 检查手机号是否存在 -->

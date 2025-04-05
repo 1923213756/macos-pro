@@ -30,7 +30,6 @@
         <java.version>21</java.version>
     </properties>
 
-
     <dependencies>
         <!--SpringBoot相关依赖-->
         <!-- Spring Security -->
@@ -74,7 +73,6 @@
             <scope>runtime</scope>
         </dependency>
 
-
         <!-- JDBC 支持 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -100,7 +98,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
-
 
         <!-- Jakarta Servlet API（必须替代 javax.servlet） -->
         <dependency>
@@ -148,6 +145,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
-

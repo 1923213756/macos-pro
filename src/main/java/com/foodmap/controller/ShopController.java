@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,17 +32,15 @@ import java.util.Map;
 public class ShopController {
 
     private final ShopService shopService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
 
     @Autowired
-    public ShopController(ShopService shopService) {
+    public ShopController(ShopService shopService, AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
         this.shopService = shopService;
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
     }
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 
     /**
      * 商铺注册
@@ -78,36 +77,37 @@ public class ShopController {
             HttpServletResponse response) {
 
         // 保留原有的登录逻辑
-        Shop shop = shopService.login(request.getShopName(), request.getShopPassword());
+        Shop shop = shopService.login(request.getShopName(), request.getPassword());
 
         if (shop != null) {
-            // 创建认证对象
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getShopName(),
-                            request.getShopPassword()
-                    )
-            );
+            try {
+                // 创建认证对象
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getShopName(),
+                                request.getPassword()
+                        )
+                );
 
-            // 设置认证信息到安全上下文
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 设置认证信息到安全上下文
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // 生成JWT令牌
-            String jwt = tokenProvider.generateToken(authentication);
+                // 生成JWT令牌
+                String jwt = tokenProvider.generateToken(authentication);
 
-            // 设置JWT到Cookie
-            Cookie cookie = new Cookie("jwt", jwt);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setMaxAge(86400); // 24小时
-            response.addCookie(cookie);
+                // 出于安全考虑，清除密码
+                shop.setPassword(null);
 
-            // 构建响应数据，包含商铺信息和token
-            Map<String, Object> responseData = new HashMap<>();
-            responseData.put("shop", shop);
-            responseData.put("token", jwt);
+                // 构建响应数据，包含商铺信息和token
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("shop", shop);
+                responseData.put("token", jwt);
 
-            return ResponseResult.success("登录成功", responseData);
+                return ResponseResult.success("登录成功", responseData);
+            } catch (Exception e) {
+                // 记录异常，这里可以添加日志
+                return ResponseResult.error(500, "认证处理异常: " + e.getMessage());
+            }
         } else {
             return ResponseResult.error(401, "商铺名或密码错误");
         }
@@ -122,6 +122,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @GetMapping
+    @PreAuthorize("hasRole('SHOP') or hasRole('USER')")
     public ResponseResult<List<Shop>> getShopList(
             @Parameter(description = "商铺类别，如'中餐'、'西餐'等")
             @RequestParam(required = false) String category,
@@ -146,6 +147,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @GetMapping("/{shopId}")
+    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
     public ResponseResult<Shop> getShopById(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId) {
@@ -166,6 +168,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @PutMapping("/{shopId}")
+    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
     public ResponseResult<Void> updateShop(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId,
@@ -190,6 +193,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @PutMapping("/{shopId}/status")
+    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
     public ResponseResult<Void> updateStatus(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId,
@@ -213,6 +217,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @DeleteMapping("/{shopId}")
+    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
     public ResponseResult<Void> deleteShop(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId,

@@ -2,7 +2,6 @@ package com.foodmap.security.config;
 
 import com.foodmap.security.jwt.JwtAuthenticationFilter;
 import com.foodmap.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,14 +25,16 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity  // 替代 @EnableGlobalMethodSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    public SecurityConfig(UserDetailsService userDetailsService, JwtTokenProvider tokenProvider) {
+        this.userDetailsService = userDetailsService;
+        this.tokenProvider = tokenProvider;
+    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -54,27 +55,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // 最宽松配置 - 允许所有请求，禁用大部分安全特性
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // 禁用CSRF保护
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 禁用跨域保护
+                .cors(cors -> cors.disable())
+                // 允许所有请求
                 .authorizeHttpRequests(auth -> auth
-                        // 允许公开访问的API端点
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-                        .requestMatchers("/api/shops/register", "/api/shops/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/shops").permitAll()
-                        // Swagger UI访问权限
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // 静态资源
-                        .requestMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg",
-                                "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
-                        // 其他请求需要认证
-                        .anyRequest().authenticated()
-                );
-
-        // 添加JWT过滤器
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll()
+                )
+                // 禁用表单登录
+                .formLogin(form -> form.disable())
+                // 禁用HTTP Basic认证
+                .httpBasic(basic -> basic.disable())
+                // 禁用登出功能
+                .logout(logout -> logout.disable());
 
         return http.build();
     }
@@ -86,6 +83,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

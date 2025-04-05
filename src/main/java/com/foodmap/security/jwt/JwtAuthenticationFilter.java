@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+
     // 从请求头或Cookie中提取JWT
     private String getJwtFromRequest(HttpServletRequest request) {
         // 从Authorization头获取

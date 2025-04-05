@@ -1,22 +1,23 @@
 package com.foodmap.controller;
 
-import com.foodmap.entity.User;
 import com.foodmap.common.response.ResponseResult;
+import com.foodmap.entity.User;
+import com.foodmap.security.jwt.JwtTokenProvider;
 import com.foodmap.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.servlet.http.Cookie;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,9 +29,14 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider tokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService) {
+    @Autowired
+    public UserController(UserService userService, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping("/register")
@@ -41,7 +47,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "注册信息有误、用户名已存在或手机号已注册",
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
-    public ResponseResult<Void> register(@Validated @RequestBody User user) {
+    public ResponseResult<Void> register(@RequestBody User user) {
         userService.register(user);
         return ResponseResult.success("注册成功");
     }
@@ -55,8 +61,8 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     public ResponseResult<Map<String, Object>> login(@RequestBody User request, HttpServletResponse response) {
-        // 保留原有的登录逻辑
-        User user = userService.login(request.getUserName(), request.getUserPassword());
+
+        User user = userService.login(request.getUserName(), request.getPassword());
 
         if (user != null) {
             try {
@@ -64,7 +70,7 @@ public class UserController {
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 request.getUserName(),
-                                request.getUserPassword()
+                                request.getPassword()
                         )
                 );
 
@@ -74,15 +80,8 @@ public class UserController {
                 // 生成JWT令牌
                 String jwt = tokenProvider.generateToken(authentication);
 
-                // 设置JWT到Cookie
-                Cookie cookie = new Cookie("jwt", jwt);
-                cookie.setHttpOnly(true);
-                cookie.setPath("/");
-                cookie.setMaxAge(86400); // 24小时
-                response.addCookie(cookie);
-
                 // 出于安全考虑，清除密码
-                user.setUserPassword(null);
+                user.setPassword(null);
 
                 // 构建响应数据，包含用户信息和token
                 Map<String, Object> responseData = new HashMap<>();
@@ -99,7 +98,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{name}")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "获取用户信息", description = "根据用户ID获取用户信息")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "成功获取用户信息",
@@ -107,14 +107,11 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "用户不存在",
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
-    public ResponseResult<User> getUserById(
+    public ResponseResult<User> getUserByName(
             @Parameter(description = "用户ID", required = true)
-            @PathVariable Long id) {
+            @PathVariable String name) {
         // 假设有一个根据ID获取用户的方法
-        // User user = userService.getUserById(id);
-        // return ResponseResult.success(user);
-
-        // 由于UserServiceImpl中没有此方法，这里仅作示例
-        return ResponseResult.error(HttpStatus.NOT_IMPLEMENTED.value(), "功能尚未实现");
+        User user = userService.getUserByName(name);
+        return ResponseResult.success(user);
     }
 }

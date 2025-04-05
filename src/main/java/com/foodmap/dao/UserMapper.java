@@ -10,6 +10,6 @@ public interface UserMapper {
     User selectByUsername(String username);
     int insertUser(User user);
     int countByUsername(String username);
-    int countByPhone(Integer phone);
+    int countByPhone(String phone);
     User selectByPhone(String phone);
 }

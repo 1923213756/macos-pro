@@ -2,6 +2,7 @@ package com.foodmap.security.service;
 
 import com.foodmap.entity.Shop;
 import com.foodmap.entity.User;
+import com.foodmap.security.jwt.JwtTokenProvider;
 import com.foodmap.service.ShopService;
 import com.foodmap.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ import java.util.Collection;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final ShopService shopService;
 
-    @Autowired
-    private ShopService shopService;
+    public JwtUserDetailsService(UserService userService, ShopService shopService) {
+        this.userService = userService;
+        this.shopService = shopService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
@@ -45,13 +48,13 @@ public class JwtUserDetailsService implements UserDetailsService {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        if (user.getUserType() == 1) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_SHOP_ADMIN"));
+        if (Boolean.TRUE.equals(user.getIsShopAdmin())) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_SHOP"));
         }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUserName(),
-                user.getUserPassword(),
+                user.getPassword(),
                 user.getStatus() == 1,  // enabled
                 true,  // accountNonExpired
                 true,  // credentialsNonExpired
@@ -67,7 +70,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 shop.getShopName(),
-                shop.getShopPassword(),  // 确保Shop类中有getPassword方法
+                shop.getPassword(),
                 shop.getStatus() == 1,  // enabled
                 true,  // accountNonExpired
                 true,  // credentialsNonExpired

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodMap - 美食地图系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #4CAF50;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            font-weight: bold;
+        }
+
+        .toggle-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #4CAF50;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .forms-container {
+                display: flex;
+                gap: 20px;
+            }
+
+            .forms-container .section {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>FoodMap 美食地图系统</h1>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="user">用户</div>
+        <div class="tab" data-tab="shop">商铺</div>
+    </div>
+
+    <!-- 用户选项卡内容 -->
+    <div id="user-tab" class="tab-content active">
+        <div class="forms-container">
+            <!-- 用户登录 -->
+            <div class="section" id="user-login-section">
+                <h2>用户登录</h2>
+                <div id="user-login-message" class="message"></div>
+                <form id="user-login-form">
+                    <div class="form-group">
+                        <label for="user-login-username">用户名</label>
+                        <input type="text" id="user-login-username" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-login-password">密码</label>
+                        <input type="password" id="user-login-password" placeholder="请输入密码" required>
+                    </div>
+                    <button type="submit">登录</button>
+                </form>
+                <a class="toggle-link" onclick="toggleUserForms()">没有账号？点击注册</a>
+            </div>
+
+            <!-- 用户注册 -->
+            <div class="section" id="user-register-section" style="display: none;">
+                <h2>用户注册</h2>
+                <div id="user-register-message" class="message"></div>
+                <form id="user-register-form">
+                    <div class="form-group">
+                        <label for="user-register-username">用户名</label>
+                        <input type="text" id="user-register-username" placeholder="请设置用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-register-password">密码</label>
+                        <input type="password" id="user-register-password" placeholder="请设置密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-register-phone">手机号码</label>
+                        <input type="tel" id="user-register-phone" placeholder="请输入手机号码" required>
+                    </div>
+                    <button type="submit">注册</button>
+                </form>
+                <a class="toggle-link" onclick="toggleUserForms()">已有账号？点击登录</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商铺选项卡内容 -->
+    <div id="shop-tab" class="tab-content">
+        <div class="forms-container">
+            <!-- 商铺登录 -->
+            <div class="section" id="shop-login-section">
+                <h2>商铺登录</h2>
+                <div id="shop-login-message" class="message"></div>
+                <form id="shop-login-form">
+                    <div class="form-group">
+                        <label for="shop-login-name">商铺名称</label>
+                        <input type="text" id="shop-login-name" placeholder="请输入商铺名称" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-login-password">密码</label>
+                        <input type="password" id="shop-login-password" placeholder="请输入密码" required>
+                    </div>
+                    <button type="submit">登录</button>
+                </form>
+                <a class="toggle-link" onclick="toggleShopForms()">没有商铺账号？点击注册</a>
+            </div>
+
+            <!-- 商铺注册 -->
+            <div class="section" id="shop-register-section" style="display: none;">
+                <h2>商铺注册</h2>
+                <div id="shop-register-message" class="message"></div>
+                <form id="shop-register-form">
+                    <div class="form-group">
+                        <label for="shop-register-name">商铺名称</label>
+                        <input type="text" id="shop-register-name" placeholder="请设置商铺名称" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-register-password">密码</label>
+                        <input type="password" id="shop-register-password" placeholder="请设置密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-register-address">商铺地址</label>
+                        <input type="text" id="shop-register-address" placeholder="请输入商铺地址" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-register-phone">联系电话</label>
+                        <input type="tel" id="shop-register-phone" placeholder="请输入联系电话" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-register-category">商铺分类</label>
+                        <input type="text" id="shop-register-category" placeholder="如：中餐、西餐、火锅等" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-register-district">所在区域</label>
+                        <input type="text" id="shop-register-district" placeholder="如：白云区、天河区等" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shop-register-description">商铺描述</label>
+                        <input type="text" id="shop-register-description" placeholder="简要描述您的商铺特色">
+                    </div>
+                    <button type="submit">注册</button>
+                </form>
+                <a class="toggle-link" onclick="toggleShopForms()">已有商铺账号？点击登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 选项卡切换功能
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            // 移除所有选项卡的active类
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.remove('active');
+            });
+
+            // 移除所有内容的active类
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 添加当前选项卡的active类
+            tab.classList.add('active');
+
+            // 显示相应的内容
+            const tabId = tab.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+    });
+
+    // 切换用户登录/注册表单
+    function toggleUserForms() {
+        const loginSection = document.getElementById('user-login-section');
+        const registerSection = document.getElementById('user-register-section');
+
+        if (loginSection.style.display === 'none') {
+            loginSection.style.display = 'block';
+            registerSection.style.display = 'none';
+        } else {
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+        }
+    }
+
+    // 切换商铺登录/注册表单
+    function toggleShopForms() {
+        const loginSection = document.getElementById('shop-login-section');
+        const registerSection = document.getElementById('shop-register-section');
+
+        if (loginSection.style.display === 'none') {
+            loginSection.style.display = 'block';
+            registerSection.style.display = 'none';
+        } else {
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+        }
+    }
+
+    // 改进的显示消息函数
+    function showMessage(elementId, message, isError = false) {
+        const messageElement = document.getElementById(elementId);
+        messageElement.textContent = message;
+        messageElement.style.display = 'block';
+
+        if (isError) {
+            messageElement.className = 'message error';
+            // 增强错误消息显示
+            messageElement.style.backgroundColor = '#f8d7da';
+            messageElement.style.color = '#721c24';
+            messageElement.style.padding = '10px';
+            messageElement.style.borderRadius = '5px';
+            messageElement.style.marginBottom = '15px';
+            messageElement.style.fontWeight = 'bold';
+        } else {
+            messageElement.className = 'message success';
+        }
+
+        // 滚动到消息位置
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // 5秒后自动隐藏消息
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // ============= 用户注册 =============
+    document.getElementById('user-register-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 获取输入值并验证
+        const username = document.getElementById('user-register-username').value.trim();
+        const password = document.getElementById('user-register-password').value.trim();
+        const phone = document.getElementById('user-register-phone').value.trim();
+
+        // 表单验证
+        if (!username) {
+            showMessage('user-register-message', '用户名不能为空', true);
+            return;
+        }
+
+        if (!password) {
+            showMessage('user-register-message', '密码不能为空', true);
+            return;
+        }
+
+        if (!phone) {
+            showMessage('user-register-message', '手机号不能为空', true);
+            return;
+        }
+
+        // 组装用户数据 - 修改这里，使用userName而不是username
+        const userData = {
+            userName: username,  // 关键修改：username -> userName 匹配实体类字段
+            password: password,
+            phone: phone,
+            userType: 0
+        };
+
+        console.log("发送用户注册数据:", userData);
+        showMessage('user-register-message', '正在注册...请稍候');
+
+        fetch('http://localhost:8080/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => {
+                console.log("注册响应状态:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("注册响应数据:", data);
+                if (data.code === 200) {
+                    showMessage('user-register-message', '注册成功！请使用新账号登录');
+                    document.getElementById('user-register-form').reset();
+
+                    // 自动填充登录表单并切换
+                    document.getElementById('user-login-username').value = username;
+                    toggleUserForms();
+                } else {
+                    showMessage('user-register-message', `注册失败: ${data.message || '未知错误'}`, true);
+                }
+            })
+            .catch(error => {
+                console.error("注册请求错误:", error);
+                showMessage('user-register-message', `请求错误: ${error.message || error}`, true);
+            });
+    });
+
+    // ============= 用户登录 =============
+    document.getElementById('user-login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 获取输入值并验证
+        const username = document.getElementById('user-login-username').value.trim();
+        const password = document.getElementById('user-login-password').value.trim();
+
+        // 表单验证
+        if (!username) {
+            showMessage('user-login-message', '用户名不能为空', true);
+            return;
+        }
+
+        if (!password) {
+            showMessage('user-login-message', '密码不能为空', true);
+            return;
+        }
+
+        // 组装登录数据 - 修改这里，使用userName而不是username
+        const loginData = {
+            userName: username,  // 关键修改：username -> userName 匹配实体类字段
+            password: password,
+            userType: 0
+        };
+
+        console.log("发送用户登录数据:", loginData);
+        showMessage('user-login-message', '正在登录...请稍候');
+
+        fetch('http://localhost:8080/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+        })
+            .then(response => {
+                console.log("登录响应状态:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("登录响应数据:", data);
+                if (data.code === 200) {
+                    showMessage('user-login-message', '登录成功！正在跳转...');
+
+                    // 保存用户信息和token到本地存储
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('userInfo', JSON.stringify(data.data.user));
+                    localStorage.setItem('userType', 'user');
+
+                    // 延迟跳转到仪表盘页面
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    // 显示登录失败消息
+                    const errorMsg = data.message || '登录失败，请检查用户名和密码';
+                    showMessage('user-login-message', `登录失败: ${errorMsg}`, true);
+                }
+            })
+            .catch(error => {
+                console.error("登录请求错误:", error);
+                showMessage('user-login-message', `登录请求错误: ${error.message || error}`, true);
+            });
+    });
+
+    // ============= 商铺注册 =============
+    document.getElementById('shop-register-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 获取输入值并验证
+        const shopName = document.getElementById('shop-register-name').value.trim();
+        const password = document.getElementById('shop-register-password').value.trim();
+        const address = document.getElementById('shop-register-address').value.trim();
+        const contactTel = document.getElementById('shop-register-phone').value.trim();
+        const category = document.getElementById('shop-register-category').value.trim();
+        const district = document.getElementById('shop-register-district').value.trim();
+        const description = document.getElementById('shop-register-description').value.trim();
+
+        // 表单验证 - 确保必填字段不为空
+        if (!shopName) {
+            showMessage('shop-register-message', '商铺名称不能为空', true);
+            return;
+        }
+
+        if (!password) {
+            showMessage('shop-register-message', '密码不能为空', true);
+            return;
+        }
+
+        if (!address) {
+            showMessage('shop-register-message', '商铺地址不能为空', true);
+            return;
+        }
+
+        if (!contactTel) {
+            showMessage('shop-register-message', '联系电话不能为空', true);
+            return;
+        }
+
+        if (!category) {
+            showMessage('shop-register-message', '商铺分类不能为空', true);
+            return;
+        }
+
+        if (!district) {
+            showMessage('shop-register-message', '所在区域不能为空', true);
+            return;
+        }
+
+        // 组装商铺数据
+        const shopData = {
+            shopName: shopName,
+            password: password,
+            address: address,
+            contactTel: contactTel,
+            category: category,
+            district: district,
+            description: description || '' // 描述可选
+        };
+
+        console.log("发送商铺注册数据:", shopData);
+        showMessage('shop-register-message', '正在注册...请稍候');
+
+        fetch('http://localhost:8080/api/shops/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(shopData)
+        })
+            .then(response => {
+                console.log("商铺注册响应状态:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("商铺注册响应数据:", data);
+                if (data.code === 200) {
+                    showMessage('shop-register-message', '商铺注册成功！请使用新账号登录');
+                    document.getElementById('shop-register-form').reset();
+
+                    // 自动填充登录表单并切换
+                    document.getElementById('shop-login-name').value = shopName;
+                    toggleShopForms();
+                } else {
+                    // 显示注册失败消息
+                    const errorMsg = data.message || '注册失败，请稍后再试';
+                    showMessage('shop-register-message', `注册失败: ${errorMsg}`, true);
+                }
+            })
+            .catch(error => {
+                console.error("商铺注册请求错误:", error);
+                showMessage('shop-register-message', `请求错误: ${error.message || error}`, true);
+            });
+    });
+
+    // ============= 商铺登录 =============
+    document.getElementById('shop-login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 获取输入值并验证
+        const shopName = document.getElementById('shop-login-name').value.trim();
+        const password = document.getElementById('shop-login-password').value.trim();
+
+        // 表单验证
+        if (!shopName) {
+            showMessage('shop-login-message', '商铺名称不能为空', true);
+            return;
+        }
+
+        if (!password) {
+            showMessage('shop-login-message', '密码不能为空', true);
+            return;
+        }
+
+        // 组装登录数据
+        const loginData = {
+            shopName: shopName,
+            password: password
+        };
+
+        console.log("发送商铺登录数据:", loginData);
+        showMessage('shop-login-message', '正在登录...请稍候');
+
+        fetch('http://localhost:8080/api/shops/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+        })
+            .then(response => {
+                console.log("商铺登录响应状态:", response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("商铺登录响应数据:", data);
+                if (data.code === 200) {
+                    showMessage('shop-login-message', '登录成功！正在跳转...');
+
+                    // 保存商铺信息和token到本地存储
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('shopInfo', JSON.stringify(data.data.shop));
+                    localStorage.setItem('userType', 'shop');
+
+                    // 延迟跳转到仪表盘页面
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    // 显示登录失败消息
+                    const errorMsg = data.message || '登录失败，请检查商铺名称和密码';
+                    showMessage('shop-login-message', `登录失败: ${errorMsg}`, true);
+                }
+            })
+            .catch(error => {
+                console.error("商铺登录请求错误:", error);
+                showMessage('shop-login-message', `登录请求错误: ${error.message || error}`, true);
+            });
+    });
+
+    // 检查是否已登录，如果已登录则直接跳转到仪表盘
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("页面加载完成，检查登录状态");
+        const token = localStorage.getItem('token');
+        if (token) {
+            console.log("找到保存的token，正在跳转到仪表盘");
+            window.location.href = 'dashboard.html';
+        }
+    });
+</script>
+</body>
+</html>
