@@ -33,7 +33,7 @@ public class Shop {
     private String businessHours;
 
     @Schema(description = "综合评分", example = "4.8")
-    private BigDecimal compositeScore = BigDecimal.ZERO; // 默认值0.0
+    private BigDecimal compositeScore; // 默认值0.0
 
     @Schema(description = "商铺分类", example = "中餐",
             allowableValues = {"中餐", "西餐", "火锅", "烧烤", "甜品", "快餐"})

@@ -4,10 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.foodmap.dao.ShopMapper">
 
-    <!-- 插入商铺（主键回填） -->
-    <insert id="insertShop" useGeneratedKeys="true" keyProperty="shopId">
-        INSERT INTO shop (shop_name, password, address, contact_tel, business_hours)
-        VALUES (#{shopName}, #{password}, #{address}, #{contactTel}, #{businessHours})
+    <insert id="insertShop" useGeneratedKeys="true" keyProperty="shopId" keyColumn="shop_id">
+        INSERT INTO shop (
+            shop_name, password, address, contact_tel, business_hours,
+            category, district, description
+        )
+        VALUES (
+                   #{shopName}, #{password}, #{address}, #{contactTel}, #{businessHours},
+                   #{category}, #{district}, #{description}
+               )
     </insert>
 
     <!--根据id删除-->

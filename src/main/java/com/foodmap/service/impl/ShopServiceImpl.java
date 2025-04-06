@@ -5,24 +5,31 @@ import com.foodmap.entity.Shop;
 import com.foodmap.entity.ShopAuthInfo;
 import com.foodmap.exception.*;
 import com.foodmap.service.ShopService;
+import com.foodmap.util.RedisCacheUtil;
 import com.foodmap.util.SecurityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ShopServiceImpl implements ShopService {
+    private static final Logger log = LoggerFactory.getLogger(ShopServiceImpl.class);
 
     private final ShopMapper shopMapper;
+    private final RedisCacheUtil cacheUtil;
 
     @Autowired
-    public ShopServiceImpl(ShopMapper shopMapper) {
+    public ShopServiceImpl(ShopMapper shopMapper, RedisCacheUtil cacheUtil) {
         this.shopMapper = shopMapper;
+        this.cacheUtil = cacheUtil;
     }
 
-    // 商铺注册
+    // 商铺注册 (不变，但添加缓存清理)
     @Override
     public void register(Shop shop) {
         // 格式检查
@@ -41,9 +48,12 @@ public class ShopServiceImpl implements ShopService {
         if (shopMapper.insertShop(shop) != 1) {
             throw new BadRequestException("商铺注册失败");
         }
+
+        // 清除商铺列表缓存
+        cacheUtil.deleteByPattern("shops:list:*");
     }
 
-    // 登录逻辑
+    // 登录逻辑 (不变)
     @Override
     public Shop login(String shopName, String rawPassword) {
         Shop shop = shopMapper.selectByShopName(shopName);
@@ -57,7 +67,7 @@ public class ShopServiceImpl implements ShopService {
         return shop;
     }
 
-    //注册参数校验（更新）
+    // 注册参数校验 (不变)
     @Override
     public void validateRegistration(Shop shop) {
         // 基础校验
@@ -102,28 +112,77 @@ public class ShopServiceImpl implements ShopService {
         }
     }
 
-    // 商铺列表查询
+    // 商铺列表查询 (添加缓存)
     @Override
-    public List<Shop> queryShopList(String category, String district, String sortField) {
+    public List<Shop> queryShopList(String category, String district, String sortField)  {
         // 默认按评分降序排序
         if (sortField == null || sortField.isEmpty()) {
             sortField = "composite_score";
         }
 
-        return shopMapper.selectShopList(category, district, sortField);
+        // 构建缓存key
+        String cacheKey = "shops:list:" + (category == null ? "all" : category) + ":"
+                + (district == null ? "all" : district) + ":" + sortField;
+
+        // 尝试从缓存获取
+        Object cachedData = cacheUtil.get(cacheKey);
+        if (cachedData != null) {
+            return (List<Shop>) cachedData;
+        }
+
+        // 缓存未命中，从数据库获取
+        List<Shop> shops = shopMapper.selectShopList(category, district, sortField);
+
+        // 记录数据完整性检查
+        if (shops != null && !shops.isEmpty()) {
+            Shop firstShop = shops.getFirst();
+            log.info("数据库获取商铺列表，第一个商铺: id={}, name={}, address={}",
+                    firstShop.getShopId(),
+                    firstShop.getShopName(),
+                    firstShop.getAddress());
+        }
+
+        // 存入缓存
+        if (shops != null && !shops.isEmpty()) {
+            cacheUtil.set(cacheKey, shops);
+        }
+
+        return shops;
     }
 
-    // 获取商铺详情
+    // 获取商铺详情 (添加缓存)
     @Override
     public Shop getShopById(Long shopId) {
+        if (shopId == null) {
+            throw new BadRequestException("商铺ID不能为空");
+        }
+
+        // 构建缓存key
+        String cacheKey = "shops:id:" + shopId;
+
+        // 尝试从缓存获取
+        Object cachedData = cacheUtil.get(cacheKey);
+        if (cachedData != null) {
+            return (Shop) cachedData;
+        }
+
+        // 缓存未命中，从数据库获取
         Shop shop = shopMapper.selectById(shopId);
         if (shop == null) {
             throw new NotFoundException("商铺不存在");
         }
+
+        // 记录日志
+        log.info("数据库获取商铺详情: id={}, name={}, address={}",
+                shop.getShopId(), shop.getShopName(), shop.getAddress());
+
+        // 存入缓存
+        cacheUtil.set(cacheKey, shop);
+
         return shop;
     }
 
-    // 更新商铺状态
+    // 更新商铺状态 (添加缓存清理)
     @Override
     public void updateShopStatus(Long shopId, Integer status) {
         if (status != 0 && status != 1) {
@@ -142,9 +201,13 @@ public class ShopServiceImpl implements ShopService {
         if (shopMapper.updateShopStatus(shop) != 1) {
             throw new BadRequestException("更新商铺状态失败");
         }
+
+        // 清除相关缓存
+        cacheUtil.delete("shops:id:" + shopId);
+        cacheUtil.deleteByPattern("shops:list:*");
     }
 
-    // 更新商铺信息
+    // 更新商铺信息 (添加缓存清理)
     @Override
     public void updateShopInfo(Shop shop) {
         // 确保不会更新密码和敏感字段
@@ -169,13 +232,27 @@ public class ShopServiceImpl implements ShopService {
         if (shopMapper.updateShopInfo(shop) != 1) {
             throw new BadRequestException("更新商铺信息失败");
         }
+
+        // 清除相关缓存
+        cacheUtil.delete("shops:id:" + shop.getShopId());
+        cacheUtil.deleteByPattern("shops:list:*");
     }
 
+    // 根据名称获取商铺 (添加缓存)
     @Override
     public Shop getShopByName(String shopName) {
         // 参数校验
         if (!StringUtils.hasText(shopName)) {
             throw new BadRequestException("商铺名称不能为空");
+        }
+
+        // 构建缓存key
+        String cacheKey = "shops:name:" + shopName;
+
+        // 尝试从缓存获取
+        Object cachedData = cacheUtil.get(cacheKey);
+        if (cachedData != null) {
+            return (Shop) cachedData;
         }
 
         // 从数据库查询商铺信息
@@ -186,11 +263,17 @@ public class ShopServiceImpl implements ShopService {
             throw new NotFoundException("商铺不存在");
         }
 
+        // 记录日志
+        log.info("数据库获取商铺详情(按名称): id={}, name={}, address={}",
+                shop.getShopId(), shop.getShopName(), shop.getAddress());
+
+        // 存入缓存
+        cacheUtil.set(cacheKey, shop);
+
         return shop;
     }
 
-
-    //删除商铺
+    // 删除商铺 (添加缓存清理)
     @Override
     public void deleteShop(Long shopId, String shopName, String password) {
         // 1. 查询店铺基本信息（仅用于验证）
@@ -216,5 +299,10 @@ public class ShopServiceImpl implements ShopService {
         if (result != 1) {
             throw new BadRequestException("删除商铺失败");
         }
+
+        // 清除相关缓存
+        cacheUtil.delete("shops:id:" + shopId);
+        cacheUtil.delete("shops:name:" + shopName);
+        cacheUtil.deleteByPattern("shops:list:*");
     }
 }

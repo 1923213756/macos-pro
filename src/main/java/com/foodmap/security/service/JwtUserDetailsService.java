@@ -48,10 +48,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        if (Boolean.TRUE.equals(user.getIsShopAdmin())) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_SHOP"));
-        }
-
         return new org.springframework.security.core.userdetails.User(
                 user.getUserName(),
                 user.getPassword(),

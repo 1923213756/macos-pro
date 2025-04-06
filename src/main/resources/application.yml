@@ -1,0 +1,19 @@
+spring:
+  # Redis最新配置 (Spring Boot 3.x)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:      # 无密码则留空
+      database: 0
+      timeout: 3000ms
+      connect-timeout: 5000ms
+      client-name: foodmap-app
+      # 连接池配置
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms

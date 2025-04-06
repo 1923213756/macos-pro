@@ -1,5 +1,6 @@
 package com.foodmap.controller;
 
+import com.foodmap.dao.ShopMapper;
 import com.foodmap.entity.Shop;
 import com.foodmap.security.jwt.JwtTokenProvider;
 import com.foodmap.service.ShopService;
@@ -36,7 +37,7 @@ public class ShopController {
     private final JwtTokenProvider tokenProvider;
 
     @Autowired
-    public ShopController(ShopService shopService, AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
+    public ShopController(ShopService shopService, AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider, ShopMapper shopMapper) {
         this.shopService = shopService;
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
@@ -53,11 +54,11 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @PostMapping("/register")
-    public ResponseResult<Void> register(
+    public ResponseResult<Shop> register(
             @Parameter(description = "商铺注册信息", required = true)
             @RequestBody Shop shop) {
         shopService.register(shop);
-        return ResponseResult.success("注册成功");
+        return ResponseResult.success("注册成功",shop);
     }
 
     /**
@@ -127,7 +128,7 @@ public class ShopController {
             @Parameter(description = "商铺类别，如'中餐'、'西餐'等")
             @RequestParam(required = false) String category,
 
-            @Parameter(description = "商铺所在区域，如'朝阳区'、'海淀区'等")
+            @Parameter(description = "商铺所在区域，如'海珠区'、'白云区'等")
             @RequestParam(required = false) String district,
 
             @Parameter(description = "排序字段，如'compositeScore'(评分)、'createTime'(创建时间)等")
@@ -147,7 +148,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @GetMapping("/{shopId}")
-    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SHOP') or hasRole('USER')")
     public ResponseResult<Shop> getShopById(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId) {
@@ -168,7 +169,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @PutMapping("/{shopId}")
-    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SHOP')")
     public ResponseResult<Void> updateShop(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId,
@@ -193,7 +194,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @PutMapping("/{shopId}/status")
-    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SHOP')")
     public ResponseResult<Void> updateStatus(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId,
@@ -217,7 +218,7 @@ public class ShopController {
                     content = @Content(schema = @Schema(implementation = ResponseResult.class)))
     })
     @DeleteMapping("/{shopId}")
-    @PreAuthorize("hasRole('SHOP') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SHOP')")
     public ResponseResult<Void> deleteShop(
             @Parameter(description = "商铺ID", required = true)
             @PathVariable Long shopId,

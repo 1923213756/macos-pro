@@ -18,9 +18,6 @@ public class User {
     @Schema(description = "密码(加密后)", example = "********", accessMode = Schema.AccessMode.WRITE_ONLY)
     private String password;
 
-    @Schema(description = "是否为商铺管理员", example = "false")
-    private Boolean isShopAdmin = false;
-
     @Schema(description = "手机号码", example = "13812345678")
     private String phone; // 改为String类型，因为手机号不用于计算且可能有前导零
 

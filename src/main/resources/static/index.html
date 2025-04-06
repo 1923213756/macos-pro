@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodMap - 美食地图系统</title>
     <style>
+        /* 样式保持不变 */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -370,9 +371,9 @@
             return;
         }
 
-        // 组装用户数据 - 修改这里，使用userName而不是username
+        // 组装用户数据
         const userData = {
-            userName: username,  // 关键修改：username -> userName 匹配实体类字段
+            userName: username,
             password: password,
             phone: phone,
             userType: 0
@@ -430,9 +431,9 @@
             return;
         }
 
-        // 组装登录数据 - 修改这里，使用userName而不是username
+        // 组装登录数据
         const loginData = {
-            userName: username,  // 关键修改：username -> userName 匹配实体类字段
+            userName: username,
             password: password,
             userType: 0
         };
@@ -456,10 +457,12 @@
                 if (data.code === 200) {
                     showMessage('user-login-message', '登录成功！正在跳转...');
 
+                    // 清除任何现有的登录信息
+                    localStorage.clear();
+
                     // 保存用户信息和token到本地存储
                     localStorage.setItem('token', data.data.token);
                     localStorage.setItem('userInfo', JSON.stringify(data.data.user));
-                    localStorage.setItem('userType', 'user');
 
                     // 延迟跳转到仪表盘页面
                     setTimeout(() => {
@@ -611,10 +614,12 @@
                 if (data.code === 200) {
                     showMessage('shop-login-message', '登录成功！正在跳转...');
 
+                    // 清除任何现有的登录信息
+                    localStorage.clear();
+
                     // 保存商铺信息和token到本地存储
                     localStorage.setItem('token', data.data.token);
                     localStorage.setItem('shopInfo', JSON.stringify(data.data.shop));
-                    localStorage.setItem('userType', 'shop');
 
                     // 延迟跳转到仪表盘页面
                     setTimeout(() => {
@@ -636,9 +641,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log("页面加载完成，检查登录状态");
         const token = localStorage.getItem('token');
-        if (token) {
-            console.log("找到保存的token，正在跳转到仪表盘");
+        const userInfo = localStorage.getItem('userInfo');
+        const shopInfo = localStorage.getItem('shopInfo');
+
+        if (token && (userInfo || shopInfo)) {
+            console.log("找到保存的token和用户/商铺信息，正在跳转到仪表盘");
             window.location.href = 'dashboard.html';
+        } else {
+            // 如果信息不完整，清除所有localStorage
+            localStorage.clear();
         }
     });
 </script>

@@ -368,6 +368,8 @@
         }
     </style>
 </head>
+<body>
+<!-- 商铺详情模态框 -->
 <div id="shop-detail-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
     <div style="background-color: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 700px; border-radius: 8px; position: relative;">
         <span id="close-detail-modal" style="position: absolute; right: 20px; top: 15px; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
@@ -385,7 +387,7 @@
         </div>
     </div>
 </div>
-<body>
+
 <!-- 顶部导航栏 -->
 <header>
     <div class="container">
@@ -632,71 +634,94 @@
 <script>
     let currentUser = null;
     let currentShop = null;
-    let userType = null;
 
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', function() {
-        // 检查是否已登录
-        const token = localStorage.getItem('token');
-        userType = localStorage.getItem('userType');
+        try {
+            // 检查是否已登录
+            const token = localStorage.getItem('token');
+            const userInfo = localStorage.getItem('userInfo');
+            const shopInfo = localStorage.getItem('shopInfo');
 
-        if (!token) {
-            // 未登录，重定向到登录页
-            window.location.href = 'index.html';
-            return;
-        }
+            console.log("检查登录信息:");
+            console.log("- token:", token ? "存在" : "不存在");
+            console.log("- userInfo:", userInfo ? "存在" : "不存在");
+            console.log("- shopInfo:", shopInfo ? "存在" : "不存在");
 
-        // 根据用户类型显示相应内容
-        if (userType === 'user') {
-            // 普通用户
-            currentUser = JSON.parse(localStorage.getItem('userInfo'));
-            document.getElementById('user-name').textContent = currentUser.userName;
-            document.getElementById('user-avatar').textContent = currentUser.userName.charAt(0);
+            if (!token || (!userInfo && !shopInfo)) {
+                // 未登录，重定向到登录页
+                console.log("未找到有效的登录信息，跳转到登录页");
+                window.location.href = 'index.html';
+                return;
+            }
 
-            // 显示用户个人信息表单
-            document.getElementById('user-profile-section').style.display = 'block';
-            document.getElementById('profile-username').value = currentUser.userName;
-            document.getElementById('profile-phone').value = currentUser.phone || '';
+            // 根据存储的信息判断用户类型
+            if (userInfo) {
+                // 普通用户
+                console.log("检测到用户登录");
+                currentUser = JSON.parse(userInfo);
+                document.getElementById('user-name').textContent = currentUser.userName;
+                document.getElementById('user-avatar').textContent = currentUser.userName.charAt(0);
 
-            // 隐藏商铺管理菜单
-            document.querySelectorAll('.shop-admin-section').forEach(el => {
-                el.style.display = 'none';
-            });
+                // 显示用户个人信息表单
+                document.getElementById('user-profile-section').style.display = 'block';
+                document.getElementById('profile-username').value = currentUser.userName;
+                document.getElementById('profile-phone').value = currentUser.phone || '';
 
-            // 设置欢迎信息
-            document.getElementById('welcome-message').innerHTML = `
+                // 隐藏商铺管理菜单
+                document.querySelectorAll('.shop-admin-section').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                // 设置欢迎信息
+                document.getElementById('welcome-message').innerHTML = `
                     <p>欢迎回来，${currentUser.userName}！</p>
                     <p>您可以浏览商铺、查看商铺详情，享受美食之旅。</p>
                 `;
-        } else if (userType === 'shop') {
-            // 商铺管理员
-            currentShop = JSON.parse(localStorage.getItem('shopInfo'));
-            document.getElementById('user-name').textContent = currentShop.shopName;
-            document.getElementById('user-avatar').textContent = currentShop.shopName.charAt(0);
+            } else if (shopInfo) {
+                // 商铺管理员
+                console.log("检测到商铺登录");
+                currentShop = JSON.parse(shopInfo);
+                document.getElementById('user-name').textContent = currentShop.shopName;
+                document.getElementById('user-avatar').textContent = currentShop.shopName.charAt(0);
 
-            // 显示商铺管理菜单
-            document.querySelectorAll('.shop-admin-section').forEach(el => {
-                el.style.display = 'block';
-            });
+                // 显示商铺管理菜单
+                document.querySelectorAll('.shop-admin-section').forEach(el => {
+                    el.style.display = 'block';
+                });
 
-            // 显示商铺个人信息
-            document.getElementById('shop-profile-section').style.display = 'block';
+                // 显示商铺个人信息
+                document.getElementById('shop-profile-section').style.display = 'block';
 
-            // 加载商铺详细信息
-            loadShopDetails(currentShop.shopId);
+                // 加载商铺详细信息
+                loadShopDetails(currentShop.shopId);
 
-            // 设置欢迎信息
-            document.getElementById('welcome-message').innerHTML = `
+                // 设置欢迎信息
+                document.getElementById('welcome-message').innerHTML = `
                     <p>欢迎回来，${currentShop.shopName}！</p>
                     <p>您可以管理商铺信息、更新营业状态。</p>
                 `;
+            }
+
+            // 加载热门商铺列表
+            loadPopularShops();
+
+            // 加载商铺列表（全部）
+            loadShopList();
+        } catch (error) {
+            console.error("初始化仪表盘出错:", error);
+            document.body.innerHTML = `
+                <div style="margin: 50px auto; max-width: 600px; padding: 20px; border: 1px solid #f44336; background-color: #fff;">
+                    <h2 style="color: #f44336;">页面加载错误</h2>
+                    <p>初始化过程中发生错误。</p>
+                    <p>错误信息: ${error.message}</p>
+                    <button onclick="localStorage.clear(); window.location.href='index.html';" 
+                        style="background: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 15px;">
+                        返回登录页
+                    </button>
+                </div>
+            `;
         }
-
-        // 加载热门商铺列表
-        loadPopularShops();
-
-        // 加载商铺列表（全部）
-        loadShopList();
     });
 
     // 显示视图函数
@@ -725,10 +750,7 @@
         e.preventDefault();
 
         // 清除本地存储
-        localStorage.removeItem('token');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('shopInfo');
-        localStorage.removeItem('userType');
+        localStorage.clear();
 
         // 跳转到登录页
         window.location.href = 'index.html';
@@ -824,24 +846,23 @@
         let html = '';
         shopsToShow.forEach(shop => {
             html += `
-                    <div class="shop-card" data-shop-id="${shop.shopId}">
-                        <div class="shop-card-image">商铺图片</div>
-                        <div class="shop-card-content">
-                            <div class="shop-name">${shop.shopName}</div>
-                            <div class="shop-category">${shop.category || '未分类'}</div>
-                            <div class="shop-address">${shop.address || '地址未提供'}</div>
-                            <div class="shop-rating">评分: ${shop.compositeScore ? shop.compositeScore.toFixed(1) : '暂无评分'}</div>
-                            <div class="shop-description">${shop.description || '暂无描述'}</div>
-                            <a href="#" class="btn" onclick="viewShopDetails(${shop.shopId})">查看详情</a>
-                        </div>
+                <div class="shop-card" data-shop-id="${shop.shopId}">
+                    <div class="shop-card-image">商铺图片</div>
+                    <div class="shop-card-content">
+                        <div class="shop-name">${shop.shopName || '未命名商铺'}</div>
+                        <div class="shop-category">${shop.category || '未分类'}</div>
+                        <div class="shop-address">${shop.address || '地址未提供'}</div>
+                        <div class="shop-rating">评分: ${shop.compositeScore ? shop.compositeScore.toFixed(1) : '暂无评分'}</div>
+                        <div class="shop-description">${shop.description || '暂无描述'}</div>
+                        <a href="#" class="btn" onclick="viewShopDetails(${shop.shopId}); return false;">查看详情</a>
                     </div>
-                `;
+                </div>
+            `;
         });
 
         container.innerHTML = html;
     }
 
-    // 查看商铺详情
     // 查看商铺详情
     function viewShopDetails(shopId) {
         // 获取token
@@ -877,56 +898,59 @@
 
                     // 构建详情内容
                     let detailHTML = `
-                <div class="detail-section">
-                    <div class="detail-item">
-                        <div class="detail-label">商铺分类</div>
-                        <div class="detail-value">${shop.category || '未设置'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">所在区域</div>
-                        <div class="detail-value">${shop.district || '未设置'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">详细地址</div>
-                        <div class="detail-value">${shop.address || '未设置'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">联系电话</div>
-                        <div class="detail-value">${shop.contactTel || '未设置'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">营业时间</div>
-                        <div class="detail-value">${shop.businessHours || '未设置'}</div>
-                    </div>
-                </div>
-
-                <div class="detail-section">
-                    <div class="detail-section-title">商铺评分</div>
-                    <div class="detail-item">
-                        <div class="detail-label">综合评分</div>
-                        <div class="detail-value">
-                            <div class="stars-container">${getStarsHtml(shop.compositeScore || 0)}</div>
-                            ${shop.compositeScore ? shop.compositeScore.toFixed(1) : '暂无评分'}
+                        <div class="detail-section">
+                            <div class="detail-item">
+                                <div class="detail-label">商铺分类</div>
+                                <div class="detail-value">${shop.category || '未设置'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">所在区域</div>
+                                <div class="detail-value">${shop.district || '未设置'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">详细地址</div>
+                                <div class="detail-value">${shop.address || '未设置'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">联系电话</div>
+                                <div class="detail-value">${shop.contactTel || '未设置'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">营业时间</div>
+                                <div class="detail-value">${shop.businessHours || '未设置'}</div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="detail-section" style="border-bottom: none;">
-                    <div class="detail-section-title">商铺介绍</div>
-                    <div style="line-height: 1.6;">
-                        ${shop.description || '该商铺暂无介绍信息'}
-                    </div>
-                </div>
-            `;
+                        <div class="detail-section">
+                            <div class="detail-section-title">商铺评分</div>
+                            <div class="detail-item">
+                                <div class="detail-label">综合评分</div>
+                                <div class="detail-value">
+                                    <div class="stars-container">${getStarsHtml(shop.compositeScore || 0)}</div>
+                                    ${shop.compositeScore ? shop.compositeScore.toFixed(1) : '暂无评分'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section" style="border-bottom: none;">
+                            <div class="detail-section-title">商铺介绍</div>
+                            <div style="line-height: 1.6;">
+                                ${shop.description || '该商铺暂无介绍信息'}
+                            </div>
+                        </div>
+                    `;
 
                     document.getElementById('shop-detail-content').innerHTML = detailHTML;
 
                     // 检查当前用户是否是商铺管理员
-                    const userType = localStorage.getItem('userType');
-                    const shopInfo = JSON.parse(localStorage.getItem('shopInfo') || '{}');
+                    const shopInfo = localStorage.getItem('shopInfo');
 
-                    // 如果是商铺管理员并且是当前查看的商铺
-                    const isOwner = (userType === 'shop' && shopInfo.shopId === shop.shopId);
+                    // 如果登录的是商铺且是当前查看的商铺
+                    let isOwner = false;
+                    if (shopInfo) {
+                        const currentShopInfo = JSON.parse(shopInfo);
+                        isOwner = (currentShopInfo.shopId === shop.shopId);
+                    }
 
                     // 显示/隐藏编辑按钮
                     document.getElementById('edit-shop-btn').style.display = isOwner ? 'block' : 'none';
@@ -1003,18 +1027,15 @@
     }
 
     // 关闭详情模态框
-    document.addEventListener('DOMContentLoaded', function() {
-        // 点击关闭按钮
-        document.getElementById('close-detail-modal').addEventListener('click', function() {
-            document.getElementById('shop-detail-modal').style.display = 'none';
-        });
+    document.getElementById('close-detail-modal').addEventListener('click', function() {
+        document.getElementById('shop-detail-modal').style.display = 'none';
+    });
 
-        // 点击模态框外部区域关闭
-        document.getElementById('shop-detail-modal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                this.style.display = 'none';
-            }
-        });
+    // 点击模态框外部区域关闭
+    document.getElementById('shop-detail-modal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            this.style.display = 'none';
+        }
     });
 
     // 加载商铺详情
@@ -1142,21 +1163,122 @@
     });
 
     // 修改密码
-    document.getElementById('password-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // 替换以下代码段:
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // 检查是否已登录
+            const token = localStorage.getItem('token');
+            const userInfo = localStorage.getItem('userInfo');
+            const shopInfo = localStorage.getItem('shopInfo');
 
-        const currentPassword = document.getElementById('current-password').value;
-        const newPassword = document.getElementById('new-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
+            console.log("检查登录信息:");
+            console.log("- token:", token ? "存在" : "不存在");
+            console.log("- userInfo:", userInfo ? "存在" : "不存在");
+            console.log("- shopInfo:", shopInfo ? "存在" : "不存在");
 
-        if (newPassword !== confirmPassword) {
-            showMessage('password-message', '两次输入的新密码不一致', true);
-            return;
+            if (!token || (!userInfo && !shopInfo)) {
+                // 未登录，重定向到登录页
+                console.log("未找到有效的登录信息，跳转到登录页");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // 根据存储的信息判断用户类型
+            if (userInfo) {
+                // 普通用户
+                console.log("检测到用户登录");
+                currentUser = JSON.parse(userInfo);
+
+                // 只设置用户名，不设置头像
+                const userName = currentUser.userName || "用户";
+                if (document.getElementById('user-name')) {
+                    document.getElementById('user-name').textContent = userName;
+                }
+
+                // 移除头像相关代码 - 不再设置 user-avatar
+
+                // 显示用户个人信息表单
+                if (document.getElementById('user-profile-section')) {
+                    document.getElementById('user-profile-section').style.display = 'block';
+
+                    if (document.getElementById('profile-username')) {
+                        document.getElementById('profile-username').value = userName;
+                    }
+
+                    if (document.getElementById('profile-phone')) {
+                        document.getElementById('profile-phone').value = currentUser.phone || '';
+                    }
+                }
+
+                // 隐藏商铺管理菜单
+                document.querySelectorAll('.shop-admin-section').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                // 设置欢迎信息
+                if (document.getElementById('welcome-message')) {
+                    document.getElementById('welcome-message').innerHTML = `
+                    <p>欢迎回来，${userName}！</p>
+                    <p>您可以浏览商铺、查看商铺详情，享受美食之旅。</p>
+                `;
+                }
+            } else if (shopInfo) {
+                // 商铺管理员
+                console.log("检测到商铺登录");
+                currentShop = JSON.parse(shopInfo);
+
+                // 只设置商铺名，不设置头像
+                const shopName = currentShop.shopName || "商铺";
+                if (document.getElementById('user-name')) {
+                    document.getElementById('user-name').textContent = shopName;
+                }
+
+                // 移除头像相关代码 - 不再设置 user-avatar
+
+                // 显示商铺管理菜单
+                document.querySelectorAll('.shop-admin-section').forEach(el => {
+                    el.style.display = 'block';
+                });
+
+                // 显示商铺个人信息
+                if (document.getElementById('shop-profile-section')) {
+                    document.getElementById('shop-profile-section').style.display = 'block';
+                }
+
+                // 加载商铺详细信息
+                loadShopDetails(currentShop.shopId);
+
+                // 设置欢迎信息
+                if (document.getElementById('welcome-message')) {
+                    document.getElementById('welcome-message').innerHTML = `
+                    <p>欢迎回来，${shopName}！</p>
+                    <p>您可以管理商铺信息、更新营业状态。</p>
+                `;
+                }
+            }
+
+            // 加载热门商铺列表
+            loadPopularShops();
+
+            // 加载商铺列表（全部）
+            loadShopList();
+        } catch (error) {
+            console.error("初始化仪表盘出错:", error);
+            document.body.innerHTML = `
+            <div style="margin: 50px auto; max-width: 600px; padding: 20px; border: 1px solid #f44336; background-color: #fff;">
+                <h2 style="color: #f44336;">页面加载错误</h2>
+                <p>初始化过程中发生错误。</p>
+                <p>错误信息: ${error.message}</p>
+                <div style="margin-top: 15px;">
+                    <button onclick="localStorage.clear(); window.location.href='index.html';"
+                        style="background: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer;">
+                        返回登录页
+                    </button>
+                </div>
+            </div>
+        `;
         }
-
-        // 这里需要一个修改密码的API，但API文档中没有提供
-        // 通常会有 POST /api/users/change-password 或类似端点
-        showMessage('password-message', '密码修改功能尚未实现');
     });
 </script>
 </body>

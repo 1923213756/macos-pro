@@ -64,6 +64,7 @@ public class UserController {
 
         User user = userService.login(request.getUserName(), request.getPassword());
 
+
         if (user != null) {
             try {
                 // 创建认证对象
