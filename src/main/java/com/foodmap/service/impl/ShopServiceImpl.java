@@ -1,14 +1,9 @@
 package com.foodmap.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.foodmap.entity.dto.ShopInfoUpdateDTO;
-import com.foodmap.mapper.ShopMapper;
-import com.foodmap.entity.pojo.Shop;
-import com.foodmap.entity.dto.ShopAuthInfo;
+import com.foodmap.dao.ShopMapper;
+import com.foodmap.entity.Shop;
+import com.foodmap.entity.ShopAuthInfo;
 import com.foodmap.exception.*;
-import com.foodmap.security.service.JwtUserDetailsService;
 import com.foodmap.service.ShopService;
 import com.foodmap.util.RedisCacheUtil;
 import com.foodmap.util.SecurityUtil;
@@ -18,15 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
-public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements ShopService {
+public class ShopServiceImpl implements ShopService {
     private static final Logger log = LoggerFactory.getLogger(ShopServiceImpl.class);
-
-    private static final org.junit.platform.commons.logging.Logger logger = org.junit.platform.commons.logging.LoggerFactory.getLogger(JwtUserDetailsService.class);
-
 
     private final ShopMapper shopMapper;
     private final RedisCacheUtil cacheUtil;
@@ -40,6 +32,9 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
     // 商铺注册 (不变，但添加缓存清理)
     @Override
     public void register(Shop shop) {
+        // 格式检查
+        validateRegistration(shop);
+
         // 密码加密、储存
         String encryptedPwd = SecurityUtil.encryptPassword(shop.getPassword());
         shop.setPassword(encryptedPwd);
@@ -58,19 +53,63 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
         cacheUtil.deleteByPattern("shops:list:*");
     }
 
+    // 登录逻辑 (不变)
     @Override
     public Shop login(String shopName, String rawPassword) {
-        // 执行数据库查询
         Shop shop = shopMapper.selectByShopName(shopName);
-
-        // 验证密码 - 使用Lambda表达式
-        boolean passwordMatch = SecurityUtil.checkPassword(rawPassword, shop.getPassword());
-
-        if (!passwordMatch) {
-            throw new UnauthorizedException("密码错误");
+        if (shop == null) {
+            throw new UnauthorizedException("商铺名不存在");
         }
 
+        if (!SecurityUtil.checkPassword(rawPassword, shop.getPassword())) {
+            throw new UnauthorizedException("密码错误");
+        }
         return shop;
+    }
+
+    // 注册参数校验 (不变)
+    @Override
+    public void validateRegistration(Shop shop) {
+        // 基础校验
+        if (!StringUtils.hasText(shop.getShopName())) {
+            throw new BadRequestException("商铺名不能为空");
+        }
+        if (!StringUtils.hasText(shop.getShopName())) {
+            throw new BadRequestException("密码不能为空");
+        }
+
+        // 新增字段校验
+        if (!StringUtils.hasText(shop.getAddress())) {
+            throw new BadRequestException("商铺地址不能为空");
+        }
+        if (!StringUtils.hasText(shop.getContactTel())) {
+            throw new BadRequestException("联系电话不能为空");
+        } else if (!shop.getContactTel().matches("^1[3-9]\\d{9}$")) {
+            throw new BadRequestException("联系电话格式错误");
+        }
+
+        // 分类和地区校验
+        if (!StringUtils.hasText(shop.getCategory())) {
+            throw new BadRequestException("商铺分类不能为空");
+        }
+        if (!StringUtils.hasText(shop.getDistrict())) {
+            throw new BadRequestException("商铺所在地区不能为空");
+        }
+
+        // 分类限制校验
+        String category = shop.getCategory();
+        if (!category.equals("甜品") && !category.equals("火锅") && !category.equals("料理")
+                && !category.equals("中餐") && !category.equals("西餐") && !category.equals("快餐")) {
+            throw new BadRequestException("商铺分类不在允许范围内");
+        }
+
+        // 唯一性校验
+        if (shopMapper.countByShopName(shop.getShopName()) > 0) {
+            throw new ConflictException("商铺名已存在");
+        }
+        if (shopMapper.countByContactTel(shop.getContactTel()) > 0) {
+            throw new ConflictException("联系电话已注册");
+        }
     }
 
     // 商铺列表查询 (添加缓存)
@@ -169,41 +208,35 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper,Shop> implements Sho
     }
 
     // 更新商铺信息 (添加缓存清理)
-/**
- * 更新商铺信息（不包含密码）
- * @return 是否更新成功
- */
-@Override
-public boolean updateShopInfo(ShopInfoUpdateDTO dto) {
-    // 1. 创建更新条件包装器
-    UpdateWrapper<Shop> updateWrapper = new UpdateWrapper<>();
+    @Override
+    public void updateShopInfo(Shop shop) {
+        // 确保不会更新密码和敏感字段
+        if (shop.getShopName() != null) {
+            throw new ForbiddenException("不允许通过此方法修改密码");
+        }
 
-    // 2. 根据DTO中的shopId设置更新条件
-    updateWrapper.eq("shop_id", dto.getShopId());
+        // 检查商铺是否存在
+        if (shopMapper.selectById(shop.getShopId()) == null) {
+            throw new NotFoundException("要更新的商铺不存在");
+        }
 
-    // 3. 只更新非null的特定字段
-    // 注意: 保持与原代码相同的数据库字段名格式
-    updateWrapper
-            .set(dto.getShopName() != null, "shopName", dto.getShopName())
-            .set(dto.getAddress() != null, "address", dto.getAddress())
-            .set(dto.getContactTel() != null, "contactTel", dto.getContactTel())
-            .set(dto.getBusinessHours() != null, "businessHours", dto.getBusinessHours())
-            .set(dto.getCategory() != null, "category", dto.getCategory())
-            .set(dto.getDistrict() != null, "district", dto.getDistrict())
-            .set(dto.getDescription() != null, "description", dto.getDescription())
-            .set(dto.getStatus() != null, "status", dto.getStatus());
+        // 如果更新分类，需要验证
+        if (shop.getCategory() != null) {
+            String category = shop.getCategory();
+            if (!category.equals("甜品") && !category.equals("火锅") && !category.equals("料理")
+                    && !category.equals("中餐") && !category.equals("西餐") && !category.equals("快餐")) {
+                throw new BadRequestException("商铺分类不在允许范围内");
+            }
+        }
 
-    // 4. 执行更新操作
-    boolean updated = this.update(updateWrapper);
+        if (shopMapper.updateShopInfo(shop) != 1) {
+            throw new BadRequestException("更新商铺信息失败");
+        }
 
-    // 5. 如果需要清除缓存，可以添加缓存清理代码
-    if (updated && cacheUtil != null) {
-        cacheUtil.delete("shops:id:" + dto.getShopId());
+        // 清除相关缓存
+        cacheUtil.delete("shops:id:" + shop.getShopId());
         cacheUtil.deleteByPattern("shops:list:*");
     }
-
-    return updated;
-}
 
     // 根据名称获取商铺 (添加缓存)
     @Override
@@ -271,57 +304,5 @@ public boolean updateShopInfo(ShopInfoUpdateDTO dto) {
         cacheUtil.delete("shops:id:" + shopId);
         cacheUtil.delete("shops:name:" + shopName);
         cacheUtil.deleteByPattern("shops:list:*");
-    }
-
-    //更新商铺密码
-    @Override
-    public void updateShopPassword(Long shopId, String oldPassword, String newPassword) {
-        // 参数验证
-        if (shopId == null || shopId <= 0) {
-            throw new BadRequestException("无效的商铺ID");
-        }
-
-        if (!StringUtils.hasText(oldPassword)) {
-            throw new BadRequestException("当前密码不能为空");
-        }
-
-        if (!StringUtils.hasText(newPassword)) {
-            throw new BadRequestException("新密码不能为空");
-        }
-
-        if (oldPassword.equals(newPassword)) {
-            throw new BadRequestException("新密码不能与当前密码相同");
-        }
-
-        // 获取商铺信息
-        Shop shop = getById(shopId);
-        if (shop == null) {
-            throw new NotFoundException("商铺不存在");
-        }
-
-        // 验证旧密码
-        if (!SecurityUtil.checkPassword(oldPassword, shop.getPassword())) {
-            throw new UnauthorizedException("当前密码不正确");
-        }
-
-        // 加密新密码
-        String encryptedNewPassword = SecurityUtil.encryptPassword(newPassword);
-
-        // 使用LambdaUpdateWrapper更新密码
-        LambdaUpdateWrapper<Shop> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(Shop::getShopId, shopId)
-                .set(Shop::getPassword, encryptedNewPassword)
-                .set(Shop::getUpdateTime, LocalDateTime.now());
-
-        boolean updated = update(updateWrapper);
-        if (!updated) {
-            throw new BadRequestException("密码更新失败");
-        }
-
-        // 清除相关缓存
-        cacheUtil.delete("shops:id:" + shopId);
-        cacheUtil.delete("shops:name:" + shop.getShopName());
-
-        log.info("商铺 {} ({}) 密码修改成功", shopId, shop.getShopName());
     }
 }

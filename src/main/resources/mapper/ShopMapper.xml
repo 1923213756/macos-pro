@@ -2,12 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.foodmap.mapper.ShopMapper">
+<mapper namespace="com.foodmap.dao.ShopMapper">
 
-
-    <insert id="insertShop" useGeneratedKeys="true" keyProperty="shopId" keyColumn="shopId">
+    <insert id="insertShop" useGeneratedKeys="true" keyProperty="shopId" keyColumn="shop_id">
         INSERT INTO shop (
-            shopName, password, address, contactTel, businessHours,
+            shop_name, password, address, contact_tel, business_hours,
             category, district, description
         )
         VALUES (
@@ -17,32 +16,27 @@
     </insert>
 
     <!--根据id删除-->
-    <delete id="deleteShopById">    DELETE FROM shop WHERE shopId = #{shopId}</delete>
+    <delete id="deleteShopById">    DELETE FROM shop WHERE shop_id = #{shopId}</delete>
 
     <!-- 根据商铺名查询 -->
-    <select id="selectByShopName" resultType="com.foodmap.entity.pojo.Shop">
-        SELECT * FROM shop WHERE shopName = #{shopName}
+    <select id="selectByShopName" resultType="com.foodmap.entity.Shop">
+        SELECT * FROM shop WHERE shop_name = #{shopName}
     </select>
     <!--模糊查询-->
 
     <!-- 检查电话是否重复 -->
     <select id="countByContactTel" resultType="int">
-        SELECT COUNT(*) FROM shop WHERE contactTel = #{contactTel}
+        SELECT COUNT(*) FROM shop WHERE contact_tel = #{contactTel}
     </select>
 
     <!-- 检查商铺名是否重复 -->
     <select id="countByShopName" resultType="int">
-        SELECT COUNT(*) FROM shop WHERE shopName = #{shopName}
+        SELECT COUNT(*) FROM shop WHERE shop_name = #{shopName}
     </select>
 
     <!--根据分类返回结果-->
-    <select id="selectShopList" resultType="com.foodmap.entity.pojo.Shop">
-        SELECT
-        shopId, shopName, address, category, district,
-        contactTel, businessHours, description,
-        compositeScore, tasteScore, environmentScore, serviceScore,
-        status, createTime, updateTime
-        FROM shop
+    <select id="selectShopList" resultType="com.foodmap.entity.Shop">
+        SELECT * FROM shop
         <where>
             <if test="category != null and category != ''">
                 AND category = #{category}
@@ -56,50 +50,50 @@
             <when test="sortField != null and sortField != ''">
                 ORDER BY
                 <choose>
-                    <when test="sortField == 'compositeScore'">compositeScore</when>
-                    <when test="sortField == 'createTime'">createTime</when>
-                    <when test="sortField == 'tasteScore'">tasteScore</when>
-                    <when test="sortField == 'environmentScore'">environmentScore</when>
-                    <when test="sortField == 'serviceScore'">serviceScore</when>
-                    <otherwise>compositeScore</otherwise>
+                    <when test="sortField == 'composite_score'">composite_score</when>
+                    <when test="sortField == 'create_time'">create_time</when>
+                    <when test="sortField == 'taste_score'">taste_score</when>
+                    <when test="sortField == 'environment_score'">environment_score</when>
+                    <when test="sortField == 'service_score'">service_score</when>
+                    <otherwise>composite_score</otherwise>
                 </choose> DESC
             </when>
             <otherwise>
-                ORDER BY compositeScore DESC
+                ORDER BY composite_score DESC
             </otherwise>
         </choose>
     </select>
     <!--根据id查询-->
-    <select id="selectById" resultType="com.foodmap.entity.pojo.Shop">SELECT *FROM shop WHERE shopId = #{shopId}</select>
+    <select id="selectById" resultType="com.foodmap.entity.Shop">SELECT * FROM shop WHERE shop_id = #{shopId}</select>
 
 
     <!-- 更新评分 -->
     <update id="updateScore">
-        UPDATE shop SET compositeScore = #{compositeScore} WHERE shopId = #{shopId}
+        UPDATE shop SET composite_score = #{compositeScore} WHERE shop_id = #{shopId}
     </update>
-    <update id="updateShopStatus"> UPDATE shop SET status = #{status} WHERE shopId = #{shopId}</update>
+    <update id="updateShopStatus"> UPDATE shop SET status = #{status} WHERE shop_id = #{shopId}</update>
 
 
     <!--更新商铺信息-->
     <update id="updateShopInfo">UPDATE shop
         <set>
-            <if test="shopName != null">shopName = #{shopName},</if>
+            <if test="shopName != null">shop_name = #{shopName},</if>
             <if test="address != null">address = #{address},</if>
-            <if test="contactTel != null">contactTel = #{contactTel},</if>
-            <if test="businessHours != null">businessHours = #{businessHours},</if>
+            <if test="contactTel != null">contact_tel = #{contactTel},</if>
+            <if test="businessHours != null">business_hours = #{businessHours},</if>
             <if test="category != null">category = #{category},</if>
             <if test="district != null">district = #{district},</if>
             <if test="description != null">description = #{description},</if>
             <if test="status != null">status = #{status},</if>
         </set>
-        WHERE shopId = #{shopId}</update>
+        WHERE shop_id = #{shopId}</update>
 
-    <select id="selectShopAuthInfo" resultType="com.foodmap.entity.dto.ShopAuthInfo">
+    <select id="selectShopAuthInfo" resultType="com.foodmap.entity.ShopAuthInfo">
         SELECT
-            shopId,
-            shopName,
+            shop_id,
+            shop_name,
             password
         FROM shop
-        WHERE shopId = #{shopId}
+        WHERE shop_id = #{shopId}
     </select>
 </mapper>

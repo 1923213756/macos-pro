@@ -2,35 +2,30 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.foodmap.mapper.UserMapper">
+<mapper namespace="com.foodmap.dao.UserMapper">
     <!-- 查询用户（根据用户名） -->
-    <select id="selectByUsername" resultType="com.foodmap.entity.pojo.User">
-        SELECT * FROM user WHERE userName = #{userName}
+    <select id="selectByUsername" resultType="com.foodmap.entity.User">
+        SELECT * FROM users WHERE username = #{userName}
     </select>
 
     <!-- 插入用户（主键回填） -->
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO user (userName, password, phone, createTime, updateTime)
-        VALUES (#{userName}, #{password}, #{phone}, now(), now())
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, password, phone)
+        VALUES (#{userName}, #{password}, #{phone})
     </insert>
 
     <!-- 检查用户名是否存在 -->
     <select id="countByUsername" resultType="int">
-        SELECT COUNT(*) FROM user WHERE userName = #{userName}
+        SELECT COUNT(*) FROM users WHERE username = #{userName}
     </select>
 
     <!-- 检查手机号是否存在 -->
     <select id="countByPhone" resultType="int">
-        SELECT COUNT(*) FROM user WHERE phone = #{phone}
+        SELECT COUNT(*) FROM users WHERE phone = #{phone}
     </select>
 
     <!-- 查询用户（根据手机号） -->
-    <select id="selectByPhone" resultType="com.foodmap.entity.pojo.User">
-        SELECT * FROM user WHERE phone = #{phone}
-    </select>
-
-    <!-- 根据ID查询用户 -->
-    <select id="selectById" resultType="com.foodmap.entity.pojo.User">
-        SELECT * FROM user WHERE userId = #{userId}
+    <select id="selectByPhone" resultType="com.foodmap.entity.User">
+        SELECT * FROM users WHERE phone = #{phone}
     </select>
 </mapper>

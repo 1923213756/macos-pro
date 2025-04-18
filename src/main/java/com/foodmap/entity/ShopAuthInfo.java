@@ -1,4 +1,4 @@
-package com.foodmap.entity.dto;
+package com.foodmap.entity;
 
 import lombok.Data;
 

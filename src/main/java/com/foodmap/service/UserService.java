@@ -1,6 +1,6 @@
 package com.foodmap.service;
 
-import com.foodmap.entity.pojo.User;
+import com.foodmap.entity.User;
 
 public interface UserService {
     // 注册用户
@@ -10,6 +10,4 @@ public interface UserService {
     User login(String username, String rawPassword);
 
     User getUserByName(String username);
-
-    void updateUserPassword(Long userId, String oldPassword, String newPassword);
 }
