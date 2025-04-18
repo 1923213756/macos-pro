@@ -1,8 +1,8 @@
 package com.foodmap.controller;
 
 import com.foodmap.common.response.ResponseResult;
-import com.foodmap.dao.ShopMapper;
-import com.foodmap.entity.Shop;
+import com.foodmap.mapper.ShopMapper;
+import com.foodmap.entity.pojo.Shop;
 import com.foodmap.util.RedisCacheUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

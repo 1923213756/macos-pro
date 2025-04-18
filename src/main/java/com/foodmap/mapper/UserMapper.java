@@ -1,12 +1,13 @@
-package com.foodmap.dao;
+package com.foodmap.mapper;
 
 
-import com.foodmap.entity.User;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.foodmap.entity.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
 
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
     User selectByUsername(String username);
     int insertUser(User user);
     int countByUsername(String username);
