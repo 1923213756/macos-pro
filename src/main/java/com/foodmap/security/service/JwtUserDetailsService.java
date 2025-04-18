@@ -1,11 +1,11 @@
 package com.foodmap.security.service;
 
-import com.foodmap.entity.Shop;
-import com.foodmap.entity.User;
-import com.foodmap.security.jwt.JwtTokenProvider;
+import com.foodmap.entity.pojo.Shop;
+import com.foodmap.entity.pojo.User;
 import com.foodmap.service.ShopService;
 import com.foodmap.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +18,7 @@ import java.util.Collection;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtUserDetailsService.class);
     private final UserService userService;
     private final ShopService shopService;
 
@@ -28,16 +29,21 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+
+        // 检查是否是商铺账户（以"SHOP_"开头）
+        if (name.startsWith("SHOP_")) {
+            String shopName = name.substring(5); // 移除"SHOP_"前缀
+            Shop shop = shopService.getShopByName(shopName);
+            if (shop != null) {
+                return createShopDetails(shop);
+            }
+            throw new UsernameNotFoundException("商铺 " + shopName + " 不存在");
+        }
+
         // 检查是否是用户名
         User user = userService.getUserByName(name);
         if (user != null) {
             return createUserDetails(user);
-        }
-
-        // 检查是否是商铺名
-        Shop shop = shopService.getShopByName(name);
-        if (shop != null) {
-            return createShopDetails(shop);
         }
 
         throw new UsernameNotFoundException("用户/商铺 " + name + " 不存在");
@@ -47,6 +53,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     private UserDetails createUserDetails(User user) {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        logger.info(() -> "用户账号: " + (user.getUserName() != null ? "非空" : "为空"));
+
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUserName(),
@@ -63,6 +71,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     private UserDetails createShopDetails(Shop shop) {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_SHOP"));
+        logger.info(() -> "商铺账号: " + (shop.getShopName() != null ? "非空" : "为空"));
+
 
         return new org.springframework.security.core.userdetails.User(
                 shop.getShopName(),

@@ -1,7 +1,8 @@
-package com.foodmap.dao;
+package com.foodmap.mapper;
 
-import com.foodmap.entity.Shop;
-import com.foodmap.entity.ShopAuthInfo;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.foodmap.entity.pojo.Shop;
+import com.foodmap.entity.dto.ShopAuthInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface ShopMapper {
+public interface ShopMapper extends BaseMapper<Shop> {
     //注册商铺
     int insertShop(Shop shop);
     //搜索商铺（未模糊搜索增强）

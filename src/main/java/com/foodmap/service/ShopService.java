@@ -1,13 +1,13 @@
 package com.foodmap.service;
 
-import com.foodmap.entity.Shop;
-import com.foodmap.entity.ShopAuthInfo;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.foodmap.entity.dto.ShopInfoUpdateDTO;
+import com.foodmap.entity.pojo.Shop;
 
 import java.util.List;
 
-public interface ShopService {
+public interface ShopService{
     Shop login(String shopName, String rawPassword);
-    void validateRegistration(Shop shop);
     void register(Shop shop);
 
     //新增内容（未测试）
@@ -15,6 +15,8 @@ public interface ShopService {
     List<Shop> queryShopList(String category, String district, String sortField);
     Shop getShopById(Long shopId);
     void updateShopStatus(Long shopId, Integer status);
-    void updateShopInfo(Shop shop);
+    boolean updateShopInfo(ShopInfoUpdateDTO dto);
     void deleteShop(Long shopId, String shopName, String password);
+
+    void updateShopPassword(Long shopId, String oldPassword, String newPassword);
 }
