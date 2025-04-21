@@ -5,15 +5,15 @@
     <select id="getReviewsByRestaurant" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
             r.id, r.content, r.rating, r.user_id AS userId,
-            u.username, u.avatar_url AS userAvatar,
-            r.restaurant_id AS restaurantId, res.name AS restaurantName,
+            u.userName AS username, u.phone AS userAvatar,
+            r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
             r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
             r.status,
             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS userLiked
         FROM
             reviews r
-                LEFT JOIN users u ON r.user_id = u.id
-                LEFT JOIN restaurants res ON r.restaurant_id = res.id
+                LEFT JOIN user u ON r.user_id = u.userId
+                LEFT JOIN shop s ON r.restaurant_id = s.shopId
                 LEFT JOIN likes l ON r.id = l.review_id AND l.user_id = #{userId}
         WHERE
             r.restaurant_id = #{restaurantId}
@@ -25,15 +25,15 @@
     <select id="getReviewsByUser" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
             r.id, r.content, r.rating, r.user_id AS userId,
-            u.username, u.avatar_url AS userAvatar,
-            r.restaurant_id AS restaurantId, res.name AS restaurantName,
+            u.userName AS username, u.phone AS userAvatar,
+            r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
             r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
             r.status,
             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS userLiked
         FROM
             reviews r
-                LEFT JOIN users u ON r.user_id = u.id
-                LEFT JOIN restaurants res ON r.restaurant_id = res.id
+                LEFT JOIN user u ON r.user_id = u.userId
+                LEFT JOIN shop s ON r.restaurant_id = s.shopId
                 LEFT JOIN likes l ON r.id = l.review_id AND l.user_id = #{currentUserId}
         WHERE
             r.user_id = #{userId}
@@ -45,18 +45,33 @@
     <select id="getReviewById" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
             r.id, r.content, r.rating, r.user_id AS userId,
-            u.username, u.avatar_url AS userAvatar,
-            r.restaurant_id AS restaurantId, res.name AS restaurantName,
+            u.userName AS username, u.phone AS userAvatar,
+            r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
             r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
             r.status,
             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS userLiked
         FROM
             reviews r
-                LEFT JOIN users u ON r.user_id = u.id
-                LEFT JOIN restaurants res ON r.restaurant_id = res.id
+                LEFT JOIN user u ON r.user_id = u.userId
+                LEFT JOIN shop s ON r.restaurant_id = s.shopId
                 LEFT JOIN likes l ON r.id = l.review_id AND l.user_id = #{userId}
         WHERE
             r.id = #{reviewId}
           AND r.status = 'ACTIVE'
     </select>
+
+    <select id="calculateAverageRating" resultType="java.lang.Double">
+        SELECT AVG(rating)
+        FROM reviews
+        WHERE restaurant_id = #{restaurantId}
+          AND status = 'ACTIVE'
+    </select>
+
+    <select id="countActiveReviewsByRestaurant" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM reviews
+        WHERE restaurant_id = #{restaurantId}
+          AND status = 'ACTIVE'
+    </select>
+
 </mapper>

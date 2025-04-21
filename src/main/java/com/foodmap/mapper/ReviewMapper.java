@@ -15,7 +15,6 @@ import java.util.Map;
 public interface ReviewMapper extends BaseMapper<Review> {
 
     // 计算综合评分（所有维度的平均分）
-    @Select("SELECT AVG(rating) FROM reviews WHERE restaurant_id = #{restaurantId} AND status = 'ACTIVE'")
     Double calculateAverageRating(@Param("restaurantId") Long restaurantId);
 
     // 计算环境评分
@@ -40,7 +39,6 @@ public interface ReviewMapper extends BaseMapper<Review> {
     Map<String, Double> calculateAllRatings(@Param("restaurantId") Long restaurantId);
 
     // 统计评论数
-    @Select("SELECT COUNT(*) FROM reviews WHERE restaurant_id = #{restaurantId} AND status = 'ACTIVE'")
     Long countActiveReviewsByRestaurant(@Param("restaurantId") Long restaurantId);
 
     // 下面的方法可能需要在对应的XML文件中实现，以支持复杂查询

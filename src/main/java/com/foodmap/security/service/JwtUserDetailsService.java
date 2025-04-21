@@ -70,12 +70,13 @@ public class JwtUserDetailsService implements UserDetailsService {
     // 创建商铺的UserDetails
     private UserDetails createShopDetails(Shop shop) {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        String usernameWithPrefix = "SHOP_" + shop.getShopName();
         authorities.add(new SimpleGrantedAuthority("ROLE_SHOP"));
         logger.info(() -> "商铺账号: " + (shop.getShopName() != null ? "非空" : "为空"));
 
 
         return new org.springframework.security.core.userdetails.User(
-                shop.getShopName(),
+                usernameWithPrefix,
                 shop.getPassword(),
                 shop.getStatus() == 1,  // enabled
                 true,  // accountNonExpired

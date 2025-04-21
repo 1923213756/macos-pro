@@ -954,6 +954,23 @@
                 window.location.href = 'index.html';
                 return;
             }
+            document.getElementById('favorite-shop-btn').addEventListener('click', function() {
+                const shopId = this.dataset.shopId; // 需要在显示详情时设置此属性
+                const isFavorited = this.dataset.favorited === 'true';
+
+                toggleFavorite(shopId)
+                    .then(newState => {
+                        // 更新按钮状态
+                        updateFavoriteButton(newState);
+
+                        // 显示操作结果
+                        const message = newState ? '收藏成功' : '取消收藏成功';
+                        alert(message); // 或者使用更优雅的通知方式
+                    })
+                    .catch(error => {
+                        alert('操作失败: ' + error.message);
+                    });
+            });
 
             // 根据存储的信息判断用户类型
             if (userInfo) {
@@ -1045,6 +1062,14 @@
         // 显示请求的视图
         document.getElementById(viewId).classList.add('active');
 
+        // 更新导航栏激活状态
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.classList.remove('active');
+        });
+        document.querySelectorAll(`.nav-links a[onclick="showView('${viewId}')"]`).forEach(link => {
+            link.classList.add('active');
+        });
+
         // 更新侧边栏菜单激活状态
         document.querySelectorAll('.sidebar-menu a').forEach(link => {
             link.classList.remove('active');
@@ -1053,9 +1078,10 @@
             link.classList.add('active');
         });
 
-        // 在显示我的评论视图时加载评论数据
+        // 关键部分：根据视图执行特定操作
         if (viewId === 'my-reviews-view') {
             loadUserReviews(1); // 加载第一页评论
+            console.log("正在加载我的评论视图...");
         }
     }
 
@@ -2059,28 +2085,62 @@
             });
     }
 
-    // 加载用户的评论列表
-    function loadUserReviews(page = 1, pageSize = 10) {
-        const container = document.getElementById('user-reviews-container');
-        container.innerHTML = '<p>正在加载您的评论...</p>';
+    // 生成星星HTML的函数
+    function generateStars(rating) {
+        if (!rating) rating = 0;
+        let starsHtml = '';
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
 
-        // 根据用户类型决定API路径
+        for (let i = 0; i < fullStars; i++) {
+            starsHtml += '★';
+        }
+
+        if (halfStar) {
+            starsHtml += '☆';
+        }
+
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+        for (let i = 0; i < emptyStars; i++) {
+            starsHtml += '☆';
+        }
+
+        return starsHtml;
+    }
+
+    // 加载用户的评论列表
+    // 修改loadUserReviews函数
+    function loadUserReviews(page = 1, pageSize = 10) {
+        console.log("加载评论, 页码:", page);
+        const container = document.getElementById('user-reviews-container');
+        container.innerHTML = '<p>正在加载评论...</p>';
+
+        // 设置正确的API路径和页面标题
         let apiPath;
-        let params = `current=${page}&size=${pageSize}`; // 注意: 参数名与后端匹配
+        const titleElement = document.querySelector('#my-reviews-view .section-title');
 
         if (currentUser) {
             // 普通用户 - 加载该用户发表的评论
-            apiPath = `/api/reviews/user`;
+            apiPath = `/api/reviews/user/${currentUser.userId}`;
+            titleElement.textContent = "我的评论";
         } else if (currentShop) {
             // 商铺 - 加载该商铺收到的评论
             apiPath = `/api/reviews/restaurant/${currentShop.shopId}`;
+            titleElement.textContent = "顾客评价";
         } else {
             container.innerHTML = '<p>未登录或无权限访问</p>';
             return;
         }
 
+        // 添加分页参数
+        const params = `current=${page}&size=${pageSize}`;
+
+        // 调用接口
+        console.log(`请求URL: ${apiPath}?${params}`);
         fetchWithTokenHandling(`${apiPath}?${params}`)
             .then(data => {
+                console.log("评论数据返回:", data);
+
                 if (!data || !data.records || data.records.length === 0) {
                     container.innerHTML = '<p class="no-reviews">暂无评论记录</p>';
                     document.getElementById('user-reviews-pagination').innerHTML = '';
@@ -2094,7 +2154,7 @@
             })
             .catch(error => {
                 console.error('加载评论失败:', error);
-                container.innerHTML = '<p class="error">加载评论失败，请稍后再试</p>';
+                container.innerHTML = `<p class="error">加载评论失败: ${error}</p>`;
             });
     }
     // 渲染用户评论列表
@@ -2103,19 +2163,35 @@
         container.innerHTML = '';
 
         data.records.forEach(review => {
-            // 创建评论元素
             const reviewElement = document.createElement('div');
             reviewElement.className = 'review-item';
 
             // 格式化日期
             const createdAt = new Date(review.createdAt).toLocaleString();
 
-            // 构建评论内容HTML
-            reviewElement.innerHTML = `
-            <div class="review-header">
-                <div class="review-author">${review.restaurantName || '商铺'}</div>
-                <div class="review-date">${createdAt}</div>
-            </div>
+            // 根据用户类型决定显示内容
+            if (currentUser) {
+                // 普通用户：显示评价的店铺名
+                reviewElement.innerHTML = `
+                <div class="review-header">
+                    <div class="review-author">评价商家：${review.restaurantName || '未知商铺'}</div>
+                    <div class="review-date">${createdAt}</div>
+                </div>
+                <!-- 评论内容... -->
+            `;
+            } else if (currentShop) {
+                // 店家：显示评论者用户名
+                reviewElement.innerHTML = `
+                <div class="review-header">
+                    <div class="review-author">评论用户：${review.username || '匿名用户'}</div>
+                    <div class="review-date">${createdAt}</div>
+                </div>
+                <!-- 评论内容... -->
+            `;
+            }
+
+            // 添加评分和评论内容（通用部分）
+            reviewElement.innerHTML += `
             <div class="review-ratings">
                 <div class="review-rating">
                     <span class="rating-label">总体评分:</span>
@@ -2123,24 +2199,94 @@
                     <span class="rating-value">${review.rating}分</span>
                 </div>
                 <div class="review-rating-details">
-                    环境: ${review.environmentRating}分 |
-                    服务: ${review.serviceRating}分 |
-                    口味: ${review.tasteRating}分
+                    环境: ${review.environmentRating || 0}分 |
+                    服务: ${review.serviceRating || 0}分 |
+                    口味: ${review.tasteRating || 0}分
                 </div>
             </div>
             <div class="review-content">${review.content}</div>
-            <div class="review-actions">
-                <div class="review-like ${review.userLiked ? 'active' : ''}" onclick="toggleReviewLike(${review.id}, this)">
-    <i class="like-icon">♥</i> <span class="like-count">${review.likeCount || 0}</span>
-</div>
-                <div class="review-edit-actions">
-                    <span class="review-edit" onclick="editReview(${review.id})">编辑</span>
-                    <span class="review-delete" onclick="deleteReview(${review.id})">删除</span>
-                </div>
-            </div>
         `;
+
+            // 添加操作按钮（根据用户类型显示不同操作）
+            if (currentUser) {
+                // 普通用户可以编辑/删除自己的评论
+                reviewElement.innerHTML += `
+                <div class="review-actions">
+                    <div class="review-like ${review.userLiked ? 'active' : ''}" onclick="toggleReviewLike(${review.id}, this)">
+                        <i class="like-icon">♥</i> <span class="like-count">${review.likeCount || 0}</span>
+                    </div>
+                    <div class="review-edit-actions">
+                        <span class="review-edit" onclick="editReview(${review.id})">编辑</span>
+                        <span class="review-delete" onclick="deleteReview(${review.id})">删除</span>
+                    </div>
+                </div>
+            `;
+            } else if (currentShop) {
+                // 店家只能查看和管理点赞（不能编辑/删除用户评论）
+                reviewElement.innerHTML += `
+                <div class="review-actions">
+                    <div class="review-like-count">
+                        <i class="like-icon">♥</i> <span class="like-count">${review.likeCount || 0}</span>
+                    </div>
+                </div>
+            `;
+            }
 
             container.appendChild(reviewElement);
         });
     }
+
+    // 检查商铺是否已收藏
+    function checkFavoriteStatus(shopId) {
+        return fetchWithTokenHandling(`/api/favorites/check/${shopId}`)
+            .then(response => {
+                if (response && response.data) {
+                    return response.data; // 返回true表示已收藏，false表示未收藏
+                }
+                return false;
+            })
+            .catch(error => {
+                console.error('检查收藏状态失败:', error);
+                return false;
+            });
+    }
+
+    // 切换收藏状态（收藏/取消收藏）
+    function toggleFavorite(shopId) {
+        const data = new FavoriteCreateDTO(shopId);
+
+        return fetchWithTokenHandling('/api/favorites/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response && response.success) {
+                    return response.data; // 返回更新后的收藏状态
+                }
+                throw new Error(response.message || '操作失败');
+            })
+            .catch(error => {
+                console.error('收藏操作失败:', error);
+                throw error;
+            });
+    }
+
+    // 更新收藏按钮状态
+    function updateFavoriteButton(isFavorited) {
+        const favoriteBtn = document.getElementById('favorite-shop-btn');
+
+        if (isFavorited) {
+            favoriteBtn.textContent = '取消收藏';
+            favoriteBtn.style.backgroundColor = '#e57373'; // 红色调
+            favoriteBtn.dataset.favorited = 'true';
+        } else {
+            favoriteBtn.textContent = '收藏商铺';
+            favoriteBtn.style.backgroundColor = '#ff9800'; // 橙色
+            favoriteBtn.dataset.favorited = 'false';
+        }
+    }
+
 </script>
