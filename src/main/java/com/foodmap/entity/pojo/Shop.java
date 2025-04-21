@@ -1,10 +1,12 @@
 package com.foodmap.entity.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -76,23 +78,33 @@ public class Shop {
     @DecimalMax(value = "5.0", message = "综合评分不能大于5")
     @Digits(integer = 1, fraction = 1, message = "评分格式为一位整数，一位小数")
     @Schema(description = "综合评分", example = "4.8")
-    private BigDecimal compositeScore;
+    private Float compositeScore;
 
     @DecimalMin(value = "0.0", message = "环境评分不能小于0")
     @DecimalMax(value = "5.0", message = "环境评分不能大于5")
     @Digits(integer = 1, fraction = 1, message = "评分格式为一位整数，一位小数")
     @Schema(description = "环境评分", example = "4.8")
-    private BigDecimal environmentScore;
+    private Float environmentScore;
 
     @DecimalMin(value = "0.0", message = "服务评分不能小于0")
     @DecimalMax(value = "5.0", message = "服务评分不能大于5")
     @Digits(integer = 1, fraction = 1, message = "评分格式为一位整数，一位小数")
     @Schema(description = "服务评分", example = "4.8")
-    private BigDecimal serviceScore;
+    private Float serviceScore;
 
     @DecimalMin(value = "0.0", message = "味道评分不能小于0")
     @DecimalMax(value = "5.0", message = "味道评分不能大于5")
     @Digits(integer = 1, fraction = 1, message = "评分格式为一位整数，一位小数")
     @Schema(description = "味道评分", example = "4.8")
-    private BigDecimal tasteScore;
+    private Float tasteScore;
+
+    @Setter
+    @TableField("review_count")  // 如果您使用MyBatis-Plus
+    private Long reviewCount;
+
+    // Getter和Setter方法
+    public Long getReviewCount() {
+        return reviewCount == null ? 0L : reviewCount;
+    }
+
 }

@@ -1,0 +1,61 @@
+<!-- 商铺详情模态框 -->
+<div id="shop-detail-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-detail-modal" class="close-btn">&times;</span>
+        <h2 id="detail-shop-name"></h2>
+        <div id="shop-detail-content"></div>
+
+        <!-- 评论区域 -->
+        <div class="reviews-section">
+            <h3>顾客评价</h3>
+            <div class="write-review-btn">
+                <button id="write-review-btn" class="btn">写评价</button>
+            </div>
+            <div id="shop-reviews" class="review-list"></div>
+            <div id="shop-reviews-pagination" class="pagination"></div>
+        </div>
+
+        <!-- 操作按钮区域 -->
+        <div id="shop-detail-actions">
+            <button id="favorite-shop-btn" class="btn">收藏商铺</button>
+            <button id="edit-shop-btn" class="btn">编辑商铺</button>
+        </div>
+    </div>
+</div>
+
+<!-- 评论模态框 -->
+<div id="review-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-review-modal" class="close-btn">&times;</span>
+        <h2 id="review-modal-title">发表评论</h2>
+        <div id="review-modal-message" class="message"></div>
+        <form id="review-form">
+            <input type="hidden" id="review-shop-id">
+            <input type="hidden" id="review-id">
+
+            <!-- 星级评分 -->
+            <div class="form-group">
+                <label for="review-environment-rating">环境评分</label>
+                <div class="rating-input" id="environment-rating-input">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="review-environment-rating" required>
+            </div>
+
+            <!-- 其他评分项 -->
+            <!-- ... -->
+
+            <div class="form-group">
+                <label for="review-content">评论内容</label>
+                <textarea id="review-content" required placeholder="请分享您的用餐体验"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn">提交评论</button>
+            </div>
+        </form>
+    </div>
+</div>

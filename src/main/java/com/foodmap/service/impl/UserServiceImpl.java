@@ -1,5 +1,6 @@
 package com.foodmap.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.foodmap.exception.BadRequestException;
@@ -14,11 +15,14 @@ import com.foodmap.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -173,4 +177,46 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         log.info("用户 {} ({}) 密码修改成功", userId, user.getUserName());
     }
+
+
+    /**
+     * 获取当前登录用户
+     * 如果未登录则抛出异常
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public User getCurrentUser() {
+        return getCurrentUserOptional()
+                .orElseThrow(() -> new UnauthorizedException("用户未登录或会话已过期"));
+    }
+
+    /**
+     * 获取当前登录用户，以Optional方式返回
+     * 如果未登录则返回空Optional
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> getCurrentUserOptional() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return Optional.empty();
+        }
+
+        String username;
+
+        // 根据Spring Security配置不同，Principal可能是String或UserDetails实现类
+        if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails) {
+            username = ((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal()).getUsername();
+        } else {
+            username = authentication.getName();
+        }
+
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUserName, username);
+
+        return Optional.ofNullable(userMapper.selectOne(queryWrapper));
+    }
+
 }

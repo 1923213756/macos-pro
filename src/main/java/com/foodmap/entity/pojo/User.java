@@ -16,14 +16,14 @@ import java.time.LocalDateTime;
 @TableName("user")
 @Schema(description = "用户实体")
 public class User {
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @TableId(value = "userId", type = IdType.AUTO)
     @Schema(description = "用户ID", example = "1001")
     private Long userId;
 
     @NotBlank(message = "用户名不能为空")
     @Size(min = 3, max = 30, message = "用户名长度必须在3-30个字符之间")
     @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "用户名只能包含字母、数字和下划线")
-    @TableField("user_name")
+    @TableField("userName")
     @Schema(description = "用户名", example = "foodlover")
     private String userName;
 
@@ -41,11 +41,11 @@ public class User {
     @Schema(description = "手机号码", example = "13812345678")
     private String phone;
 
-    @TableField("create_time")
+    @TableField("createTime")
     @Schema(description = "注册时间", example = "2025-03-31T12:40:55", accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime createTime;
 
-    @TableField("update_time")
+    @TableField("updateTime")
     @Schema(description = "更新时间", example = "2025-03-31T12:40:55", accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime updateTime;
 
