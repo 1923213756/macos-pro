@@ -42,4 +42,6 @@ public interface ReviewService {
      * 更新餐厅评分
      */
     void updateRestaurantRating(Long restaurantId);
+
+    IPage<ReviewDTO> getCurrentUserReviews(Page<ReviewDTO> page);
 }

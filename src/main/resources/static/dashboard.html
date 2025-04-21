@@ -1042,18 +1042,21 @@
             view.classList.remove('active');
         });
 
-        // 显示指定视图
+        // 显示请求的视图
         document.getElementById(viewId).classList.add('active');
 
-        // 更新导航链接状态
-        document.querySelectorAll('.nav-links a, .sidebar-menu a').forEach(link => {
+        // 更新侧边栏菜单激活状态
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
             link.classList.remove('active');
         });
-
-        // 找到对应的导航链接并激活
-        document.querySelectorAll(`.nav-links a[onclick*="${viewId}"], .sidebar-menu a[onclick*="${viewId}"]`).forEach(link => {
+        document.querySelectorAll(`.sidebar-menu a[onclick="showView('${viewId}')"]`).forEach(link => {
             link.classList.add('active');
         });
+
+        // 在显示我的评论视图时加载评论数据
+        if (viewId === 'my-reviews-view') {
+            loadUserReviews(1); // 加载第一页评论
+        }
     }
 
     // 退出登录
@@ -2057,55 +2060,87 @@
     }
 
     // 加载用户的评论列表
-    function loadUserReviews(page = 1, size = 10) {
-        if (!currentUser) {
-            document.getElementById('user-reviews-container').innerHTML =
-                '<div class="no-reviews">请以普通用户身份登录查看您的评论</div>';
+    function loadUserReviews(page = 1, pageSize = 10) {
+        const container = document.getElementById('user-reviews-container');
+        container.innerHTML = '<p>正在加载您的评论...</p>';
+
+        // 根据用户类型决定API路径
+        let apiPath;
+        let params = `current=${page}&size=${pageSize}`; // 注意: 参数名与后端匹配
+
+        if (currentUser) {
+            // 普通用户 - 加载该用户发表的评论
+            apiPath = `/api/reviews/user`;
+        } else if (currentShop) {
+            // 商铺 - 加载该商铺收到的评论
+            apiPath = `/api/reviews/restaurant/${currentShop.shopId}`;
+        } else {
+            container.innerHTML = '<p>未登录或无权限访问</p>';
             return;
         }
 
-        fetchWithTokenHandling(`http://localhost:8080/api/reviews/user/${currentUser.userId}?current=${page}&size=${size}`)
+        fetchWithTokenHandling(`${apiPath}?${params}`)
             .then(data => {
-                const container = document.getElementById('user-reviews-container');
-
-                if (!data.records || data.records.length === 0) {
-                    container.innerHTML = '<div class="no-reviews">您还没有发表任何评论</div>';
+                if (!data || !data.records || data.records.length === 0) {
+                    container.innerHTML = '<p class="no-reviews">暂无评论记录</p>';
+                    document.getElementById('user-reviews-pagination').innerHTML = '';
                     return;
                 }
 
-                let html = '';
-                data.records.forEach(review => {
-                    html += `
-                <div class="review-item" data-id="${review.id}">
-                    <div class="review-header">
-                        <span class="review-author">餐厅：${review.restaurantName || '未知餐厅'}</span>
-                        <span class="review-date">${formatDate(review.createdAt)}</span>
-                    </div>
-                    <div class="review-rating">${getStarsHtml(review.rating)}</div>
-                    <div class="review-content">${review.content}</div>
-                    <div class="review-actions">
-                        <div class="review-like ${review.userLiked ? 'active' : ''}" onclick="toggleReviewLike(${review.id})">
-                            <i class="like-icon">♥</i> <span class="like-count">${review.likeCount || 0}</span>
-                        </div>
-                        <div class="review-edit-actions">
-                            <span class="review-edit" onclick="editReview(${review.id})">编辑</span>
-                            <span class="review-delete" onclick="deleteReview(${review.id})">删除</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-                });
-
-                container.innerHTML = html;
-
+                // 渲染评论列表
+                renderUserReviews(data);
                 // 渲染分页
-                renderPagination(data, 'user-reviews-pagination', (p) => loadUserReviews(p, size));
+                renderPagination(data, 'user-reviews-pagination', loadUserReviews);
             })
             .catch(error => {
-                if (error !== 'Session expired') {
-                    document.getElementById('user-reviews-container').innerHTML =
-                        `<div class="error">加载评论失败: ${error.message || error}</div>`;
-                }
+                console.error('加载评论失败:', error);
+                container.innerHTML = '<p class="error">加载评论失败，请稍后再试</p>';
             });
+    }
+    // 渲染用户评论列表
+    function renderUserReviews(data) {
+        const container = document.getElementById('user-reviews-container');
+        container.innerHTML = '';
+
+        data.records.forEach(review => {
+            // 创建评论元素
+            const reviewElement = document.createElement('div');
+            reviewElement.className = 'review-item';
+
+            // 格式化日期
+            const createdAt = new Date(review.createdAt).toLocaleString();
+
+            // 构建评论内容HTML
+            reviewElement.innerHTML = `
+            <div class="review-header">
+                <div class="review-author">${review.restaurantName || '商铺'}</div>
+                <div class="review-date">${createdAt}</div>
+            </div>
+            <div class="review-ratings">
+                <div class="review-rating">
+                    <span class="rating-label">总体评分:</span>
+                    <span class="stars-container">${generateStars(review.rating)}</span>
+                    <span class="rating-value">${review.rating}分</span>
+                </div>
+                <div class="review-rating-details">
+                    环境: ${review.environmentRating}分 |
+                    服务: ${review.serviceRating}分 |
+                    口味: ${review.tasteRating}分
+                </div>
+            </div>
+            <div class="review-content">${review.content}</div>
+            <div class="review-actions">
+                <div class="review-like ${review.userLiked ? 'active' : ''}" onclick="toggleReviewLike(${review.id}, this)">
+    <i class="like-icon">♥</i> <span class="like-count">${review.likeCount || 0}</span>
+</div>
+                <div class="review-edit-actions">
+                    <span class="review-edit" onclick="editReview(${review.id})">编辑</span>
+                    <span class="review-delete" onclick="deleteReview(${review.id})">删除</span>
+                </div>
+            </div>
+        `;
+
+            container.appendChild(reviewElement);
+        });
     }
 </script>

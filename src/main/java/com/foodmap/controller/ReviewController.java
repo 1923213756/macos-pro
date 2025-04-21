@@ -66,4 +66,13 @@ public class ReviewController {
         ReviewDTO review = reviewService.getReviewById(reviewId);
         return ResponseEntity.ok(review);
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<IPage<ReviewDTO>> getCurrentUserReviews(
+            @RequestParam(defaultValue = "1") Long current,
+            @RequestParam(defaultValue = "10") Long size) {
+        Page<ReviewDTO> page = new Page<>(current, size);
+        IPage<ReviewDTO> reviews = reviewService.getCurrentUserReviews(page);
+        return ResponseEntity.ok(reviews);
+    }
 }

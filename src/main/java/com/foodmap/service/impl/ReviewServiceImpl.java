@@ -221,4 +221,11 @@ public class ReviewServiceImpl implements ReviewService {
             shopMapper.updateById(shop);
         }
     }
+
+    @Override
+    @Transactional
+    public IPage<ReviewDTO> getCurrentUserReviews(Page<ReviewDTO> page) {
+        Long currentUserId = getCurrentUserId();
+        return getReviewsByUser(currentUserId, page);
+    }
 }
