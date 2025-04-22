@@ -38,10 +38,19 @@ public interface ReviewService {
      */
     ReviewDTO getReviewById(Long reviewId);
 
-    /**
-     * 更新餐厅评分
-     */
-    void updateRestaurantRating(Long restaurantId);
 
     IPage<ReviewDTO> getCurrentUserReviews(Page<ReviewDTO> page);
+
+    /**
+     * 更新所有商铺的评分数据
+     * @return 更新的商铺数量
+     */
+    int updateAllShopsRatings();
+
+    /**
+     * 更新指定商铺的评分数据
+     * @param shopId 商铺ID
+     * @return 是否更新成功
+     */
+    boolean updateShopRatings(Long shopId);
 }

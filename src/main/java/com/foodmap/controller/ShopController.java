@@ -4,6 +4,7 @@ import com.foodmap.entity.dto.ShopInfoUpdateDTO;
 import com.foodmap.mapper.ShopMapper;
 import com.foodmap.entity.pojo.Shop;
 import com.foodmap.security.jwt.JwtTokenProvider;
+import com.foodmap.service.ReviewService;
 import com.foodmap.service.ShopService;
 import com.foodmap.common.response.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,18 +32,14 @@ import java.util.Map;
 @RequestMapping("/api/shops")
 @CrossOrigin(origins = "*")  // 用于开发阶段，生产环境应限制来源
 @Tag(name = "商铺管理", description = "商铺注册、登录、查询、更新与删除操作")
+@RequiredArgsConstructor
 public class ShopController {
 
     private final ShopService shopService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
+    private final ReviewService reviewService;
 
-    @Autowired
-    public ShopController(ShopService shopService, AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider, ShopMapper shopMapper) {
-        this.shopService = shopService;
-        this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
-    }
 
     /**
      * 商铺注册
@@ -146,7 +144,7 @@ public class ShopController {
                 !sortField.equals("compositeScore") && !sortField.equals("createTime")) {
             return ResponseResult.error(400, "不支持的排序字段，支持的字段为：compositeScore, createTime");
         }
-
+        reviewService.updateAllShopsRatings();
         List<Shop> shops = shopService.queryShopList(category, district, sortField);
         return ResponseResult.success(shops);
     }
@@ -171,7 +169,7 @@ public class ShopController {
         if (shopId == null || shopId <= 0) {
             return ResponseResult.error(400, "无效的商铺ID");
         }
-
+        reviewService.updateShopRatings(shopId);
         Shop shop = shopService.getShopById(shopId);
         return ResponseResult.success(shop);
     }

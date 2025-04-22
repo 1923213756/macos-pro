@@ -15,6 +15,7 @@ import com.foodmap.mapper.ShopMapper;
 import com.foodmap.service.ReviewService;
 import com.foodmap.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewMapper reviewMapper;
@@ -94,31 +96,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-    private void updateShopRatings(Long shopId) {
-        // 使用新方法获取所有维度的平均分
-        Map<String, Double> ratings = reviewMapper.calculateAllRatings(shopId);
-        Long reviewCount = reviewMapper.countActiveReviewsByRestaurant(shopId);
-
-        // 更新商铺评分
-        Shop shop = shopMapper.selectById(shopId);
-        if (shop != null) {
-            // 设置各个维度的评分
-            shop.setCompositeScore(ratings.get("compositeScore") != null ?
-                    ratings.get("compositeScore").floatValue() : 0f);
-            shop.setEnvironmentScore(ratings.get("environmentScore") != null ?
-                    ratings.get("environmentScore").floatValue() : 0f);
-            shop.setServiceScore(ratings.get("serviceScore") != null ?
-                    ratings.get("serviceScore").floatValue() : 0f);
-            shop.setTasteScore(ratings.get("tasteScore") != null ?
-                    ratings.get("tasteScore").floatValue() : 0f);
-
-            // 设置评论数量
-            shop.setReviewCount(reviewCount);
-
-            // 更新数据库
-            shopMapper.updateById(shop);
-        }
-    }
 
     @Override
     @Transactional
@@ -140,7 +117,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewMapper.updateById(review);
 
         // 更新餐厅评分
-        updateRestaurantRating(review.getRestaurantId());
+        updateShopRatings(review.getRestaurantId());
 
         return reviewMapper.getReviewById(reviewId, currentUser.getUserId());
     }
@@ -163,7 +140,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewMapper.updateById(review);
 
         // 更新餐厅评分
-        updateRestaurantRating(review.getRestaurantId());
+        updateShopRatings(review.getRestaurantId());
     }
 
     @Override
@@ -210,22 +187,40 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public void updateRestaurantRating(Long restaurantId) {
-        Double avgRating = reviewMapper.calculateAverageRating(restaurantId);
-        Long reviewCount = reviewMapper.countActiveReviewsByRestaurant(restaurantId);
-
-        Shop shop= shopMapper.selectById(restaurantId);
-        if (shop != null) {
-            shop.setCompositeScore((float) (avgRating != null ? avgRating : 0.0));
-            shop.setReviewCount(reviewCount);
-            shopMapper.updateById(shop);
-        }
-    }
-
-    @Override
-    @Transactional
     public IPage<ReviewDTO> getCurrentUserReviews(Page<ReviewDTO> page) {
         Long currentUserId = getCurrentUserId();
         return getReviewsByUser(currentUserId, page);
+    }
+
+    /**
+     * 更新所有商铺的评分数据
+     */
+    @Override
+    @Transactional
+    public int updateAllShopsRatings() {
+        int updatedCount = reviewMapper.updateAllShopsRatings();
+        log.info("已更新{}家商铺的评分数据", updatedCount);
+        return updatedCount;
+    }
+
+    /**
+     * 更新指定商铺的评分数据
+     */
+    @Override
+    @Transactional
+    public boolean updateShopRatings(Long shopId) {
+        if (shopId == null || shopId <= 0) {
+            log.error("无效的商铺ID: {}", shopId);
+            return false;
+        }
+
+        try {
+            int result = reviewMapper.updateShopRatings(shopId);
+            log.info("商铺ID {} 评分更新结果: {}", shopId, result > 0 ? "成功" : "无变化");
+            return result > 0;
+        } catch (Exception e) {
+            log.error("更新商铺评分失败, 商铺ID: {}, 错误: {}", shopId, e.getMessage());
+            return false;
+        }
     }
 }

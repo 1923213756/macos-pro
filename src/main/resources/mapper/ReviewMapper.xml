@@ -44,7 +44,7 @@
 
     <select id="getReviewById" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
-            r.id, r.content, r.rating, r.user_id AS userId,
+            r.id, r.content, r.composite_score, r.user_id AS userId,
             u.userName AS username, u.phone AS userAvatar,
             r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
             r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
@@ -61,7 +61,7 @@
     </select>
 
     <select id="calculateAverageRating" resultType="java.lang.Double">
-        SELECT AVG(rating)
+        SELECT AVG(composite_score)
         FROM reviews
         WHERE restaurant_id = #{restaurantId}
           AND status = 'ACTIVE'
@@ -79,10 +79,10 @@
             INNER JOIN (
             SELECT
             restaurant_id,
-            ROUND(AVG(rating), 1) AS composite_score,
-            ROUND(AVG(environment_rating), 1) AS environment_score,
-            ROUND(AVG(service_rating), 1) AS service_score,
-            ROUND(AVG(taste_rating), 1) AS taste_score,
+            ROUND(AVG(composite_score), 1) AS composite_score,
+            ROUND(AVG(environment_score), 1) AS environmentScore,
+            ROUND(AVG(service_score), 1) AS serviceScore,
+            ROUND(AVG(taste_score), 1) AS tasteScore,
             COUNT(*) AS review_count
             FROM
             reviews
@@ -90,12 +90,12 @@
             status = 'ACTIVE'
             GROUP BY
             restaurant_id
-            ) r ON s.shop_id = r.restaurant_id
+            ) r ON s.shopId = r.restaurant_id
             SET
-                s.composite_score = r.composite_score,
-                s.environment_score = r.environment_score,
-                s.service_score = r.service_score,
-                s.taste_score = r.taste_score,
+                s.compositeScore = r.composite_score,
+                s.environmentScore = r.environment_score,
+                s.serviceScore = r.service_score,
+                s.tasteScore = r.taste_score,
                 s.review_count = r.review_count
     </update>
 
@@ -104,10 +104,10 @@
             INNER JOIN (
             SELECT
             restaurant_id,
-            ROUND(AVG(rating), 1) AS compositeScore,
-            ROUND(AVG(environment_rating), 1) AS environmentScore,
-            ROUND(AVG(service_rating), 1) AS serviceScore,
-            ROUND(AVG(taste_rating), 1) AS tasteScore,
+            ROUND(AVG(composite_score), 1) AS compositeScore,
+            ROUND(AVG(environment_score), 1) AS environmentScore,
+            ROUND(AVG(service_score), 1) AS serviceScore,
+            ROUND(AVG(taste_score), 1) AS tasteScore,
             COUNT(*) AS review_count
             FROM
             reviews
@@ -117,10 +117,10 @@
             restaurant_id
             ) r ON s.shop_id = r.restaurant_id
             SET
-                s.composite_score = r.composite_score,
-                s.environment_score = r.environment_score,
-                s.service_score = r.service_score,
-                s.taste_score = r.taste_score,
+                s.compositeScore = r.composite-score,
+                s.environmentScore = r.environment-score,
+                s.serviceScore = r.service-score,
+                s.tasteScore = r.taste-score,
                 s.review_count = r.review_count
     </update>
 
