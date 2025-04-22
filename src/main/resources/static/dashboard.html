@@ -954,23 +954,6 @@
                 window.location.href = 'index.html';
                 return;
             }
-            document.getElementById('favorite-shop-btn').addEventListener('click', function() {
-                const shopId = this.dataset.shopId; // 需要在显示详情时设置此属性
-                const isFavorited = this.dataset.favorited === 'true';
-
-                toggleFavorite(shopId)
-                    .then(newState => {
-                        // 更新按钮状态
-                        updateFavoriteButton(newState);
-
-                        // 显示操作结果
-                        const message = newState ? '收藏成功' : '取消收藏成功';
-                        alert(message); // 或者使用更优雅的通知方式
-                    })
-                    .catch(error => {
-                        alert('操作失败: ' + error.message);
-                    });
-            });
 
             // 根据存储的信息判断用户类型
             if (userInfo) {
@@ -1240,47 +1223,47 @@
 
                     // 构建详情内容
                     let detailHTML = `
-                        <div class="detail-section">
-                            <div class="detail-item">
-                                <div class="detail-label">商铺分类</div>
-                                <div class="detail-value">${shop.category || '未设置'}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">所在区域</div>
-                                <div class="detail-value">${shop.district || '未设置'}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">详细地址</div>
-                                <div class="detail-value">${shop.address || '未设置'}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">联系电话</div>
-                                <div class="detail-value">${shop.contactTel || '未设置'}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">营业时间</div>
-                                <div class="detail-value">${shop.businessHours || '未设置'}</div>
-                            </div>
+                    <div class="detail-section">
+                        <div class="detail-item">
+                            <div class="detail-label">商铺分类</div>
+                            <div class="detail-value">${shop.category || '未设置'}</div>
                         </div>
+                        <div class="detail-item">
+                            <div class="detail-label">所在区域</div>
+                            <div class="detail-value">${shop.district || '未设置'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">详细地址</div>
+                            <div class="detail-value">${shop.address || '未设置'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">联系电话</div>
+                            <div class="detail-value">${shop.contactTel || '未设置'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">营业时间</div>
+                            <div class="detail-value">${shop.businessHours || '未设置'}</div>
+                        </div>
+                    </div>
 
-                        <div class="detail-section">
-                            <div class="detail-section-title">商铺评分</div>
-                            <div class="detail-item">
-                                <div class="detail-label">综合评分</div>
-                                <div class="detail-value">
-                                    <div class="stars-container">${getStarsHtml(shop.compositeScore || 0)}</div>
-                                    ${shop.compositeScore ? shop.compositeScore.toFixed(1) : '暂无评分'}
-                                </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">商铺评分</div>
+                        <div class="detail-item">
+                            <div class="detail-label">综合评分</div>
+                            <div class="detail-value">
+                                <div class="stars-container">${getStarsHtml(shop.compositeScore || 0)}</div>
+                                ${shop.compositeScore ? shop.compositeScore.toFixed(1) : '暂无评分'}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="detail-section" style="border-bottom: none;">
-                            <div class="detail-section-title">商铺介绍</div>
-                            <div style="line-height: 1.6;">
-                                ${shop.description || '该商铺暂无介绍信息'}
-                            </div>
+                    <div class="detail-section" style="border-bottom: none;">
+                        <div class="detail-section-title">商铺介绍</div>
+                        <div style="line-height: 1.6;">
+                            ${shop.description || '该商铺暂无介绍信息'}
                         </div>
-                    `;
+                    </div>
+                `;
 
                     document.getElementById('shop-detail-content').innerHTML = detailHTML;
 
@@ -1289,6 +1272,7 @@
 
                     // 检查当前用户是否是商铺管理员
                     const shopInfo = localStorage.getItem('shopInfo');
+                    const userInfo = localStorage.getItem('userInfo');
 
                     // 如果登录的是商铺且是当前查看的商铺
                     let isOwner = false;
@@ -1299,6 +1283,41 @@
 
                     // 显示/隐藏编辑按钮
                     document.getElementById('edit-shop-btn').style.display = isOwner ? 'block' : 'none';
+
+                    // 获取收藏按钮元素
+                    const favoriteBtn = document.getElementById('favorite-shop-btn');
+
+                    // 如果是商铺账号，隐藏收藏按钮
+                    if (shopInfo) {
+                        favoriteBtn.style.display = 'none';
+                    } else if (userInfo) {
+                        // 如果是普通用户，显示收藏按钮
+                        favoriteBtn.style.display = 'block';
+
+                        // 保存shopId到按钮数据中
+                        favoriteBtn.dataset.shopId = shop.shopId;
+
+                        // 检查收藏状态并更新按钮
+                        checkFavoriteStatus(shop.shopId).then(isFavorited => {
+                            updateFavoriteButton(favoriteBtn, isFavorited);
+                        });
+
+                        // 设置收藏按钮点击事件
+                        favoriteBtn.onclick = function() {
+                            const shopId = this.dataset.shopId;
+                            const isFavorited = this.dataset.favorited === 'true';
+
+                            toggleFavorite(shopId)
+                                .then(newStatus => {
+                                    updateFavoriteButton(favoriteBtn, newStatus);
+                                    const message = newStatus ? '收藏成功' : '已取消收藏';
+                                    alert(message);
+                                })
+                                .catch(error => {
+                                    alert('操作失败: ' + error.message);
+                                });
+                        };
+                    }
 
                     // 设置编辑按钮点击事件
                     document.getElementById('edit-shop-btn').onclick = function() {
@@ -1324,11 +1343,6 @@
                         }
 
                         document.getElementById('shop-description').value = shop.description || '';
-                    };
-
-                    // 设置收藏按钮功能（未实现真正的功能，仅显示消息）
-                    document.getElementById('favorite-shop-btn').onclick = function() {
-                        alert('收藏功能即将上线，敬请期待！');
                     };
 
                     // 显示模态框
@@ -2108,6 +2122,77 @@
         return starsHtml;
     }
 
+    // 检查商铺是否已收藏
+    function checkFavoriteStatus(shopId) {
+        const token = localStorage.getItem('token');
+        if (!token) return Promise.resolve(false);
+
+        return fetch(`http://localhost:8080/api/favorites/check/${shopId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return false;
+                }
+                return response.json();
+            })
+            .then(data => {
+                return data.data === true; // 返回收藏状态
+            })
+            .catch(error => {
+                console.error('检查收藏状态失败:', error);
+                return false;
+            });
+    }
+
+    // 切换收藏状态
+    function toggleFavorite(shopId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('请先登录');
+            return Promise.reject('未登录');
+        }
+
+        return fetch('http://localhost:8080/api/favorites/toggle', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ shopId: shopId })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('操作失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.code !== 200) {
+                    throw new Error(data.message || '操作失败');
+                }
+                return data.data; // 返回新的收藏状态
+            });
+    }
+
+    // 更新收藏按钮状态
+    function updateFavoriteButton(button, isFavorited) {
+        if (isFavorited) {
+            button.textContent = '取消收藏';
+            button.style.backgroundColor = '#e57373'; // 红色调
+            button.dataset.favorited = 'true';
+        } else {
+            button.textContent = '收藏商铺';
+            button.style.backgroundColor = '#ff9800'; // 橙色
+            button.dataset.favorited = 'false';
+        }
+    }
+
+
     // 加载用户的评论列表
     // 修改loadUserReviews函数
     function loadUserReviews(page = 1, pageSize = 10) {
@@ -2235,58 +2320,4 @@
             container.appendChild(reviewElement);
         });
     }
-
-    // 检查商铺是否已收藏
-    function checkFavoriteStatus(shopId) {
-        return fetchWithTokenHandling(`/api/favorites/check/${shopId}`)
-            .then(response => {
-                if (response && response.data) {
-                    return response.data; // 返回true表示已收藏，false表示未收藏
-                }
-                return false;
-            })
-            .catch(error => {
-                console.error('检查收藏状态失败:', error);
-                return false;
-            });
-    }
-
-    // 切换收藏状态（收藏/取消收藏）
-    function toggleFavorite(shopId) {
-        const data = new FavoriteCreateDTO(shopId);
-
-        return fetchWithTokenHandling('/api/favorites/toggle', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (response && response.success) {
-                    return response.data; // 返回更新后的收藏状态
-                }
-                throw new Error(response.message || '操作失败');
-            })
-            .catch(error => {
-                console.error('收藏操作失败:', error);
-                throw error;
-            });
-    }
-
-    // 更新收藏按钮状态
-    function updateFavoriteButton(isFavorited) {
-        const favoriteBtn = document.getElementById('favorite-shop-btn');
-
-        if (isFavorited) {
-            favoriteBtn.textContent = '取消收藏';
-            favoriteBtn.style.backgroundColor = '#e57373'; // 红色调
-            favoriteBtn.dataset.favorited = 'true';
-        } else {
-            favoriteBtn.textContent = '收藏商铺';
-            favoriteBtn.style.backgroundColor = '#ff9800'; // 橙色
-            favoriteBtn.dataset.favorited = 'false';
-        }
-    }
-
 </script>

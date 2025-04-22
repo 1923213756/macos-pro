@@ -8,6 +8,7 @@ import com.foodmap.entity.dto.ReviewDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.Map;
 
@@ -47,4 +48,8 @@ public interface ReviewMapper extends BaseMapper<Review> {
     IPage<ReviewDTO> getReviewsByUser(Page<ReviewDTO> page, @Param("userId") Long userId, @Param("currentUserId") Long currentUserId);
 
     ReviewDTO getReviewById(@Param("reviewId") Long reviewId, @Param("userId") Long userId);
+
+    int updateAllShopsRatings();
+
+    int updateShopRatings(@Param("shopId") Long shopId);
 }
