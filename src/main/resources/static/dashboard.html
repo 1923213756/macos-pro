@@ -1719,13 +1719,13 @@
                         <div class="review-ratings">
                             <div class="review-rating">
                                 <span class="rating-label">综合评分:</span>
-                                <span class="stars-container">${getStarsHtml(review.rating)}</span>
-                                <span class="rating-value">${review.rating.toFixed(1)}</span>
+                                <span class="stars-container">${getStarsHtml(review.compositeScore)}</span>
+                                <span class="rating-value">${review.compositeScore.toFixed(1)}</span>
                             </div>
                             <div class="review-rating-details">
-                                <span>环境: ${review.environmentRating?.toFixed(1) || '无'}</span> |
-                                <span>服务: ${review.serviceRating?.toFixed(1) || '无'}</span> |
-                                <span>口味: ${review.tasteRating?.toFixed(1) || '无'}</span>
+                                <span>环境: ${review.environmentScore?.toFixed(1) || '无'}</span> |
+                                <span>服务: ${review.serviceScore?.toFixed(1) || '无'}</span> |
+                                <span>口味: ${review.tasteScore?.toFixed(1) || '无'}</span>
                             </div>
                         </div>
                         <div class="review-content">${review.content}</div>
@@ -2280,13 +2280,13 @@
             <div class="review-ratings">
                 <div class="review-rating">
                     <span class="rating-label">总体评分:</span>
-                    <span class="stars-container">${generateStars(review.rating)}</span>
-                    <span class="rating-value">${review.rating}分</span>
+                    <span class="stars-container">${generateStars(review.compositeScore)}</span>
+                    <span class="rating-value">${review.compositeScore}分</span>
                 </div>
                 <div class="review-rating-details">
-                    环境: ${review.environmentRating || 0}分 |
-                    服务: ${review.serviceRating || 0}分 |
-                    口味: ${review.tasteRating || 0}分
+                    环境: ${review.environmentScore || 0}分 |
+                    服务: ${review.serviceScore || 0}分 |
+                    口味: ${review.tasteScore || 0}分
                 </div>
             </div>
             <div class="review-content">${review.content}</div>

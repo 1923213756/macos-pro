@@ -17,22 +17,22 @@ public class ReviewCreateDTO {
     private String content;
 
     // 可选综合评分字段，可由系统根据三个维度评分计算得出
-    private Integer rating;
+    private Integer compositeScore;
 
     @NotNull(message = "环境评分不能为空")
     @Min(value = 1, message = "环境评分最小为1")
     @Max(value = 5, message = "环境评分最大为5")
-    private Integer environmentRating;
+    private Integer environmentScore;
 
     @NotNull(message = "服务评分不能为空")
     @Min(value = 1, message = "服务评分最小为1")
     @Max(value = 5, message = "服务评分最大为5")
-    private Integer serviceRating;
+    private Integer serviceScore;
 
     @NotNull(message = "口味评分不能为空")
     @Min(value = 1, message = "口味评分最小为1")
     @Max(value = 5, message = "口味评分最大为5")
-    private Integer tasteRating;
+    private Integer tasteScore;
 
     @NotNull(message = "餐厅ID不能为空")
     private Long restaurantId;

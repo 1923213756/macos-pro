@@ -4,73 +4,73 @@
 
     <select id="getReviewsByRestaurant" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
-            r.id, r.content, r.rating, r.user_id AS userId,
+            r.id, r.content, r.compositeScore, r.userId AS userId,
             u.userName AS username, u.phone AS userAvatar,
-            r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
-            r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
+            r.restaurantId AS restaurantId, s.shopName AS restaurantName,
+            r.likeCount AS likeCount, r.createdAt AS createdAt, r.updatedAt AS updatedAt,
             r.status,
             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS userLiked
         FROM
             reviews r
-                LEFT JOIN user u ON r.user_id = u.userId
-                LEFT JOIN shop s ON r.restaurant_id = s.shopId
-                LEFT JOIN likes l ON r.id = l.review_id AND l.user_id = #{userId}
+                LEFT JOIN user u ON r.userId = u.userId
+                LEFT JOIN shop s ON r.restaurantId = s.shopId
+                LEFT JOIN likes l ON r.id = l.reviewId AND l.userId = #{userId}
         WHERE
-            r.restaurant_id = #{restaurantId}
+            r.restaurantId = #{restaurantId}
           AND r.status = 'ACTIVE'
         ORDER BY
-            r.created_at DESC
+            r.createdAt DESC
     </select>
 
     <select id="getReviewsByUser" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
-            r.id, r.content, r.rating, r.user_id AS userId,
+            r.id, r.content, r.compositeScore, r.userId AS userId,
             u.userName AS username, u.phone AS userAvatar,
-            r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
-            r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
+            r.restaurantId AS restaurantId, s.shopName AS restaurantName,
+            r.likeCount AS likeCount, r.createdAt AS createdAt, r.updatedAt AS updatedAt,
             r.status,
             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS userLiked
         FROM
             reviews r
-                LEFT JOIN user u ON r.user_id = u.userId
-                LEFT JOIN shop s ON r.restaurant_id = s.shopId
-                LEFT JOIN likes l ON r.id = l.review_id AND l.user_id = #{currentUserId}
+                LEFT JOIN user u ON r.userId = u.userId
+                LEFT JOIN shop s ON r.restaurantId = s.shopId
+                LEFT JOIN likes l ON r.id = l.reviewId AND l.userId = #{currentUserId}
         WHERE
-            r.user_id = #{userId}
+            r.userId = #{userId}
           AND r.status = 'ACTIVE'
         ORDER BY
-            r.created_at DESC
+            r.createdAt DESC
     </select>
 
     <select id="getReviewById" resultType="com.foodmap.entity.dto.ReviewDTO">
         SELECT
-            r.id, r.content, r.composite_score, r.user_id AS userId,
+            r.id, r.content, r.compositeScore, r.userId AS userId,
             u.userName AS username, u.phone AS userAvatar,
-            r.restaurant_id AS restaurantId, s.shopName AS restaurantName,
-            r.like_count AS likeCount, r.created_at AS createdAt, r.updated_at AS updatedAt,
+            r.restaurantId AS restaurantId, s.shopName AS restaurantName,
+            r.likeCount AS likeCount, r.createdAt AS createdAt, r.updatedAt AS updatedAt,
             r.status,
             CASE WHEN l.id IS NOT NULL THEN true ELSE false END AS userLiked
         FROM
             reviews r
-                LEFT JOIN user u ON r.user_id = u.userId
-                LEFT JOIN shop s ON r.restaurant_id = s.shopId
-                LEFT JOIN likes l ON r.id = l.review_id AND l.user_id = #{userId}
+                LEFT JOIN user u ON r.userId = u.userId
+                LEFT JOIN shop s ON r.restaurantId = s.shopId
+                LEFT JOIN likes l ON r.id = l.reviewId AND l.userId = #{userId}
         WHERE
             r.id = #{reviewId}
           AND r.status = 'ACTIVE'
     </select>
 
     <select id="calculateAverageRating" resultType="java.lang.Double">
-        SELECT AVG(composite_score)
+        SELECT AVG(compositeScore)
         FROM reviews
-        WHERE restaurant_id = #{restaurantId}
+        WHERE restaurantId = #{restaurantId}
           AND status = 'ACTIVE'
     </select>
 
     <select id="countActiveReviewsByRestaurant" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM reviews
-        WHERE restaurant_id = #{restaurantId}
+        WHERE restaurantId = #{restaurantId}
           AND status = 'ACTIVE'
     </select>
 
@@ -78,50 +78,50 @@
         UPDATE shop s
             INNER JOIN (
             SELECT
-            restaurant_id,
-            ROUND(AVG(composite_score), 1) AS composite_score,
-            ROUND(AVG(environment_score), 1) AS environmentScore,
-            ROUND(AVG(service_score), 1) AS serviceScore,
-            ROUND(AVG(taste_score), 1) AS tasteScore,
-            COUNT(*) AS review_count
+            restaurantId,
+            ROUND(AVG(compositeScore), 1) AS compositeScore,
+            ROUND(AVG(environmentScore), 1) AS environmentScore,
+            ROUND(AVG(serviceScore), 1) AS serviceScore,
+            ROUND(AVG(tasteScore), 1) AS tasteScore,
+            COUNT(*) AS reviewCount
             FROM
             reviews
             WHERE
             status = 'ACTIVE'
             GROUP BY
-            restaurant_id
-            ) r ON s.shopId = r.restaurant_id
+            restaurantId
+            ) r ON s.shopId = r.restaurantId
             SET
-                s.compositeScore = r.composite_score,
-                s.environmentScore = r.environment_score,
-                s.serviceScore = r.service_score,
-                s.tasteScore = r.taste_score,
-                s.review_count = r.review_count
+                s.compositeScore = r.compositeScore,
+                s.environmentScore = r.environmentScore,
+                s.serviceScore = r.serviceScore,
+                s.tasteScore = r.tasteScore,
+                s.reviewCount = r.reviewCount
     </update>
 
     <update id="updateShopRatings">
         UPDATE shop s
             INNER JOIN (
             SELECT
-            restaurant_id,
-            ROUND(AVG(composite_score), 1) AS compositeScore,
-            ROUND(AVG(environment_score), 1) AS environmentScore,
-            ROUND(AVG(service_score), 1) AS serviceScore,
-            ROUND(AVG(taste_score), 1) AS tasteScore,
-            COUNT(*) AS review_count
+            restaurantId,
+            ROUND(AVG(compositeScore), 1) AS compositeScore,
+            ROUND(AVG(environmentScore), 1) AS environmentScore,
+            ROUND(AVG(serviceScore), 1) AS serviceScore,
+            ROUND(AVG(tasteScore), 1) AS tasteScore,
+            COUNT(*) AS reviewCount
             FROM
             reviews
             WHERE
-            status = 'ACTIVE' AND restaurant_id = #{shopId}
+            status = 'ACTIVE' AND restaurantId = #{shopId}
             GROUP BY
-            restaurant_id
-            ) r ON s.shop_id = r.restaurant_id
+            restaurantId
+            ) r ON s.shopId = r.restaurantId
             SET
-                s.compositeScore = r.composite-score,
-                s.environmentScore = r.environment-score,
-                s.serviceScore = r.service-score,
-                s.tasteScore = r.taste-score,
-                s.review_count = r.review_count
+                s.compositeScore = r.compositeScore,
+                s.environmentScore = r.environmentScore,
+                s.serviceScore = r.serviceScore,
+                s.tasteScore = r.tasteScore,
+                s.reviewCount = r.reviewCount
     </update>
 
 </mapper>

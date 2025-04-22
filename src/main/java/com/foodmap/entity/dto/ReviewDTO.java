@@ -16,12 +16,12 @@ public class ReviewDTO {
     private String content;
 
     // 综合评分
-    private Integer rating;
+    private Integer compositeScore;
 
     // 新增三个维度评分
-    private Integer environmentRating;  // 环境评分
-    private Integer serviceRating;      // 服务评分
-    private Integer tasteRating;        // 口味评分
+    private Integer environmentScore;  // 环境评分
+    private Integer serviceScore;      // 服务评分
+    private Integer tasteScore;        // 口味评分
 
     private Long userId;
     private String username;

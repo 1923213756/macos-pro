@@ -46,13 +46,13 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRestaurantId(dto.getRestaurantId());
 
         // 3. 设置评分
-        review.setEnvironmentRating(dto.getEnvironmentRating());
-        review.setServiceRating(dto.getServiceRating());
-        review.setTasteRating(dto.getTasteRating());
+        review.setEnvironmentScore(dto.getEnvironmentScore());
+        review.setServiceScore(dto.getServiceScore());
+        review.setTasteScore(dto.getTasteScore());
 
         // 4. 计算综合评分
-        float avgRating = (dto.getEnvironmentRating() + dto.getServiceRating() + dto.getTasteRating()) / 3.0f;
-        review.setRating(Math.round(avgRating));
+        float avgRating = (dto.getEnvironmentScore() + dto.getServiceScore() + dto.getTasteScore()) / 3.0f;
+        review.setCompositeScore(Math.round(avgRating));
 
         // 5. 设置默认值
         review.setLikeCount(0);
@@ -83,10 +83,10 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewDTO dto = new ReviewDTO();
         dto.setId(review.getId());
         dto.setContent(review.getContent());
-        dto.setRating(review.getRating());
-        dto.setEnvironmentRating(review.getEnvironmentRating());
-        dto.setServiceRating(review.getServiceRating());
-        dto.setTasteRating(review.getTasteRating());
+        dto.setCompositeScore(review.getCompositeScore());
+        dto.setEnvironmentScore(review.getEnvironmentScore());
+        dto.setServiceScore(review.getServiceScore());
+        dto.setTasteScore(review.getTasteScore());
         dto.setUserId(review.getUserId());
         dto.setRestaurantId(review.getRestaurantId());
         dto.setCreatedAt(review.getCreatedAt());
@@ -112,7 +112,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         review.setContent(dto.getContent());
-        review.setRating(dto.getRating());
+        review.setCompositeScore(dto.getScore());
 
         reviewMapper.updateById(review);
 

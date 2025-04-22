@@ -22,31 +22,31 @@ public class Review {
 
     private String content;
 
-    private Integer rating;//综合评分
+    private Integer compositeScore;//综合评分
 
-    @TableField("environment_rating")
-    private Integer environmentRating; // 环境评分
+    @TableField("environmentScore")
+    private Integer environmentScore; // 环境评分
 
-    @TableField("service_rating")
-    private Integer serviceRating; // 服务评分
+    @TableField("serviceScore")
+    private Integer serviceScore; // 服务评分
 
-    @TableField("taste_rating")
-    private Integer tasteRating; // 口味评分
+    @TableField("tasteScore")
+    private Integer tasteScore; // 口味评分
 
-    @TableField("user_id")
+    @TableField("userId")
     private Long userId;
 
-    @TableField("restaurant_id")
+    @TableField("restaurantId")
     private Long restaurantId;
 
-    @TableField("like_count")
+    @TableField("likeCount")
     @Builder.Default
     private Integer likeCount = 0;
 
-    @TableField(value = "created_at", fill = FieldFill.INSERT)
+    @TableField(value = "createdAt", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 
-    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "updatedAt", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
     private String status;

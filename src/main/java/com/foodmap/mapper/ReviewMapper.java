@@ -18,27 +18,6 @@ public interface ReviewMapper extends BaseMapper<Review> {
     // 计算综合评分（所有维度的平均分）
     Double calculateAverageRating(@Param("restaurantId") Long restaurantId);
 
-    // 计算环境评分
-    @Select("SELECT AVG(environment_rating) FROM reviews WHERE restaurant_id = #{restaurantId} AND status = 'ACTIVE'")
-    Double calculateEnvironmentRating(@Param("restaurantId") Long restaurantId);
-
-    // 计算服务评分
-    @Select("SELECT AVG(service_rating) FROM reviews WHERE restaurant_id = #{restaurantId} AND status = 'ACTIVE'")
-    Double calculateServiceRating(@Param("restaurantId") Long restaurantId);
-
-    // 计算口味评分
-    @Select("SELECT AVG(taste_rating) FROM reviews WHERE restaurant_id = #{restaurantId} AND status = 'ACTIVE'")
-    Double calculateTasteRating(@Param("restaurantId") Long restaurantId);
-
-    // 计算所有维度评分（整合方法）
-    @Select("SELECT " +
-            "AVG(rating) as compositeScore, " +
-            "AVG(environment_rating) as environmentScore, " +
-            "AVG(service_rating) as serviceScore, " +
-            "AVG(taste_rating) as tasteScore " +
-            "FROM reviews WHERE restaurant_id = #{restaurantId} AND status = 'ACTIVE'")
-    Map<String, Double> calculateAllRatings(@Param("restaurantId") Long restaurantId);
-
     // 统计评论数
     Long countActiveReviewsByRestaurant(@Param("restaurantId") Long restaurantId);
 
