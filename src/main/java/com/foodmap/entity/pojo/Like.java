@@ -18,15 +18,15 @@ public class Like {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("user_id")
+    @TableField("userId")
     private Long userId;
 
-    @TableField("review_id")
+    @TableField("reviewId")
     private Long reviewId;
 
     private String type;
 
-    @TableField(value = "created_at", fill = FieldFill.INSERT)
+    @TableField(value = "createdAt", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 
     public static final String TYPE_LIKE = "LIKE";

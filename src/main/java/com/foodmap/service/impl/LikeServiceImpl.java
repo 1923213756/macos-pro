@@ -76,9 +76,9 @@ public class LikeServiceImpl implements LikeService {
         updateWrapper.eq(Review::getId, review.getId());
 
         if (isIncrease) {
-            updateWrapper.setSql("like_count = like_count + 1");
+            updateWrapper.setSql("likeCount = likeCount + 1");  // 改为 likeCount
         } else {
-            updateWrapper.setSql("like_count = GREATEST(0, like_count - 1)");
+            updateWrapper.setSql("likeCount = GREATEST(0, likeCount - 1)");  // 改为 likeCount
         }
 
         reviewMapper.update(null, updateWrapper);

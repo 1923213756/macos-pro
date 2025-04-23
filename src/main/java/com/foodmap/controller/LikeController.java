@@ -16,7 +16,7 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @PostMapping("/toggle")
+    @PostMapping("")
     public ResponseEntity<ApiResponse> toggleLike(@Valid @RequestBody LikeCreateDTO dto) {
         boolean isLiked = likeService.toggleLike(dto);
 

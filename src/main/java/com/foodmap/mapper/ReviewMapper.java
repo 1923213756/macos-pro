@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
 import java.util.Map;
 
 @Mapper
@@ -31,4 +32,8 @@ public interface ReviewMapper extends BaseMapper<Review> {
     int updateAllShopsRatings();
 
     int updateShopRatings(@Param("shopId") Long shopId);
+    
+    long countByRestaurantId(Long restaurantId);
+
+    List<Review> findRecentByRestaurantId(Long restaurantId, Page<Review> page);
 }

@@ -179,7 +179,7 @@ public boolean updateShopInfo(ShopInfoUpdateDTO dto) {
     UpdateWrapper<Shop> updateWrapper = new UpdateWrapper<>();
 
     // 2. 根据DTO中的shopId设置更新条件
-    updateWrapper.eq("shop_id", dto.getShopId());
+    updateWrapper.eq("shopId", dto.getShopId());
 
     // 3. 只更新非null的特定字段
     // 注意: 保持与原代码相同的数据库字段名格式

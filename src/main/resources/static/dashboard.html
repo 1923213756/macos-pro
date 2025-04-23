@@ -2059,14 +2059,15 @@
     }
 
     // 点赞/取消点赞评论
-    function toggleReviewLike(reviewId) {
+    // 点赞/取消点赞评论
+    function toggleReviewLike(reviewId, likeButton = null) {
         // 检查是否已登录
-        if (!currentUser) {
+        if (!currentUser && !currentShop) {
             alert('请先登录才能点赞评论');
             return;
         }
 
-        fetchWithTokenHandling(`http://localhost:8080/api/likes`, {
+        fetchWithTokenHandling(`/api/likes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -2077,26 +2078,72 @@
             })
         })
             .then(data => {
-                // 获取点赞按钮元素
-                const likeButton = document.querySelector(`.review-item[data-id="${reviewId}"] .review-like`);
+                // 如果没有传入按钮元素，则查找它
+                if (!likeButton) {
+                    likeButton = document.querySelector(`.review-item[data-id="${reviewId}"] .review-like`);
+                }
+
                 const likeCountElement = likeButton.querySelector('.like-count');
+
+                // 获取当前点赞数
+                let count = parseInt(likeCountElement.textContent || '0');
 
                 // 更新UI
                 if (likeButton.classList.contains('active')) {
                     // 取消点赞
                     likeButton.classList.remove('active');
-                    likeCountElement.textContent = parseInt(likeCountElement.textContent) - 1;
+                    likeCountElement.textContent = Math.max(0, count - 1);
                 } else {
                     // 添加点赞
                     likeButton.classList.add('active');
-                    likeCountElement.textContent = parseInt(likeCountElement.textContent) + 1;
+                    likeCountElement.textContent = count + 1;
                 }
             })
             .catch(error => {
                 if (error !== 'Session expired') {
                     alert(`点赞操作失败: ${error.message || error}`);
+                    console.error('点赞操作失败:', error);
                 }
             });
+    }
+
+    // 检查评论点赞状态
+    function checkReviewLikeStatus(reviewId) {
+        // 如果没有登录，则不需要检查
+        if (!currentUser && !currentShop) {
+            return Promise.resolve(false);
+        }
+
+        return fetchWithTokenHandling(`/api/likes/check/${reviewId}`)
+            .then(response => {
+                if (response.success) {
+                    // 找到对应的点赞按钮并更新状态
+                    const likeButton = document.querySelector(`.review-item[data-id="${reviewId}"] .review-like`);
+                    if (likeButton) {
+                        if (response.data) {
+                            likeButton.classList.add('active');
+                        } else {
+                            likeButton.classList.remove('active');
+                        }
+                    }
+                    return response.data; // 返回是否已点赞
+                }
+                return false;
+            })
+            .catch(error => {
+                console.error('检查点赞状态失败:', error);
+                return false;
+            });
+    }
+
+    // 批量检查点赞状态
+    function batchCheckLikeStatus(reviewIds) {
+        if (!reviewIds || reviewIds.length === 0) return;
+
+        console.log('批量检查评论点赞状态...');
+        reviewIds.forEach(reviewId => {
+            checkReviewLikeStatus(reviewId);
+        });
     }
 
     // 生成星星HTML的函数
@@ -2194,54 +2241,44 @@
 
 
     // 加载用户的评论列表
-    // 修改loadUserReviews函数
-    function loadUserReviews(page = 1, pageSize = 10) {
-        console.log("加载评论, 页码:", page);
+    // 加载用户评论
+    function loadUserReviews(page = 1) {
         const container = document.getElementById('user-reviews-container');
-        container.innerHTML = '<p>正在加载评论...</p>';
+        container.innerHTML = '<div class="loading">加载评论中...</div>';
 
-        // 设置正确的API路径和页面标题
-        let apiPath;
-        const titleElement = document.querySelector('#my-reviews-view .section-title');
+        // 根据当前登录类型选择API路径
+        const apiPath = currentUser
+            ? `/api/reviews/user/${currentUser.userId}?page=${page}&size=5`
+            : `/api/reviews/shop/${currentShop.shopId}?page=${page}&size=5`;
 
-        if (currentUser) {
-            // 普通用户 - 加载该用户发表的评论
-            apiPath = `/api/reviews/user/${currentUser.userId}`;
-            titleElement.textContent = "我的评论";
-        } else if (currentShop) {
-            // 商铺 - 加载该商铺收到的评论
-            apiPath = `/api/reviews/restaurant/${currentShop.shopId}`;
-            titleElement.textContent = "顾客评价";
-        } else {
-            container.innerHTML = '<p>未登录或无权限访问</p>';
-            return;
-        }
-
-        // 添加分页参数
-        const params = `current=${page}&size=${pageSize}`;
-
-        // 调用接口
-        console.log(`请求URL: ${apiPath}?${params}`);
-        fetchWithTokenHandling(`${apiPath}?${params}`)
+        fetchWithTokenHandling(apiPath)
             .then(data => {
-                console.log("评论数据返回:", data);
+                container.innerHTML = '';
 
-                if (!data || !data.records || data.records.length === 0) {
-                    container.innerHTML = '<p class="no-reviews">暂无评论记录</p>';
-                    document.getElementById('user-reviews-pagination').innerHTML = '';
+                if (!data.records || data.records.length === 0) {
+                    container.innerHTML = '<div class="no-reviews">暂无评论记录</div>';
                     return;
                 }
 
-                // 渲染评论列表
+                // 渲染评论
                 renderUserReviews(data);
+
+                // 收集评论ID进行点赞状态验证
+                if (currentUser) { // 只为用户验证点赞状态，商家不需要
+                    const reviewIds = data.records.map(review => review.id);
+                    batchCheckLikeStatus(reviewIds);
+                }
+
                 // 渲染分页
                 renderPagination(data, 'user-reviews-pagination', loadUserReviews);
             })
             .catch(error => {
-                console.error('加载评论失败:', error);
-                container.innerHTML = `<p class="error">加载评论失败: ${error}</p>`;
+                container.innerHTML = '<div class="error">加载失败，请稍后再试</div>';
+                console.error('加载用户评论失败:', error);
             });
     }
+
+
     // 渲染用户评论列表
     function renderUserReviews(data) {
         const container = document.getElementById('user-reviews-container');

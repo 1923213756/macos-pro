@@ -65,3 +65,10 @@ mybatis-plus:
       id-type: assign_id
       update-strategy: not_null
 
+ollama:
+  api:
+    endpoint:http://localhost:11434
+  model:deepseek-r1:14b
+  request:
+    timeout:60000
+
