@@ -666,6 +666,7 @@
                     <li><a href="#" onclick="showView('shop-list-view')">浏览商铺</a></li>
                     <li><a href="#" onclick="showView('my-reviews-view')">我的评论</a></li>
                     <li><a href="#" onclick="showView('profile-view')">个人信息</a></li>
+                    <li><a href="#" onclick="showView('ai-analysis-view')">AI评论分析</a></li>
                 </ul>
             </div>
 
@@ -2478,91 +2479,210 @@
         });
     }
 
-    // 添加到dashboard.html的<script>标签中的底部或者替换现有JS
-
-    // 1. 在侧边栏添加新菜单项 - 在shop-admin-section部分中添加
-    function addAiMenuToSidebar() {
-        // 找到商铺管理菜单
-        const shopAdminSection = document.querySelector('.shop-admin-section');
-        if (shopAdminSection) {
-            const sidebarMenu = shopAdminSection.querySelector('.sidebar-menu');
-            if (sidebarMenu) {
-                // 添加AI分析工具菜单项
-                const aiMenuItem = document.createElement('li');
-                aiMenuItem.innerHTML = '<a href="#" onclick="showView(\'ai-analysis-view\')">AI评论分析</a>';
-                sidebarMenu.appendChild(aiMenuItem);
+    // AI评论分析功能
+    document.addEventListener('DOMContentLoaded', function() {
+        // AI视图显示时加载数据
+        const originalShowView = window.showView;
+        window.showView = function(viewId) {
+            // 调用原始showView函数或基本实现
+            if (typeof originalShowView === 'function') {
+                originalShowView(viewId);
+            } else {
+                document.querySelectorAll('.view').forEach(view => {
+                    view.classList.remove('active');
+                });
+                const targetView = document.getElementById(viewId);
+                if (targetView) {
+                    targetView.classList.add('active');
+                }
             }
-        }
-    }
 
-    // 2. 在content区域添加新的视图容器
-    function addAiViewContainer() {
-        const contentDiv = document.querySelector('.content');
-        if (contentDiv) {
-            const aiViewDiv = document.createElement('div');
-            aiViewDiv.id = 'ai-analysis-view';
-            aiViewDiv.className = 'view';
-            aiViewDiv.innerHTML = '<div id="ai-analysis-content">加载中...</div>';
-            contentDiv.appendChild(aiViewDiv);
-        }
-    }
+            // 当显示AI分析视图时加载内容
+            if (viewId === 'ai-analysis-view' && currentShop) {
+                loadReviewSummary(currentShop.shopId);
+                loadRestaurantDishes(currentShop.shopId);
 
-    // 3. 加载AI评论分析页面
-    function loadAiAnalysisContent() {
-        const aiContent = document.getElementById('ai-analysis-content');
-        if (!aiContent) return;
+                // 确保事件监听器只添加一次
+                document.getElementById('refresh-summary').onclick = refreshSummary;
+                document.getElementById('generate-guide').onclick = generateGuide;
+            }
+        };
+    });
 
-        fetch('review-ai.html')
-            .then(response => response.text())
-            .then(html => {
-                // 提取body内容
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const bodyContent = doc.body.innerHTML;
+    // 加载评论摘要
+    function loadReviewSummary(restaurantId) {
+        if (!restaurantId) return;
 
-                // 将内容插入到容器中
-                aiContent.innerHTML = bodyContent;
+        document.getElementById('summary-content').innerHTML = `
+        <div class="loading-indicator">
+            <div class="loading-spinner"></div>
+            <span>正在加载评论摘要...</span>
+        </div>
+    `;
 
-                // 如果是商铺，初始化AI工具
-                if (currentShop && window.initAiReviewTools) {
-                    window.initAiReviewTools(currentShop.shopId);
+        // 使用异步API获取摘要
+        fetchWithTokenHandling(`/api/reviews/analysis/summary/${restaurantId}/async`)
+            .then(response => {
+                if (response.success) {
+                    displaySummary(response.data);
+                } else {
+                    throw new Error(response.message || '加载失败');
                 }
             })
             .catch(error => {
-                console.error('加载AI分析页面失败:', error);
-                aiContent.innerHTML = '<p>加载AI分析工具失败，请刷新页面重试。</p>';
+                console.error('加载评论摘要失败:', error);
+                showMessage('summary-message', 'error', `加载评论摘要失败: ${error.message || error}`);
+                document.getElementById('summary-content').innerHTML = '<p>无法加载评论摘要，请稍后再试。</p>';
             });
     }
 
-    // 在原始的showView函数中添加处理新视图的逻辑
-    const originalShowView = window.showView;
-    window.showView = function(viewId) {
-        // 调用原始函数
-        if (typeof originalShowView === 'function') {
-            originalShowView(viewId);
-        } else {
-            // 如果原始函数不存在，手动实现基本功能
-            document.querySelectorAll('.view').forEach(view => {
-                view.classList.remove('active');
+    // 刷新评论摘要
+    function refreshSummary() {
+        if (!currentShop || !currentShop.shopId) {
+            showMessage('summary-message', 'error', '无法获取餐厅信息');
+            return;
+        }
+
+        document.getElementById('summary-content').innerHTML = `
+        <div class="loading-indicator">
+            <div class="loading-spinner"></div>
+            <span>正在刷新评论摘要...</span>
+        </div>
+    `;
+
+        // 使用刷新API
+        fetchWithTokenHandling(`/api/reviews/analysis/summary/${currentShop.shopId}/refresh`, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.success) {
+                    displaySummary(response.data);
+                    showMessage('summary-message', 'success', '评论摘要已成功刷新！');
+                } else {
+                    throw new Error(response.message || '刷新失败');
+                }
+            })
+            .catch(error => {
+                console.error('刷新评论摘要失败:', error);
+                showMessage('summary-message', 'error', `刷新评论摘要失败: ${error.message || error}`);
+                document.getElementById('summary-content').innerHTML = '<p>刷新评论摘要失败，请稍后再试。</p>';
             });
-            const targetView = document.getElementById(viewId);
-            if (targetView) {
-                targetView.classList.add('active');
-            }
+    }
+
+    // 显示评论摘要
+    function displaySummary(summaryData) {
+        document.getElementById('summary-content').innerHTML = `
+        <div class="ai-summary">${summaryData}</div>
+    `;
+    }
+
+    // 加载餐厅菜品
+    function loadRestaurantDishes(restaurantId) {
+        if (!restaurantId) return;
+
+        // 假设有API获取菜品列表
+        fetchWithTokenHandling(`/api/dishes?restaurantId=${restaurantId}`)
+            .then(response => {
+                if (response.success && Array.isArray(response.data)) {
+                    const dishSelector = document.getElementById('dish-selector');
+                    // 清除除了第一个选项外的所有选项
+                    while (dishSelector.options.length > 1) {
+                        dishSelector.remove(1);
+                    }
+
+                    // 添加菜品选项
+                    response.data.forEach(dish => {
+                        const option = document.createElement('option');
+                        option.value = dish.name;
+                        option.textContent = dish.name;
+                        dishSelector.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('加载菜品列表失败:', error);
+            });
+    }
+
+    // 生成评论引导
+    function generateGuide() {
+        const dishValue = document.getElementById('dish-selector').value;
+        const typeValue = document.getElementById('type-selector').value;
+
+        if (!dishValue && !typeValue) {
+            showMessage('guide-message', 'error', '请至少选择一个菜品或商铺类型');
+            return;
         }
 
-        // 额外处理：当显示AI分析视图时加载内容
-        if (viewId === 'ai-analysis-view') {
-            loadAiAnalysisContent();
+        document.getElementById('guide-content').innerHTML = `
+        <div class="loading-indicator">
+            <div class="loading-spinner"></div>
+            <span>正在生成评论引导...</span>
+        </div>
+    `;
+
+        // 构建查询参数
+        const queryParams = new URLSearchParams();
+        if (dishValue) queryParams.append('dish', dishValue);
+        if (typeValue) queryParams.append('type', typeValue);
+
+        // 调用API生成引导
+        fetchWithTokenHandling(`/api/reviews/guide?${queryParams.toString()}`)
+            .then(response => {
+                if (response.success) {
+                    document.getElementById('guide-content').innerHTML = `
+                    <div class="ai-guide">${response.data}</div>
+                    <button class="btn" onclick="copyGuideContent()">复制内容</button>
+                `;
+                    showMessage('guide-message', 'success', '引导生成成功！');
+                } else {
+                    throw new Error(response.message || '生成失败');
+                }
+            })
+            .catch(error => {
+                console.error('生成评论引导失败:', error);
+                showMessage('guide-message', 'error', `生成评论引导失败: ${error.message || error}`);
+                document.getElementById('guide-content').innerHTML = '<p>生成评论引导失败，请稍后再试。</p>';
+            });
+    }
+
+    // 复制引导内容
+    function copyGuideContent() {
+        const guideElement = document.querySelector('.ai-guide');
+        if (!guideElement) return;
+
+        const textToCopy = guideElement.innerText;
+
+        // 创建临时textarea
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            document.execCommand('copy');
+            showMessage('guide-message', 'success', '评论引导已复制到剪贴板！');
+        } catch (err) {
+            showMessage('guide-message', 'error', '复制失败，请手动复制');
         }
-    };
 
-    // 页面加载时初始化新功能
-    document.addEventListener('DOMContentLoaded', function() {
-        // 添加侧边栏菜单项
-        addAiMenuToSidebar();
+        document.body.removeChild(textarea);
+    }
 
-        // 添加视图容器
-        addAiViewContainer();
-    });
+    // 显示消息
+    function showMessage(elementId, type, message) {
+        const messageElement = document.getElementById(elementId);
+        if (!messageElement) return;
+
+        messageElement.textContent = message;
+        messageElement.className = `message ${type}`;
+        messageElement.style.display = 'block';
+
+        // 5秒后自动隐藏成功消息
+        if (type === 'success') {
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+    }
 </script>
