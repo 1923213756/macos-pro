@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface LikeMapper extends BaseMapper<Like> {
 
-    @Select("SELECT COUNT(1) FROM likes WHERE user_id = #{userId} AND review_id = #{reviewId}")
+    @Select("SELECT COUNT(1) FROM likes WHERE userId = #{userId} AND reviewId = #{reviewId}")
     Integer checkUserLiked(@Param("userId") Long userId, @Param("reviewId") Long reviewId);
 
     // 删除点赞记录

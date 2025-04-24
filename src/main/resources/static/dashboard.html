@@ -298,7 +298,15 @@
         .message {
             padding: 10px;
             margin: 10px 0;
-            border-radius: 4px;
+            border-radius: 4px;<div class="sidebar-section shop-admin-section" style="display: none;">
+        <h3 class="sidebar-title">商铺管理</h3>
+        <ul class="sidebar-menu">
+        <li><a href="#" onclick="showView('shop-info-view')">商铺信息</a></li>
+        <li><a href="#" onclick="showView('shop-status-view')">营业状态</a></li>
+        <!-- 在这里添加新菜单项 -->
+        <li><a href="#" onclick="showView('ai-analysis-view')">AI评论分析</a></li>
+        </ul>
+        </div>
             display: none;
         }
 
@@ -667,6 +675,8 @@
                 <ul class="sidebar-menu">
                     <li><a href="#" onclick="showView('shop-info-view')">商铺信息</a></li>
                     <li><a href="#" onclick="showView('shop-status-view')">营业状态</a></li>
+                    <!-- 在这里添加新菜单项 -->
+                    <li><a href="#" onclick="showView('ai-analysis-view')">AI评论分析</a></li>
                 </ul>
             </div>
         </div>
@@ -875,6 +885,116 @@
                     </form>
                 </div>
             </div>
+            <!-- AI评论分析视图 -->
+            <div id="ai-analysis-view" class="view">
+                <h2 class="section-title">AI评论分析工具</h2>
+
+                <style>
+                    .ai-section {
+                        background: white;
+                        border-radius: 8px;
+                        padding: 20px;
+                        margin-bottom: 20px;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    }
+
+                    .ai-section-title {
+                        font-size: 18px;
+                        margin-bottom: 15px;
+                        color: var(--primary-color);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .ai-summary {
+                        line-height: 1.6;
+                        white-space: pre-line;
+                        background: #f9f9f9;
+                        padding: 15px;
+                        border-radius: 6px;
+                        border-left: 4px solid var(--primary-color);
+                    }
+
+                    .ai-guide {
+                        background: #f0f8ff;
+                        padding: 15px;
+                        border-radius: 6px;
+                        border-left: 4px solid #2196F3;
+                        margin-bottom: 15px;
+                    }
+
+                    .loading-indicator {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                        color: var(--text-light);
+                    }
+
+                    .loading-spinner {
+                        border: 4px solid rgba(0, 0, 0, 0.1);
+                        border-radius: 50%;
+                        border-top: 4px solid var(--primary-color);
+                        width: 20px;
+                        height: 20px;
+                        animation: spin 1s linear infinite;
+                        margin-right: 10px;
+                    }
+
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+
+                <!-- 评论摘要部分 -->
+                <div class="ai-section" id="summary-section">
+                    <div class="ai-section-title">
+                        <span>评论智能摘要</span>
+                        <button id="refresh-summary" class="btn">刷新摘要</button>
+                    </div>
+                    <div id="summary-message" class="message"></div>
+                    <div id="summary-content">
+                        <div class="loading-indicator">
+                            <div class="loading-spinner"></div>
+                            <span>正在加载评论摘要...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 评论引导部分 -->
+                <div class="ai-section">
+                    <div class="ai-section-title">
+                        <span>评论智能引导</span>
+                    </div>
+                    <div id="guide-message" class="message"></div>
+                    <div class="guide-options">
+                        <label for="dish-selector">选择菜品:</label>
+                        <select id="dish-selector">
+                            <option value="">不针对特定菜品</option>
+                            <!-- 菜品将通过JavaScript动态加载 -->
+                        </select>
+
+                        <label for="type-selector">商铺类型:</label>
+                        <select id="type-selector">
+                            <option value="">不指定类型</option>
+                            <option value="中餐">中餐</option>
+                            <option value="西餐">西餐</option>
+                            <option value="火锅">火锅</option>
+                            <option value="烧烤">烧烤</option>
+                            <option value="甜品">甜品</option>
+                            <option value="快餐">快餐</option>
+                        </select>
+
+                        <button id="generate-guide" class="btn">生成引导</button>
+                    </div>
+                    <div id="guide-content">
+                        <p>请选择菜品或商铺类型，然后点击"生成引导"按钮获取评论引导。</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -2357,4 +2477,92 @@
             container.appendChild(reviewElement);
         });
     }
+
+    // 添加到dashboard.html的<script>标签中的底部或者替换现有JS
+
+    // 1. 在侧边栏添加新菜单项 - 在shop-admin-section部分中添加
+    function addAiMenuToSidebar() {
+        // 找到商铺管理菜单
+        const shopAdminSection = document.querySelector('.shop-admin-section');
+        if (shopAdminSection) {
+            const sidebarMenu = shopAdminSection.querySelector('.sidebar-menu');
+            if (sidebarMenu) {
+                // 添加AI分析工具菜单项
+                const aiMenuItem = document.createElement('li');
+                aiMenuItem.innerHTML = '<a href="#" onclick="showView(\'ai-analysis-view\')">AI评论分析</a>';
+                sidebarMenu.appendChild(aiMenuItem);
+            }
+        }
+    }
+
+    // 2. 在content区域添加新的视图容器
+    function addAiViewContainer() {
+        const contentDiv = document.querySelector('.content');
+        if (contentDiv) {
+            const aiViewDiv = document.createElement('div');
+            aiViewDiv.id = 'ai-analysis-view';
+            aiViewDiv.className = 'view';
+            aiViewDiv.innerHTML = '<div id="ai-analysis-content">加载中...</div>';
+            contentDiv.appendChild(aiViewDiv);
+        }
+    }
+
+    // 3. 加载AI评论分析页面
+    function loadAiAnalysisContent() {
+        const aiContent = document.getElementById('ai-analysis-content');
+        if (!aiContent) return;
+
+        fetch('review-ai.html')
+            .then(response => response.text())
+            .then(html => {
+                // 提取body内容
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const bodyContent = doc.body.innerHTML;
+
+                // 将内容插入到容器中
+                aiContent.innerHTML = bodyContent;
+
+                // 如果是商铺，初始化AI工具
+                if (currentShop && window.initAiReviewTools) {
+                    window.initAiReviewTools(currentShop.shopId);
+                }
+            })
+            .catch(error => {
+                console.error('加载AI分析页面失败:', error);
+                aiContent.innerHTML = '<p>加载AI分析工具失败，请刷新页面重试。</p>';
+            });
+    }
+
+    // 在原始的showView函数中添加处理新视图的逻辑
+    const originalShowView = window.showView;
+    window.showView = function(viewId) {
+        // 调用原始函数
+        if (typeof originalShowView === 'function') {
+            originalShowView(viewId);
+        } else {
+            // 如果原始函数不存在，手动实现基本功能
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+            const targetView = document.getElementById(viewId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+        }
+
+        // 额外处理：当显示AI分析视图时加载内容
+        if (viewId === 'ai-analysis-view') {
+            loadAiAnalysisContent();
+        }
+    };
+
+    // 页面加载时初始化新功能
+    document.addEventListener('DOMContentLoaded', function() {
+        // 添加侧边栏菜单项
+        addAiMenuToSidebar();
+
+        // 添加视图容器
+        addAiViewContainer();
+    });
 </script>
