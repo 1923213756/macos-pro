@@ -575,39 +575,7 @@
     </div>
 </div>
 
-<!-- 商铺管理 - 菜品管理 -->
-<div id="dish-management-section" style="display: none;" class="view">
-    <h2 class="section-title">菜品管理</h2>
-    <div id="dish-management-message" class="message"></div>
-    <form id="dish-form">
-        <input type="hidden" id="dish-id">
-        <div class="form-group">
-            <label for="dish-name">菜品名称</label>
-            <input type="text" id="dish-name" required>
-        </div>
-        <div class="form-group">
-            <label for="dish-description">菜品描述</label>
-            <textarea id="dish-description"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="dish-price">菜品价格</label>
-            <input type="number" id="dish-price" step="0.01" required>
-        </div>
-        <div class="form-group">
-            <label for="dish-special">是否为特色菜</label>
-            <select id="dish-special">
-                <option value="1">是</option>
-                <option value="0" selected>否</option>
-            </select>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="btn">保存菜品</button>
-            <button type="button" class="btn" id="reset-dish-form">重置</button>
-        </div>
-    </form>
-    <h3 class="section-title">现有菜品</h3>
-    <ul id="dish-list"></ul>
-</div>
+
 <!-- 评论模态框内容替换 -->
 <div id="review-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
     <div style="background-color: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 600px; border-radius: 8px; position: relative;">
@@ -836,6 +804,41 @@
             <div id="shop-info-view" class="view">
                 <h2 class="section-title">编辑商铺信息</h2>
 
+                <!-- 商铺管理 - 菜品管理 (仅商铺管理员可见) -->
+                <div id="dish-management-section" style="display: none;">
+                    <h2 class="section-title">菜品管理</h2>
+                    <div id="dish-management-message" class="message"></div>
+                    <form id="dish-form">
+                        <input type="hidden" id="dish-id">
+                        <div class="form-group">
+                            <label for="dish-name">菜品名称</label>
+                            <input type="text" id="dish-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dish-description">菜品描述</label>
+                            <textarea id="dish-description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="dish-price">菜品价格</label>
+                            <input type="number" id="dish-price" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dish-special">是否为特色菜</label>
+                            <select id="dish-special">
+                                <option value="1">是</option>
+                                <option value="0" selected>否</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn">保存菜品</button>
+                            <button type="button" class="btn" id="reset-dish-form">重置</button>
+                        </div>
+                    </form>
+                    <h3 class="section-title">现有菜品</h3>
+                    <ul id="dish-list"></ul>
+                </div>
+
+                <!-- 商铺基本信息 -->
                 <div class="profile-section">
                     <div id="shop-info-message" class="message"></div>
                     <form id="shop-info-form">
@@ -973,6 +976,29 @@
                 return Promise.reject(error);
             });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const token = localStorage.getItem('token');
+        const userInfo = localStorage.getItem('userInfo');
+        const shopInfo = localStorage.getItem('shopInfo');
+
+        if (!token || (!userInfo && !shopInfo)) {
+            console.log("未找到有效的登录信息，跳转到登录页");
+            window.location.href = 'index.html';
+            return;
+        }
+
+        if (userInfo) {
+            // 普通用户，隐藏菜品管理部分
+            document.getElementById('dish-management-section').style.display = 'none';
+            console.log("普通用户，无权限访问菜品管理部分");
+        } else if (shopInfo) {
+            // 商铺管理员，显示菜品管理部分
+            currentShop = JSON.parse(shopInfo);
+            document.getElementById('dish-management-section').style.display = 'block';
+            console.log("商铺管理员，显示菜品管理部分");
+        }
+    });
 
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', function() {
