@@ -1905,17 +1905,14 @@
             return;
         }
 
-        // 计算综合评分（三个维度的平均值）
-        const compositeRating = (parseFloat(environmentRating) + parseFloat(serviceRating) + parseFloat(tasteRating)) / 3;
-
-        // 构建请求数据
+        // 构建请求数据 - 将rating字段名改为score
         const reviewData = {
-            environmentRating: parseFloat(environmentRating),
-            serviceRating: parseFloat(serviceRating),
-            tasteRating: parseFloat(tasteRating),
-            rating: Math.round(compositeRating * 10) / 10, // 四舍五入到小数点后一位
+            environmentScore: parseFloat(environmentRating),  // 改为Score
+            serviceScore: parseFloat(serviceRating),          // 改为Score
+            tasteScore: parseFloat(tasteRating),              // 改为Score
             content: content.trim(),
             restaurantId: parseInt(restaurantId)
+            // 移除rating字段，由后端计算compositeScore
         };
 
         console.log("发送评论数据:", reviewData); // 添加日志
@@ -1979,20 +1976,20 @@
                     document.getElementById('review-shop-id').value = data.restaurantId;
                     document.getElementById('review-content').value = data.content;
 
-                    // 设置各维度评分
-                    if (data.environmentRating) {
-                        document.getElementById('review-environment-rating').value = data.environmentRating;
-                        updateStarsSelection('environment-rating-input', data.environmentRating);
+                    // 设置各维度评分 - 将rating字段名改为score
+                    if (data.environmentScore) {  // 修改为environmentScore
+                        document.getElementById('review-environment-rating').value = data.environmentScore;
+                        updateStarsSelection('environment-rating-input', data.environmentScore);
                     }
 
-                    if (data.serviceRating) {
-                        document.getElementById('review-service-rating').value = data.serviceRating;
-                        updateStarsSelection('service-rating-input', data.serviceRating);
+                    if (data.serviceScore) {  // 修改为serviceScore
+                        document.getElementById('review-service-rating').value = data.serviceScore;
+                        updateStarsSelection('service-rating-input', data.serviceScore);
                     }
 
-                    if (data.tasteRating) {
-                        document.getElementById('review-taste-rating').value = data.tasteRating;
-                        updateStarsSelection('taste-rating-input', data.tasteRating);
+                    if (data.tasteScore) {  // 修改为tasteScore
+                        document.getElementById('review-taste-rating').value = data.tasteScore;
+                        updateStarsSelection('taste-rating-input', data.tasteScore);
                     }
 
                     // 显示模态框
@@ -2056,6 +2053,67 @@
                     alert(`删除失败: ${error.message || error}`);
                 }
             });
+    }
+
+    // 提交评论函数 - 这部分已经正确映射为score
+    function submitReview() {
+        const shopId = document.getElementById('review-shop-id').value;
+        const reviewId = document.getElementById('review-id').value;
+        const content = document.getElementById('review-content').value;
+
+        // 获取评分值
+        const environmentRating = document.getElementById('review-environment-rating').value;
+        const serviceRating = document.getElementById('review-service-rating').value;
+        const tasteRating = document.getElementById('review-taste-rating').value;
+
+        // 验证数据
+        if (!environmentRating || !serviceRating || !tasteRating) {
+            showReviewModalMessage('error', '请为环境、服务和口味评分');
+            return;
+        }
+
+        if (!content || content.trim().length < 5) {
+            showReviewModalMessage('error', '请输入至少5个字符的评论内容');
+            return;
+        }
+
+        // 准备数据 - 关键修改：将rating映射为后端期望的score字段名
+        const reviewData = {
+            shopId: shopId,
+            content: content,
+            environmentScore: environmentRating,  // 修改字段名为score
+            serviceScore: serviceRating,          // 修改字段名为score
+            tasteScore: tasteRating               // 修改字段名为score
+        };
+
+        // 如果有reviewId，则为编辑操作
+        if (reviewId) {
+            reviewData.reviewId = reviewId;
+            updateReview(reviewData);
+        } else {
+            createReview(reviewData);
+        }
+    }
+
+    // 确保review-form有事件监听器
+    document.getElementById('review-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        submitReview();
+    });
+
+    // 修复显示评论模态框消息的函数
+    function showReviewModalMessage(type, message) {
+        const messageElement = document.getElementById('review-modal-message');
+        messageElement.textContent = message; // 使用textContent而非innerHTML
+        messageElement.className = 'message ' + type; // 只添加类型
+        messageElement.style.display = 'block';
+
+        // 5秒后自动隐藏成功消息
+        if (type === 'success') {
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
     }
 
     // 点赞/取消点赞评论
