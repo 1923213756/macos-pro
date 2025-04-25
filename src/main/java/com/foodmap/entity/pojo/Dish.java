@@ -25,8 +25,6 @@ public class Dish {
     // 使用BigDecimal表示货币值，更精确
     private BigDecimal price;
 
-    private String image;
-
     @TableField("isSpecial")
     private Integer isSpecial;
 

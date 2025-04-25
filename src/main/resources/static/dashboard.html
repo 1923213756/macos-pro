@@ -549,6 +549,12 @@
             <!-- 商铺详情内容将通过JavaScript动态填充 -->
         </div>
 
+        <!-- 菜品列表 -->
+        <div id="shop-dishes-section" style="margin-bottom: 20px;">
+            <h3>菜品列表</h3>
+            <ul id="shop-dishes-list"></ul>
+        </div>
+
         <!-- 评论区域 -->
         <div class="reviews-section">
             <h3>顾客评价</h3>
@@ -567,9 +573,42 @@
             <button id="edit-shop-btn" class="btn" style="display: none;">编辑商铺</button>
         </div>
     </div>
+</div>
 
-
-</div><!-- 评论模态框内容替换 -->
+<!-- 商铺管理 - 菜品管理 -->
+<div id="dish-management-section" style="display: none;" class="view">
+    <h2 class="section-title">菜品管理</h2>
+    <div id="dish-management-message" class="message"></div>
+    <form id="dish-form">
+        <input type="hidden" id="dish-id">
+        <div class="form-group">
+            <label for="dish-name">菜品名称</label>
+            <input type="text" id="dish-name" required>
+        </div>
+        <div class="form-group">
+            <label for="dish-description">菜品描述</label>
+            <textarea id="dish-description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="dish-price">菜品价格</label>
+            <input type="number" id="dish-price" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="dish-special">是否为特色菜</label>
+            <select id="dish-special">
+                <option value="1">是</option>
+                <option value="0" selected>否</option>
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn">保存菜品</button>
+            <button type="button" class="btn" id="reset-dish-form">重置</button>
+        </div>
+    </form>
+    <h3 class="section-title">现有菜品</h3>
+    <ul id="dish-list"></ul>
+</div>
+<!-- 评论模态框内容替换 -->
 <div id="review-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
     <div style="background-color: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 600px; border-radius: 8px; position: relative;">
         <span id="close-review-modal" style="position: absolute; right: 20px; top: 15px; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
@@ -2414,5 +2453,121 @@
 
             container.appendChild(reviewElement);
         });
+    }
+
+    // 加载商铺的菜品列表
+    function loadShopDishes(shopId) {
+        fetchWithTokenHandling(`/api/dishes/${shopId}`)
+            .then(data => {
+                const dishList = document.getElementById('shop-dishes-list');
+                dishList.innerHTML = '';
+                if (data.length === 0) {
+                    dishList.innerHTML = '<li>暂无菜品</li>';
+                } else {
+                    data.forEach(dish => {
+                        const li = document.createElement('li');
+                        li.textContent = `${dish.name} - ¥${dish.price} (${dish.isSpecial ? '特色菜' : '普通菜'})`;
+                        dishList.appendChild(li);
+                    });
+                }
+            })
+            .catch(err => {
+                console.error('加载菜品失败:', err);
+                document.getElementById('shop-dishes-section').innerHTML = '<p>加载菜品失败</p>';
+            });
+    }
+
+    // 加载菜品管理内容
+    function loadDishManagement(shopId) {
+        fetchWithTokenHandling(`/api/dishes/${shopId}`)
+            .then(data => {
+                const dishList = document.getElementById('dish-list');
+                dishList.innerHTML = '';
+                data.forEach(dish => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        ${dish.name} - ¥${dish.price} (${dish.isSpecial ? '特色菜' : '普通菜'})
+                        <button onclick="editDish(${dish.id})">编辑</button>
+                        <button onclick="deleteDish(${dish.id})">删除</button>
+                    `;
+                    dishList.appendChild(li);
+                });
+            })
+            .catch(err => {
+                console.error('加载菜品失败:', err);
+                document.getElementById('dish-management-message').className = 'message error';
+                document.getElementById('dish-management-message').textContent = '加载菜品失败';
+                document.getElementById('dish-management-message').style.display = 'block';
+            });
+    }
+
+    // 保存菜品信息
+    document.getElementById('dish-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const shopId = currentShop.shopId;
+        const dishId = document.getElementById('dish-id').value;
+        const dish = {
+            name: document.getElementById('dish-name').value,
+            description: document.getElementById('dish-description').value,
+            price: parseFloat(document.getElementById('dish-price').value),
+            isSpecial: parseInt(document.getElementById('dish-special').value),
+        };
+        const url = dishId ? `/api/dishes/${dishId}` : `/api/dishes/${shopId}/add`;
+        const method = dishId ? 'PUT' : 'POST';
+
+        fetchWithTokenHandling(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dish),
+        })
+            .then(() => {
+                document.getElementById('dish-management-message').className = 'message success';
+                document.getElementById('dish-management-message').textContent = '菜品保存成功';
+                document.getElementById('dish-management-message').style.display = 'block';
+                loadDishManagement(shopId);
+            })
+            .catch(err => {
+                console.error('保存菜品失败:', err);
+                document.getElementById('dish-management-message').className = 'message error';
+                document.getElementById('dish-management-message').textContent = '保存菜品失败';
+                document.getElementById('dish-management-message').style.display = 'block';
+            });
+    });
+
+    // 编辑菜品
+    function editDish(dishId) {
+        fetchWithTokenHandling(`/api/dishes/${dishId}`)
+            .then(dish => {
+                document.getElementById('dish-id').value = dish.id;
+                document.getElementById('dish-name').value = dish.name;
+                document.getElementById('dish-description').value = dish.description;
+                document.getElementById('dish-price').value = dish.price;
+                document.getElementById('dish-special').value = dish.isSpecial;
+            })
+            .catch(err => {
+                console.error('加载菜品信息失败:', err);
+                alert('加载菜品信息失败');
+            });
+    }
+
+    // 删除菜品
+    function deleteDish(dishId) {
+        if (!confirm('确定要删除这道菜品吗？')) return;
+
+        fetchWithTokenHandling(`/api/dishes/${dishId}`, {
+            method: 'DELETE',
+        })
+            .then(() => {
+                document.getElementById('dish-management-message').className = 'message success';
+                document.getElementById('dish-management-message').textContent = '菜品删除成功';
+                document.getElementById('dish-management-message').style.display = 'block';
+                loadDishManagement(currentShop.shopId);
+            })
+            .catch(err => {
+                console.error('删除菜品失败:', err);
+                document.getElementById('dish-management-message').className = 'message error';
+                document.getElementById('dish-management-message').textContent = '删除菜品失败';
+                document.getElementById('dish-management-message').style.display = 'block';
+            });
     }
 </script>
