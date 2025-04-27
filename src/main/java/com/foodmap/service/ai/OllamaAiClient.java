@@ -19,7 +19,7 @@ public class OllamaAiClient {
 
     public OllamaAiClient(
             @Value("${ollama.api.endpoint:http://localhost:11434}") String ollamaEndpoint,
-            @Value("${ollama.model:deepseek-r1:14b}") String model) {
+            @Value("${ollama.model:llama3.2:latest}") String model) {
         this.restTemplate = new RestTemplate();
         this.ollamaEndpoint = ollamaEndpoint;
         this.model = model;

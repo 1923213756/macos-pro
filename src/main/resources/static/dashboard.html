@@ -556,6 +556,22 @@
         </div>
 
         <!-- 评论区域 -->
+        <!-- 评论引导功能 -->
+        <div id="review-guide-section" style="margin-top: 20px;">
+            <h3>AI 生成评论引导</h3>
+            <div class="form-group">
+                <label for="dish-name-input">菜品名称（可选）</label>
+                <input type="text" id="dish-name-input" placeholder="请输入菜品名称" style="width: 100%; padding: 10px; margin-top: 5px;">
+                <button type="button" id="generate-guide-btn" class="btn" style="margin-top: 10px;">生成引导词</button>
+                <div id="guide-message" class="message" style="margin-top: 10px;"></div>
+            </div>
+
+            <!-- 显示生成的引导词 -->
+            <div id="generated-guide" style="display: none; margin-top: 10px; background-color: #f9f9f9; padding: 10px; border-radius: 4px; border: 1px solid var(--border-color);">
+                <strong>提示词：</strong>
+                <p id="guide-content" style="white-space: pre-line; color: var(--text-light);"></p>
+            </div>
+        </div>
         <div class="reviews-section">
             <h3>顾客评价</h3>
             <div class="write-review-btn">
@@ -976,6 +992,7 @@
                 return Promise.reject(error);
             });
     }
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const token = localStorage.getItem('token');
@@ -2481,119 +2498,168 @@
         });
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const shopId = currentShop.shopId; // 当前商铺ID
+
+        // 加载菜品列表
+        loadShopDishes(shopId);
+
+        // 绑定表单提交事件
+        document.getElementById('dish-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            const dishId = document.getElementById('dish-id').value; // 判断是否为编辑模式
+            const dishData = {
+                restaurantId: shopId, // 后端需要的餐厅ID字段
+                name: document.getElementById('dish-name').value.trim(),
+                description: document.getElementById('dish-description').value.trim(),
+                price: parseFloat(document.getElementById('dish-price').value),
+                isSpecial: parseInt(document.getElementById('dish-special').value),
+            };
+
+            const url = dishId ? `/api/dishes` : `/api/dishes`;
+            const method = dishId ? 'PUT' : 'POST';
+
+            fetchWithTokenHandling(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dishData),
+            })
+                .then(() => {
+                    alert(dishId ? '菜品修改成功！' : '菜品添加成功！');
+                    document.getElementById('dish-form').reset(); // 重置表单
+                    document.getElementById('dish-id').value = ''; // 清空隐藏字段
+                    loadShopDishes(shopId); // 重新加载菜品列表
+                })
+                .catch(err => {
+                    console.error('保存菜品失败:', err);
+                    alert('保存菜品失败，请稍后重试');
+                });
+        });
+
+        // 绑定重置按钮事件
+        document.getElementById('reset-dish-form').addEventListener('click', function () {
+            document.getElementById('dish-form').reset(); // 重置表单
+            document.getElementById('dish-id').value = ''; // 清空隐藏字段
+        });
+    });
+
     // 加载商铺的菜品列表
     function loadShopDishes(shopId) {
-        fetchWithTokenHandling(`/api/dishes/${shopId}`)
-            .then(data => {
-                const dishList = document.getElementById('shop-dishes-list');
-                dishList.innerHTML = '';
-                if (data.length === 0) {
-                    dishList.innerHTML = '<li>暂无菜品</li>';
-                } else {
-                    data.forEach(dish => {
-                        const li = document.createElement('li');
-                        li.textContent = `${dish.name} - ¥${dish.price} (${dish.isSpecial ? '特色菜' : '普通菜'})`;
-                        dishList.appendChild(li);
-                    });
-                }
-            })
-            .catch(err => {
-                console.error('加载菜品失败:', err);
-                document.getElementById('shop-dishes-section').innerHTML = '<p>加载菜品失败</p>';
-            });
-    }
+        const dishList = document.getElementById('dish-list');
+        dishList.innerHTML = '<li>加载中...</li>'; // 显示加载状态
 
-    // 加载菜品管理内容
-    function loadDishManagement(shopId) {
         fetchWithTokenHandling(`/api/dishes/${shopId}`)
-            .then(data => {
-                const dishList = document.getElementById('dish-list');
-                dishList.innerHTML = '';
-                data.forEach(dish => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        ${dish.name} - ¥${dish.price} (${dish.isSpecial ? '特色菜' : '普通菜'})
-                        <button onclick="editDish(${dish.id})">编辑</button>
-                        <button onclick="deleteDish(${dish.id})">删除</button>
-                    `;
-                    dishList.appendChild(li);
+            .then(dishes => {
+                if (dishes.length === 0) {
+                    dishList.innerHTML = '<li>暂无菜品</li>';
+                    return;
+                }
+
+                dishList.innerHTML = ''; // 清空加载状态
+                dishes.forEach(dish => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'dish-item';
+                    listItem.innerHTML = `
+                    <div>
+                        <strong>${dish.name}</strong> - ¥${dish.price.toFixed(2)}
+                        ${dish.isSpecial ? '<span class="special-tag">特色菜</span>' : ''}
+                    </div>
+                    <div>${dish.description}</div>
+                    <button onclick="editDish(${dish.id})" class="btn">编辑</button>
+                    <button onclick="deleteDish(${dish.id}, ${shopId})" class="btn" style="background-color: #f44336;">删除</button>
+                `;
+                    dishList.appendChild(listItem);
                 });
             })
             .catch(err => {
-                console.error('加载菜品失败:', err);
-                document.getElementById('dish-management-message').className = 'message error';
-                document.getElementById('dish-management-message').textContent = '加载菜品失败';
-                document.getElementById('dish-management-message').style.display = 'block';
+                console.error('加载菜品列表失败:', err);
+                dishList.innerHTML = '<li>加载失败，请稍后重试</li>';
             });
     }
-
-    // 保存菜品信息
-    document.getElementById('dish-form').addEventListener('submit', function (event) {
-        event.preventDefault();
-        const shopId = currentShop.shopId;
-        const dishId = document.getElementById('dish-id').value;
-        const dish = {
-            name: document.getElementById('dish-name').value,
-            description: document.getElementById('dish-description').value,
-            price: parseFloat(document.getElementById('dish-price').value),
-            isSpecial: parseInt(document.getElementById('dish-special').value),
-        };
-        const url = dishId ? `/api/dishes/${dishId}` : `/api/dishes/${shopId}/add`;
-        const method = dishId ? 'PUT' : 'POST';
-
-        fetchWithTokenHandling(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dish),
-        })
-            .then(() => {
-                document.getElementById('dish-management-message').className = 'message success';
-                document.getElementById('dish-management-message').textContent = '菜品保存成功';
-                document.getElementById('dish-management-message').style.display = 'block';
-                loadDishManagement(shopId);
-            })
-            .catch(err => {
-                console.error('保存菜品失败:', err);
-                document.getElementById('dish-management-message').className = 'message error';
-                document.getElementById('dish-management-message').textContent = '保存菜品失败';
-                document.getElementById('dish-management-message').style.display = 'block';
-            });
-    });
 
     // 编辑菜品
     function editDish(dishId) {
         fetchWithTokenHandling(`/api/dishes/${dishId}`)
             .then(dish => {
-                document.getElementById('dish-id').value = dish.id;
+                // 将菜品信息填入表单
+                document.getElementById('dish-id').value = dish.id; // 隐藏字段存储id
                 document.getElementById('dish-name').value = dish.name;
                 document.getElementById('dish-description').value = dish.description;
                 document.getElementById('dish-price').value = dish.price;
                 document.getElementById('dish-special').value = dish.isSpecial;
+                document.getElementById('dish-name').focus(); // 聚焦到名称输入框
             })
             .catch(err => {
                 console.error('加载菜品信息失败:', err);
-                alert('加载菜品信息失败');
+                alert('无法加载菜品信息，请稍后重试');
             });
     }
 
     // 删除菜品
-    function deleteDish(dishId) {
-        if (!confirm('确定要删除这道菜品吗？')) return;
+    function deleteDish(dishId, shopId) {
+        if (!confirm('确定要删除这道菜吗？')) {
+            return;
+        }
 
-        fetchWithTokenHandling(`/api/dishes/${dishId}`, {
-            method: 'DELETE',
-        })
+        fetchWithTokenHandling(`/api/dishes/${dishId}`, { method: 'DELETE' })
             .then(() => {
-                document.getElementById('dish-management-message').className = 'message success';
-                document.getElementById('dish-management-message').textContent = '菜品删除成功';
-                document.getElementById('dish-management-message').style.display = 'block';
-                loadDishManagement(currentShop.shopId);
+                alert('菜品删除成功！');
+                loadShopDishes(shopId); // 删除成功后重新加载菜品列表
             })
             .catch(err => {
                 console.error('删除菜品失败:', err);
-                document.getElementById('dish-management-message').className = 'message error';
-                document.getElementById('dish-management-message').textContent = '删除菜品失败';
-                document.getElementById('dish-management-message').style.display = 'block';
+                alert('删除菜品失败，请稍后重试');
             });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const generateGuideBtn = document.getElementById('generate-guide-btn');
+        const dishNameInput = document.getElementById('dish-name-input');
+        const guideMessage = document.getElementById('guide-message');
+        const generatedGuide = document.getElementById('generated-guide');
+        const guideContent = document.getElementById('guide-content');
+
+        // 生成引导词按钮点击事件
+        generateGuideBtn.addEventListener('click', function () {
+            const dishName = dishNameInput.value.trim();
+
+            if (!dishName) {
+                // 提示用户输入菜品名称
+                guideMessage.className = 'message error';
+                guideMessage.textContent = '请输入菜品名称以生成提示词！';
+                guideMessage.style.display = 'block';
+                return;
+            }
+
+            // 显示加载中的提示
+            guideMessage.className = 'message';
+            guideMessage.textContent = '正在生成提示词，请稍候...';
+            guideMessage.style.display = 'block';
+
+            // 调用后端接口生成提示词
+            fetch(`/api/reviews/guide?dish=${encodeURIComponent(dishName)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 成功生成提示词
+                        guideMessage.style.display = 'none';
+                        generatedGuide.style.display = 'block';
+                        guideContent.textContent = data.data; // 显示生成的提示词
+                    } else {
+                        // 接口返回错误
+                        guideMessage.className = 'message error';
+                        guideMessage.textContent = '生成提示词失败：' + data.message;
+                        guideMessage.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    // 请求失败
+                    console.error('生成提示词失败:', err);
+                    guideMessage.className = 'message error';
+                    guideMessage.textContent = '生成提示词时发生错误，请稍后重试！';
+                    guideMessage.style.display = 'block';
+                });
+        });
+    });
 </script>

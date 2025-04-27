@@ -13,6 +13,6 @@ public interface DishMapper extends BaseMapper<Dish> {
     /**
      * 查询指定餐厅的所有菜品
      */
-    @Select("SELECT * FROM dishes WHERE restaurant_id = #{restaurantId}")
+    @Select("SELECT * FROM dishes WHERE restaurantId = #{restaurantId}")
     List<Dish> findByRestaurantId(@Param("restaurantId") Long restaurantId);
 }

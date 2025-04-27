@@ -68,7 +68,7 @@ mybatis-plus:
 ollama:
   api:
     endpoint:http://localhost:11434
-  model: deepseek-r1:14b
+  model: llama3.2:latest
   request:
     timeout: 60000
 
