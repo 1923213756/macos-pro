@@ -1,0 +1,6 @@
+jieba
+nltk
+transformers
+torch
+tiktoken
+protobuf

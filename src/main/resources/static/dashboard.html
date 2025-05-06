@@ -520,6 +520,54 @@
             color: var(--text-light);
         }
 
+        /* 情感分析相关样式 */
+        .aspect-item {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .aspect-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .sentiment-bar-container {
+            height: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .sentiment-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 5px;
+        }
+
+        .sentiment-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .sentiment-summary {
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #4CAF50;
+            line-height: 1.5;
+        }
+
+        .no-data-message {
+            color: var(--text-light);
+            font-style: italic;
+            margin: 10px 0;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -1325,6 +1373,16 @@
                         <div class="detail-item">
                             <div class="detail-label">营业时间</div>
                             <div class="detail-value">${shop.businessHours || '未设置'}</div>
+                        </div>
+                        <div class="detail-section-title">情感分析</div>
+                        <div id="sentiment-summary" style="margin-bottom: 15px;">
+                            <p style="color: var(--text-light);">加载中...</p>
+                        </div>
+                        <div id="aspect-sentiment-container">
+                            <!-- 情感分析结果会在这里显示 -->
+                        </div>
+                        <div id="sentiment-actions" style="margin-top: 15px; text-align: right;">
+                            <button id="analyze-sentiment-btn" style="display: none;" class="btn">重新分析评论</button>
                         </div>
                     </div>
 
@@ -2662,4 +2720,126 @@
                 });
         });
     });
+
+    // 加载情感分析数据
+function loadSentimentAnalysis(shopId) {
+    const sentimentContainer = document.getElementById('aspect-sentiment-container');
+    const summaryElement = document.getElementById('sentiment-summary');
+    
+    sentimentContainer.innerHTML = '<div class="loading">加载情感分析中...</div>';
+    summaryElement.innerHTML = '<p style="color: var(--text-light);">加载中...</p>';
+    
+    // 显示或隐藏分析按钮（仅对商铺管理员显示）
+    const analyzeBtn = document.getElementById('analyze-sentiment-btn');
+    if (currentShop && currentShop.shopId == shopId) {
+        analyzeBtn.style.display = 'inline-block';
+        analyzeBtn.onclick = () => triggerSentimentAnalysis(shopId);
+    } else {
+        analyzeBtn.style.display = 'none';
+    }
+    
+    // 获取情感分析数据
+    fetchWithTokenHandling(`/api/sentiment/restaurant/${shopId}`)
+        .then(data => {
+            if (data.status === 'empty') {
+                sentimentContainer.innerHTML = `
+                    <div class="no-data-message">
+                        <p>暂无情感分析数据</p>
+                        ${currentShop && currentShop.shopId == shopId ? 
+                            '<p>点击"重新分析评论"按钮生成分析结果</p>' : ''}
+                    </div>`;
+                summaryElement.innerHTML = '<p style="color: var(--text-light);">暂无总结数据</p>';
+                return;
+            }
+            
+            // 显示总结文本
+            if (data.summaryText) {
+                summaryElement.innerHTML = `
+                    <div class="sentiment-summary">
+                        ${data.summaryText}
+                    </div>`;
+            } else {
+                summaryElement.innerHTML = '<p style="color: var(--text-light);">暂无总结数据</p>';
+            }
+            
+            // 显示各方面的情感分析结果
+            if (data.aspects && data.aspects.length > 0) {
+                let html = '';
+                
+                data.aspects.forEach(aspect => {
+                    const totalCount = aspect.totalCount || 0;
+                    const positiveCount = aspect.positiveCount || 0;
+                    const positivePercentage = totalCount > 0 ? 
+                        Math.round((positiveCount / totalCount) * 100) : 0;
+                    
+                    html += `
+                        <div class="aspect-item">
+                            <div class="aspect-name">${aspect.aspect}</div>
+                            <div class="sentiment-bar-container">
+                                <div class="sentiment-bar" style="width: ${positivePercentage}%"></div>
+                            </div>
+                            <div class="sentiment-stats">
+                                <span>积极: ${positiveCount}</span>
+                                <span>${positivePercentage}%</span>
+                                <span>总计: ${totalCount}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                sentimentContainer.innerHTML = html;
+            } else {
+                sentimentContainer.innerHTML = '<div class="no-data-message">暂无方面情感数据</div>';
+            }
+        })
+        .catch(error => {
+            sentimentContainer.innerHTML = `<div class="error">加载情感分析失败: ${error.message || '未知错误'}</div>`;
+            summaryElement.innerHTML = '<p style="color: var(--text-light);">加载失败</p>';
+        });
+}
+
+// 触发情感分析
+function triggerSentimentAnalysis(shopId) {
+    const sentimentContainer = document.getElementById('aspect-sentiment-container');
+    const summaryElement = document.getElementById('sentiment-summary');
+    const analyzeBtn = document.getElementById('analyze-sentiment-btn');
+    
+    // 禁用按钮并显示加载状态
+    analyzeBtn.disabled = true;
+    analyzeBtn.textContent = '分析中...';
+    sentimentContainer.innerHTML = '<div class="loading">正在分析评论，这可能需要一些时间...</div>';
+    summaryElement.innerHTML = '<p style="color: var(--text-light);">分析中...</p>';
+    
+    // 调用分析API
+    fetchWithTokenHandling(`/api/sentiment/analyze/restaurant/${shopId}`, {
+        method: 'POST'
+    })
+        .then(data => {
+            // 重新启用按钮
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = '重新分析评论';
+            
+            // 显示成功消息
+            sentimentContainer.innerHTML = `
+                <div class="message success">
+                    ${data.message || '分析完成'}
+                </div>`;
+            
+            // 延迟3秒后重新加载分析结果
+            setTimeout(() => {
+                loadSentimentAnalysis(shopId);
+            }, 3000);
+        })
+        .catch(error => {
+            // 重新启用按钮
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = '重新分析评论';
+            
+            // 显示错误消息
+            sentimentContainer.innerHTML = `
+                <div class="error">
+                    分析失败: ${error.message || '未知错误'}
+                </div>`;
+        });
+}
 </script>

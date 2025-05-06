@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.foodmap.mapper.AspectSummaryMapper">
+
+    <!-- 批量更新或插入方面统计数据 -->
+    <insert id="batchUpsertAspectStatistics">
+        INSERT INTO aspect_summary (restaurant_id, aspect, positive_count, negative_count, total_count, positive_percentage)
+        VALUES
+        <foreach collection="aspectStats" item="stat" separator=",">
+            (
+            #{restaurantId},
+            #{stat.aspect},
+            #{stat.positive},
+            #{stat.negative},
+            #{stat.total},
+            <if test="stat.total > 0">
+                #{stat.positive} * 100.0 / #{stat.total}
+            </if>
+            <if test="stat.total == 0">
+                0
+            </if>
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        positive_count = VALUES(positive_count),
+        negative_count = VALUES(negative_count),
+        total_count = VALUES(total_count),
+        positive_percentage = VALUES(positive_percentage),
+        last_updated = NOW()
+    </insert>
+
+    <!-- 保存方面情感证据 -->
+    <insert id="saveAspectEvidence">
+        INSERT INTO aspect_summary_evidence
+            (summary_id, review_id, aspect, sentiment, evidence_text, confidence)
+        VALUES
+            (#{summaryId}, #{reviewId}, #{aspect}, #{sentiment}, #{evidenceText}, #{confidence})
+    </insert>
+
+</mapper>

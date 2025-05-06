@@ -1,0 +1,49 @@
+2025-05-06 12:32:34,250 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:32:34,327 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:32:37,187 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 12:32:37,187 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 12:32:37,188 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 12:32:41,192 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:32:41,202 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:32:43,920 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 12:32:43,968 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 12:32:47,755 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 12:32:47] "GET /health HTTP/1.1" 200 -
+2025-05-06 12:39:27,878 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:39:27,904 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:39:29,666 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 12:39:29,667 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 12:39:29,668 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 12:39:32,926 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:39:32,937 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:39:34,802 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 12:39:34,814 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 12:47:16,412 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/models/aspect_model.py', reloading
+2025-05-06 12:47:17,202 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 12:47:19,924 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:47:19,980 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:47:24,869 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 12:47:24,910 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 12:47:54,827 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/train.py', reloading
+2025-05-06 12:47:55,559 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 12:47:58,294 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:47:58,314 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:48:01,420 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 12:48:01,463 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 12:48:03,706 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/models/aspect_model.py', reloading
+2025-05-06 12:48:04,428 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 12:48:07,156 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:48:07,180 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:48:10,214 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 12:48:10,226 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 12:48:47,529 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/train.py', reloading
+2025-05-06 12:48:48,203 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 12:48:51,977 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 12:48:52,049 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 12:48:57,397 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 12:48:57,431 - werkzeug - INFO -  * Debugger PIN: 134-006-417

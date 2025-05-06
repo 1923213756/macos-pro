@@ -1,0 +1,131 @@
+[
+  {
+    "text": "环境非常好",
+    "aspect": "环境",
+    "sentiment": "好"
+  },
+  {
+    "text": "装修很有格调",
+    "aspect": "环境",
+    "sentiment": "好"
+  },
+  {
+    "text": "服务员态度很差",
+    "aspect": "服务",
+    "sentiment": "差"
+  },
+  {
+    "text": "等了半小时才上菜",
+    "aspect": "服务",
+    "sentiment": "差"
+  },
+  {
+    "text": "菜品味道不错",
+    "aspect": "口味",
+    "sentiment": "好"
+  },
+  {
+    "text": "招牌菜非常美味",
+    "aspect": "口味",
+    "sentiment": "好"
+  },
+  {
+    "text": "价格有点贵",
+    "aspect": "价格",
+    "sentiment": "差"
+  },
+  {
+    "text": "性价比不高",
+    "aspect": "价格",
+    "sentiment": "差"
+  },
+  {
+    "text": "地理位置很便利",
+    "aspect": "位置",
+    "sentiment": "好"
+  },
+  {
+    "text": "交通方便",
+    "aspect": "位置",
+    "sentiment": "好"
+  },
+  {
+    "text": "店内环境嘈杂",
+    "aspect": "环境",
+    "sentiment": "差"
+  },
+  {
+    "text": "声音太大影响了用餐体验",
+    "aspect": "环境",
+    "sentiment": "差"
+  },
+  {
+    "text": "服务很周到",
+    "aspect": "服务",
+    "sentiment": "好"
+  },
+  {
+    "text": "服务员很热情",
+    "aspect": "服务",
+    "sentiment": "好"
+  },
+  {
+    "text": "上菜速度快",
+    "aspect": "服务",
+    "sentiment": "好"
+  },
+  {
+    "text": "饭菜不够入味",
+    "aspect": "口味",
+    "sentiment": "差"
+  },
+  {
+    "text": "感觉有点淡而无味",
+    "aspect": "口味",
+    "sentiment": "差"
+  },
+  {
+    "text": "价格实惠",
+    "aspect": "价格",
+    "sentiment": "好"
+  },
+  {
+    "text": "很划算",
+    "aspect": "价格",
+    "sentiment": "好"
+  },
+  {
+    "text": "位置偏僻",
+    "aspect": "位置",
+    "sentiment": "差"
+  },
+  {
+    "text": "很难找",
+    "aspect": "位置",
+    "sentiment": "差"
+  },
+    {"text": "环境非常好", "aspect": "环境", "sentiment": "好"},
+    {"text": "装修很有格调", "aspect": "环境", "sentiment": "好"},
+    {"text": "服务员态度很差", "aspect": "服务", "sentiment": "差"},
+    {"text": "服务态度一般", "aspect": "服务", "sentiment": "差"},
+    {"text": "菜品味道不错", "aspect": "口味", "sentiment": "好"},
+    {"text": "招牌菜非常美味", "aspect": "口味", "sentiment": "好"},
+    {"text": "价格有点贵", "aspect": "价格", "sentiment": "差"},
+    {"text": "性价比不高", "aspect": "价格", "sentiment": "差"},
+    {"text": "地理位置很便利", "aspect": "位置", "sentiment": "好"},
+    {"text": "交通方便", "aspect": "位置", "sentiment": "好"},
+
+    {"text": "上菜非常快", "aspect": "速度", "sentiment": "好"},
+    {"text": "点餐后很快就上来了", "aspect": "速度", "sentiment": "好"},
+    {"text": "等了好久才上菜", "aspect": "速度", "sentiment": "差"},
+    {"text": "上菜速度太慢了", "aspect": "速度", "sentiment": "差"},
+    {"text": "菜量很足", "aspect": "分量", "sentiment": "好"},
+    {"text": "分量十足", "aspect": "分量", "sentiment": "好"},
+    {"text": "分量太少了", "aspect": "分量", "sentiment": "差"},
+    {"text": "菜的分量不足", "aspect": "分量", "sentiment": "差"},
+    {"text": "食材很新鲜", "aspect": "新鲜度", "sentiment": "好"},
+    {"text": "海鲜特别新鲜", "aspect": "新鲜度", "sentiment": "好"},
+    {"text": "菜品不太新鲜", "aspect": "新鲜度", "sentiment": "差"},
+    {"text": "食材感觉不是当天的", "aspect": "新鲜度", "sentiment": "差"}
+
+]
