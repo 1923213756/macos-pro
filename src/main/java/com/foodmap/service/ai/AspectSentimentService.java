@@ -41,6 +41,7 @@ public class AspectSentimentService {
 
         System.out.println("Python服务URL设置为: " + this.pythonServiceUrl);
     }
+
     // 在构造函数后添加初始化方法
     @PostConstruct
     public void init() {
@@ -63,7 +64,7 @@ public class AspectSentimentService {
      * 定时任务：分析餐厅评论
      */
 
-     //测试阶段删去
+    //测试阶段删去
     // @Scheduled(cron = "0 0 */3 * * *") // 每3小时执行一次
     public void scheduledAnalysis() {
         // 获取未分析的评论，限制每次处理100条
@@ -77,7 +78,7 @@ public class AspectSentimentService {
     public Map<String, Object> analyzeRestaurantReviews(Long restaurantId) {
         // 获取该餐厅最新的100条评论进行分析（不论是否已分析）
         //测试阶段改为1条
-        System.out.println("成功发送请求，ID"+restaurantId);
+        System.out.println("成功发送请求，ID" + restaurantId);
         List<Map<String, Object>> reviews = reviewMapper.getRecentReviewsForAnalysis(restaurantId, 5);
 
         System.out.println("获取到的评论数量: " + reviews.size());
@@ -89,7 +90,7 @@ public class AspectSentimentService {
         // 重置该餐厅评论的分析状态
         reviewMapper.resetAnalysisStatusByRestaurant(restaurantId);
 
-        System.out.println("进入处理评论阶段，revews如下"+reviews);
+        System.out.println("进入处理评论阶段，revews如下" + reviews);
 
         // 处理评论
         Map<String, Object> result = processReviews(reviews);
@@ -150,7 +151,8 @@ public class AspectSentimentService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody)
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                    })
                     .block(java.time.Duration.ofSeconds(500)); // 增加超时时间到60秒，大批量评论需要更长时间
 
             //测试用
@@ -329,6 +331,7 @@ public class AspectSentimentService {
 
     /**
      * 检查Python服务健康状态
+     *
      * @return 包含健康状态与消息的Map
      */
     public Map<String, Object> checkPythonServiceHealth() {
@@ -338,7 +341,8 @@ public class AspectSentimentService {
             Map<String, Object> response = webClient.get()
                     .uri("/health")
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                    })
                     .block(java.time.Duration.ofSeconds(5)); // 添加5秒超时
 
             if (response != null && "healthy".equals(response.get("status"))) {
@@ -380,7 +384,8 @@ public class AspectSentimentService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody)
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                    })
                     .block(java.time.Duration.ofSeconds(10)); // 10秒超时
 
             // 提取分析结果中的关键信息
@@ -412,66 +417,4 @@ public class AspectSentimentService {
         }
     }
 
-    public String generateAspectSummaryWithLocalAI(Map<String, Map<String, Integer>> aspectStats) {
-        try {
-            StringBuilder promptBuilder = new StringBuilder();
-            promptBuilder.append("请根据以下餐厅的顾客评价方面情感分析结果，生成一段简短的餐厅整体评价摘要，突出优势和不足：\n\n");
-            
-            // 格式化方面情感数据
-            for (Map.Entry<String, Map<String, Integer>> entry : aspectStats.entrySet()) {
-                String aspect = entry.getKey();
-                Map<String, Integer> sentiments = entry.getValue();
-                
-                int positive = sentiments.getOrDefault("好", 0);
-                int negative = sentiments.getOrDefault("差", 0);
-                int total = positive + negative;
-                
-                if (total > 0) {
-                    int positivePercentage = (positive * 100) / total;
-                    promptBuilder.append(aspect).append(": ").append(positivePercentage).append("%好评, ");
-                }
-            }
-            
-            // 删除最后的逗号和空格
-            if (promptBuilder.toString().endsWith(", ")) {
-                promptBuilder.delete(promptBuilder.length() - 2, promptBuilder.length());
-            }
-            
-            promptBuilder.append("\n\n生成摘要时请根据好评率高低突出优缺点，风格简洁客观。");
-            
-            System.out.println("向本地AI发送提示: " + promptBuilder.toString());
-            
-            // 使用Ollama客户端生成摘要
-            String summary = ollamaAiClient.generateText(promptBuilder.toString());
-            System.out.println("本地AI生成的摘要: " + summary);
-            
-            return summary;
-        } catch (Exception e) {
-            System.err.println("使用本地AI生成摘要失败: " + e.getMessage());
-            e.printStackTrace();
-            return "无法生成餐厅评价摘要。";
-        }
-    }
-    
-    /**
-     * 使用本地AI根据提供的方面情感数据直接生成摘要
-     * @param aspectData 格式化的方面情感数据字符串
-     * @return 生成的摘要文本
-     */
-    public String generateSummaryFromAspectData(String aspectData) {
-        try {
-            StringBuilder prompt = new StringBuilder();
-            prompt.append("请根据以下餐厅的顾客评价方面情感分析结果，生成一段简短的餐厅整体评价摘要，突出优势和不足：\n\n");
-            prompt.append(aspectData);
-            prompt.append("\n\n生成摘要时请根据好评率高低突出优缺点，风格简洁客观。");
-            
-            System.out.println("向本地AI发送提示: " + prompt.toString());
-            
-            // 使用Ollama客户端生成摘要
-            return ollamaAiClient.generateText(prompt.toString());
-        } catch (Exception e) {
-            System.err.println("使用本地AI生成摘要失败: " + e.getMessage());
-            e.printStackTrace();
-            return "无法生成餐厅评价摘要。";
-        }
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Insert;
 
 import java.util.List;
 import java.util.Map;
@@ -51,9 +52,5 @@ public interface AspectSummaryMapper extends BaseMapper<AspectSummary> {
                                                       @Param("aspect") String aspect,
                                                       @Param("limit") int limit);
 
-    /**
-     * 清理旧的证据数据
-     */
-    @Update("DELETE FROM aspect_summary_evidence WHERE summary_id = #{summaryId} AND aspect = #{aspect}")
-    int clearOldEvidence(@Param("summaryId") Long summaryId, @Param("aspect") String aspect);
+
 }

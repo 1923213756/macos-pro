@@ -19,8 +19,21 @@ def split_into_sentences(text):
     return sentences
 
 def clean_text(text):
-    """清理文本，保留语义重要的内容"""
-    text = re.sub(r'<[^>]+>', '', text)
-    text = re.sub(r'[^\\u4e00-\\\u9fa5a-zA-Z0-9，。！？,.!?;；:：""''（）()]', ' ', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
+    """清洗文本同时保留中文和关键内容"""
+    if not text:
+        return ""
+    
+    # 先打印原始文本以便调试
+    print(f"清洗前: '{text[:30]}'...")
+    
+    # 修改后的简化清洗逻辑 - 只移除明确的不需要字符
+    # 保留所有中文、英文、数字和常用标点符号
+    cleaned_text = re.sub(r'[^\u4e00-\u9fa5a-zA-Z0-9，。！？,.!?;；:：""\'\'（）()\s]', '', text)
+    
+    # 替换多个空格为一个空格
+    cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
+    
+    # 打印清洗后的文本以便调试
+    print(f"清洗后: '{cleaned_text[:30]}'...")
+    
+    return cleaned_text
