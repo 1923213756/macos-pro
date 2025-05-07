@@ -36,11 +36,11 @@ public interface ReviewMapper extends BaseMapper<Review> {
 
 
     // 新增方法 - 获取尚未分析的评论
-    @Select("SELECT id, content FROM reviews WHERE sentiment_analyzed = 0 AND status = 1 LIMIT #{limit}")
+    @Select("SELECT id, content FROM reviews WHERE sentiment_analyzed = 0 AND status = 'ACTIVE' LIMIT #{limit}")
     List<Map<String, Object>> findUnanalyzedReviews(@Param("limit") int limit);
 
     // 新增方法 - 按餐厅ID获取尚未分析的评论
-    @Select("SELECT id, content FROM reviews WHERE sentiment_analyzed = 0 AND status = 1 AND restaurantId = #{restaurantId} LIMIT #{limit}")
+    @Select("SELECT id, content FROM reviews WHERE sentiment_analyzed = 0 AND status = 'ACTIVE' AND restaurantId = #{restaurantId} LIMIT #{limit}")
     List<Map<String, Object>> findUnanalyzedReviewsByRestaurant(@Param("restaurantId") Long restaurantId, @Param("limit") int limit);
 
     // 新增方法 - 标记评论已分析
@@ -52,7 +52,7 @@ public interface ReviewMapper extends BaseMapper<Review> {
     int resetAnalysisStatusByRestaurant(@Param("restaurantId") Long restaurantId);
 
     // 新增方法 - 获取最近的评论用于分析
-    @Select("SELECT id, content FROM reviews WHERE status = 1 AND restaurantId = #{restaurantId} " +
+    @Select("SELECT id, content,restaurantId FROM reviews WHERE status = 'ACTIVE' AND restaurantId = #{restaurantId} " +
             "ORDER BY createdAt DESC LIMIT #{limit}")
     List<Map<String, Object>> getRecentReviewsForAnalysis(@Param("restaurantId") Long restaurantId, @Param("limit") int limit);
 }

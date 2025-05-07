@@ -568,6 +568,121 @@
             text-align: center;
         }
 
+        /* 情感分析组件样式优化 */
+        .sentiment-analysis-section {
+        margin: 10px 0;
+        padding: 8px 10px;
+        background-color: #f9f9f9;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .sentiment-section-title {
+        font-size: 15px;
+        margin-bottom: 8px;
+        color: #333;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+
+        .aspect-item {
+        margin-bottom: 8px;
+        padding: 5px 0;
+        border-bottom: 1px solid #f0f0f0;
+        }
+
+        .aspect-item:last-child {
+        border-bottom: none;
+        }
+
+        .aspect-name {
+        font-weight: 500;
+        font-size: 13px;
+        margin-bottom: 3px;
+        color: #444;
+        }
+
+        /* 情感分析图表样式优化 */
+        /* 情感分析图表样式优化 - 仅显示好评 */
+        .sentiment-bar-container {
+            height: 12px; /* 减小高度，因为只需要显示一个条形图 */
+            background-color: #f1f1f1; /* 灰色底色，让好评更加突出 */
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sentiment-bar.positive {
+            background-color: #4CAF50; /* 好评条使用绿色 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%; /* 填充整个容器高度 */
+            border-radius: 2px;
+            transition: width 0.5s ease-out;
+        }
+
+        /* 移除不再需要的负面评价条样式 */
+        .sentiment-bar.negative {
+            display: none; /* 隐藏差评条 */
+        }
+
+        .sentiment-bar {
+            transition: width 0.5s ease-out;
+        }
+
+        .sentiment-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #666;
+        }
+
+        .sentiment-stats-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+        }
+
+        .positive-stat {
+        color: #388E3C;
+        font-weight: 500;
+        font-size: 11px;
+        }
+
+        .negative-stat {
+        color: #D32F2F;
+        font-weight: 500;
+        font-size: 11px;
+        }
+
+        .sentiment-summary {
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #f0f8ff;
+        border-left: 3px solid #4a86e8;
+        font-size: 13px;
+        line-height: 1.4;
+        border-radius: 3px;
+        }
+                        @keyframes pulse {
+                    0% { opacity: 0.6; }
+                    50% { opacity: 1; }
+                    100% { opacity: 0.6; }
+                }
+
+                .loading {
+                    padding: 20px;
+                    text-align: center;
+                    color: #888;
+                    animation: pulse 1.5s infinite;
+                }
+
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -1374,15 +1489,16 @@
                             <div class="detail-label">营业时间</div>
                             <div class="detail-value">${shop.businessHours || '未设置'}</div>
                         </div>
-                        <div class="detail-section-title">情感分析</div>
-                        <div id="sentiment-summary" style="margin-bottom: 15px;">
-                            <p style="color: var(--text-light);">加载中...</p>
+                        <div class="detail-section-title sentiment-section-title">
+                            情感分析
+                            <small style="font-size: 11px; color: #666; font-weight: normal;">
+                                基于用户评论的AI分析
+                            </small>
                         </div>
-                        <div id="aspect-sentiment-container">
-                            <!-- 情感分析结果会在这里显示 -->
-                        </div>
-                        <div id="sentiment-actions" style="margin-top: 15px; text-align: right;">
-                            <button id="analyze-sentiment-btn" style="display: none;" class="btn">重新分析评论</button>
+                        <div id="sentiment-summary" style="margin-bottom: 10px;"></div>
+                        <div id="aspect-sentiment-container" style="max-height: 250px; overflow-y: auto;"></div>
+                        <div id="sentiment-actions" style="margin-top: 8px; text-align: right;">
+                            <button id="analyze-sentiment-btn" style="display: none; font-size: 12px; padding: 5px 10px;" class="btn">重新分析</button>
                         </div>
                     </div>
 
@@ -1409,6 +1525,9 @@
 
                     // 加载商铺评论
                     loadShopReviews(shop.shopId);
+
+                    // 添加调用情感分析加载函数
+                    loadSentimentAnalysis(shop.shopId);
 
                     // 检查当前用户是否是商铺管理员
                     const shopInfo = localStorage.getItem('shopInfo');
@@ -2722,12 +2841,13 @@
     });
 
     // 加载情感分析数据
+// 加载情感分析数据
 function loadSentimentAnalysis(shopId) {
     const sentimentContainer = document.getElementById('aspect-sentiment-container');
     const summaryElement = document.getElementById('sentiment-summary');
     
-    sentimentContainer.innerHTML = '<div class="loading">加载情感分析中...</div>';
-    summaryElement.innerHTML = '<p style="color: var(--text-light);">加载中...</p>';
+    sentimentContainer.innerHTML = '<div class="loading">加载分析中...</div>';
+    summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">加载中...</p>';
     
     // 显示或隐藏分析按钮（仅对商铺管理员显示）
     const analyzeBtn = document.getElementById('analyze-sentiment-btn');
@@ -2743,12 +2863,12 @@ function loadSentimentAnalysis(shopId) {
         .then(data => {
             if (data.status === 'empty') {
                 sentimentContainer.innerHTML = `
-                    <div class="no-data-message">
+                    <div class="no-data-message" style="text-align: center; padding: 5px; color: #888; font-size: 12px;">
                         <p>暂无情感分析数据</p>
                         ${currentShop && currentShop.shopId == shopId ? 
-                            '<p>点击"重新分析评论"按钮生成分析结果</p>' : ''}
+                            '<p>点击"重新分析"按钮生成结果</p>' : ''}
                     </div>`;
-                summaryElement.innerHTML = '<p style="color: var(--text-light);">暂无总结数据</p>';
+                summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">暂无总结</p>';
                 return;
             }
             
@@ -2759,42 +2879,53 @@ function loadSentimentAnalysis(shopId) {
                         ${data.summaryText}
                     </div>`;
             } else {
-                summaryElement.innerHTML = '<p style="color: var(--text-light);">暂无总结数据</p>';
+                summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">暂无总结</p>';
             }
             
             // 显示各方面的情感分析结果
             if (data.aspects && data.aspects.length > 0) {
                 let html = '';
-                
+
+// 修复情感分析数据渲染函数
                 data.aspects.forEach(aspect => {
-                    const totalCount = aspect.totalCount || 0;
-                    const positiveCount = aspect.positiveCount || 0;
-                    const positivePercentage = totalCount > 0 ? 
+                    // 确保兼容不同字段命名
+                    const totalCount = aspect.totalCount || aspect.total || 0;
+                    const positiveCount = aspect.positiveCount || aspect.positive || 0;
+                    const negativeCount = totalCount - positiveCount;
+
+                    // 确保百分比计算正确
+                    const positivePercentage = totalCount > 0 ?
                         Math.round((positiveCount / totalCount) * 100) : 0;
-                    
+
                     html += `
-                        <div class="aspect-item">
-                            <div class="aspect-name">${aspect.aspect}</div>
-                            <div class="sentiment-bar-container">
-                                <div class="sentiment-bar" style="width: ${positivePercentage}%"></div>
-                            </div>
-                            <div class="sentiment-stats">
-                                <span>积极: ${positiveCount}</span>
-                                <span>${positivePercentage}%</span>
-                                <span>总计: ${totalCount}</span>
-                            </div>
-                        </div>
-                    `;
+        <div class="aspect-item">
+            <div class="aspect-name">${aspect.aspect}</div>
+            <div class="sentiment-bar-container">
+                <div class="sentiment-bar positive" style="width: ${positivePercentage}%"></div>
+                <!-- 移除负面评价条 -->
+            </div>
+            <div class="sentiment-stats">
+                <div class="sentiment-stats-row">
+                    <span class="positive-stat">好评: ${positiveCount}</span>
+                    <span style="font-size: 11px;">${positivePercentage}%</span>
+                </div>
+                <div class="sentiment-stats-row">
+                    <span class="negative-stat">差评: ${negativeCount}</span>
+                    <span style="font-size: 11px;">${100-positivePercentage}%</span>
+                </div>
+            </div>
+        </div>
+    `;
                 });
                 
                 sentimentContainer.innerHTML = html;
             } else {
-                sentimentContainer.innerHTML = '<div class="no-data-message">暂无方面情感数据</div>';
+                sentimentContainer.innerHTML = '<div class="no-data-message" style="text-align: center; padding: 5px; color: #888; font-size: 12px;">暂无方面情感数据</div>';
             }
         })
         .catch(error => {
-            sentimentContainer.innerHTML = `<div class="error">加载情感分析失败: ${error.message || '未知错误'}</div>`;
-            summaryElement.innerHTML = '<p style="color: var(--text-light);">加载失败</p>';
+            sentimentContainer.innerHTML = `<div class="error" style="font-size: 12px;">加载失败: ${error.message || '未知错误'}</div>`;
+            summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">加载失败</p>';
         });
 }
 
@@ -2804,40 +2935,33 @@ function triggerSentimentAnalysis(shopId) {
     const summaryElement = document.getElementById('sentiment-summary');
     const analyzeBtn = document.getElementById('analyze-sentiment-btn');
     
-    // 禁用按钮并显示加载状态
     analyzeBtn.disabled = true;
     analyzeBtn.textContent = '分析中...';
-    sentimentContainer.innerHTML = '<div class="loading">正在分析评论，这可能需要一些时间...</div>';
-    summaryElement.innerHTML = '<p style="color: var(--text-light);">分析中...</p>';
+    sentimentContainer.innerHTML = '<div class="loading" style="font-size: 12px;">正在分析，请稍候...</div>';
+    summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">分析中...</p>';
     
-    // 调用分析API
     fetchWithTokenHandling(`/api/sentiment/analyze/restaurant/${shopId}`, {
         method: 'POST'
     })
         .then(data => {
-            // 重新启用按钮
             analyzeBtn.disabled = false;
-            analyzeBtn.textContent = '重新分析评论';
+            analyzeBtn.textContent = '重新分析';
             
-            // 显示成功消息
             sentimentContainer.innerHTML = `
-                <div class="message success">
+                <div class="message success" style="font-size: 12px; padding: 5px;">
                     ${data.message || '分析完成'}
                 </div>`;
             
-            // 延迟3秒后重新加载分析结果
             setTimeout(() => {
                 loadSentimentAnalysis(shopId);
-            }, 3000);
+            }, 2000);
         })
         .catch(error => {
-            // 重新启用按钮
             analyzeBtn.disabled = false;
-            analyzeBtn.textContent = '重新分析评论';
+            analyzeBtn.textContent = '重新分析';
             
-            // 显示错误消息
             sentimentContainer.innerHTML = `
-                <div class="error">
+                <div class="error" style="font-size: 12px; padding: 5px;">
                     分析失败: ${error.message || '未知错误'}
                 </div>`;
         });

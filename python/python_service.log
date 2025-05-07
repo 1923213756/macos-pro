@@ -47,3 +47,196 @@
 2025-05-06 12:48:52,049 - aspect_sentiment_service - INFO - 使用设备: mps
 2025-05-06 12:48:57,397 - werkzeug - WARNING -  * Debugger is active!
 2025-05-06 12:48:57,431 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 17:09:43,575 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 17:09:43,604 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 17:09:55,273 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 17:09:55,274 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 17:09:55,275 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 17:09:57,885 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 17:09:57,923 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 17:10:09,637 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 17:10:09,674 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 17:12:47,434 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 17:12:47] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:09:40,105 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:09:40,176 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:09:59,482 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 20:09:59,482 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 20:09:59,483 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 20:10:02,567 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:10:02,590 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:10:20,949 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 20:10:21,428 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 20:10:21,555 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:10:21] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:11:43,170 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:11:43] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:19:13,534 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/app.py', reloading
+2025-05-06 20:19:15,155 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 20:19:18,760 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:19:18,791 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:19:31,368 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 20:19:31,381 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 20:20:08,097 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:20:08,125 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:20:15,672 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 20:20:15,673 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 20:20:15,675 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 20:20:19,157 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:20:19,242 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:20:38,970 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 20:20:39,059 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 20:20:39,109 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:20:39] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:21:16,255 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:21:16] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:26:02,708 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:26:02,737 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:26:14,953 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 20:26:14,953 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 20:26:14,954 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 20:26:18,358 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:26:18,377 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:26:30,938 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 20:26:30,955 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 20:30:13,221 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/app.py', reloading
+2025-05-06 20:30:14,061 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 20:30:16,647 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:30:16,680 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:30:22,576 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 20:30:22,689 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 20:30:39,478 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/app.py', reloading
+2025-05-06 20:30:40,389 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 20:30:42,862 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 20:30:42,883 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 20:30:47,897 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 20:30:48,012 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 20:35:42,315 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:35:42] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:37:25,024 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:37:25] "GET /health HTTP/1.1" 200 -
+2025-05-06 20:55:50,613 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 20:55:50] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:11:38,973 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 21:11:39,004 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 21:11:50,939 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 21:11:50,941 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 21:11:50,942 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 21:11:53,500 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 21:11:53,547 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 21:12:11,931 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 21:12:11,977 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 21:30:12,063 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:30:12] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:30:12,227 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:30:12] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:31:55,109 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:31:55] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:35:28,509 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:35:28] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:37:12,611 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:37:12] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:37:13,091 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:37:13] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:41:13,003 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:41:13] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:42:46,789 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:42:46] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:44:17,771 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:44:17] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:44:54,277 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:44:54] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:45:05,463 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:45:05] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:46:11,626 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:46:11] "GET /health HTTP/1.1" 200 -
+2025-05-06 21:53:09,232 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 21:53:09] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:01:06,838 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/app.py', reloading
+2025-05-06 22:01:16,783 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 22:01:16,813 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 22:01:28,322 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-06 22:01:28,322 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-06 22:01:28,324 - werkzeug - INFO -  * Restarting with stat
+2025-05-06 22:01:31,025 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-06 22:01:31,049 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-06 22:01:45,196 - werkzeug - WARNING -  * Debugger is active!
+2025-05-06 22:01:45,215 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-06 22:02:01,995 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:02:01] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:06:57,887 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:06:57] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:10:03,038 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:10:03] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:13:27,667 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:13:27] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:13:29,935 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:13:29,939 - aspect_sentiment_service - INFO - 收到 4 条评论需要分析
+2025-05-06 22:13:37,593 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 7.66秒 =====
+2025-05-06 22:13:37,597 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:13:37] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-06 22:14:24,836 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:14:24,839 - aspect_sentiment_service - INFO - 收到 4 条评论需要分析
+2025-05-06 22:14:25,386 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 0.55秒 =====
+2025-05-06 22:14:25,387 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:14:25] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-06 22:23:34,424 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:23:34,429 - aspect_sentiment_service - INFO - 收到 5 条评论需要分析
+2025-05-06 22:23:37,393 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 2.97秒 =====
+2025-05-06 22:23:37,858 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:23:37] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-06 22:25:55,131 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:25:55,135 - aspect_sentiment_service - INFO - 收到 5 条评论需要分析
+2025-05-06 22:25:56,122 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 0.99秒 =====
+2025-05-06 22:25:56,124 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:25:56] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-06 22:33:36,049 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:33:36] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:33:59,610 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:33:59,615 - aspect_sentiment_service - INFO - 收到 5 条评论需要分析
+2025-05-06 22:34:07,487 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 7.88秒 =====
+2025-05-06 22:34:07,490 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:34:07] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-06 22:39:41,827 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:39:41] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:41:01,362 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:41:01,365 - aspect_sentiment_service - INFO - 收到 5 条评论需要分析
+2025-05-06 22:41:10,771 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 9.41秒 =====
+2025-05-06 22:41:10,774 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:41:10] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-06 22:42:44,141 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:42:44] "GET /health HTTP/1.1" 200 -
+2025-05-06 22:43:39,694 - aspect_sentiment_service - INFO - ===== 收到批量分析请求 =====
+2025-05-06 22:43:39,697 - aspect_sentiment_service - INFO - 收到 5 条评论需要分析
+2025-05-06 22:43:48,412 - aspect_sentiment_service - INFO - ===== 批量分析完成，处理耗时: 8.72秒 =====
+2025-05-06 22:43:48,418 - werkzeug - INFO - 127.0.0.1 - - [06/May/2025 22:43:48] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 08:25:57,935 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-07 08:25:58,000 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-07 08:26:12,883 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-07 08:26:12,886 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-07 08:26:12,889 - werkzeug - INFO -  * Restarting with stat
+2025-05-07 08:26:16,549 - aspect_sentiment_service - INFO - ======= 情感分析服务启动 =======
+2025-05-07 08:26:16,615 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-07 08:26:35,353 - werkzeug - WARNING -  * Debugger is active!
+2025-05-07 08:26:35,371 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-07 09:27:15,258 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-07 09:27:18,989 - aspect_sentiment_service - INFO - 正在加载模型: saved_models/aspect_model_best
+2025-05-07 09:27:29,535 - aspect_sentiment_service - INFO - 模型加载完成！
+2025-05-07 09:29:09,886 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-07 09:29:12,112 - aspect_sentiment_service - INFO - 正在加载模型: saved_models/aspect_model_best
+2025-05-07 09:29:15,784 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-07 09:29:17,271 - aspect_sentiment_service - INFO - 正在加载模型: saved_models/aspect_model_best
+2025-05-07 09:29:25,490 - aspect_sentiment_service - INFO - 模型加载完成！
+2025-05-07 09:29:27,380 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-07 09:29:27,381 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-07 09:29:27,382 - werkzeug - INFO -  * Restarting with stat
+2025-05-07 09:29:28,641 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-07 09:29:30,593 - aspect_sentiment_service - INFO - 正在加载模型: saved_models/aspect_model_best
+2025-05-07 09:29:41,712 - aspect_sentiment_service - INFO - 模型加载完成！
+2025-05-07 09:29:43,954 - werkzeug - WARNING -  * Debugger is active!
+2025-05-07 09:29:44,073 - werkzeug - INFO -  * Debugger PIN: 134-006-417
+2025-05-07 09:34:44,482 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 09:34:44] "GET /health HTTP/1.1" 200 -
+2025-05-07 09:34:53,528 - aspect_sentiment_service - INFO - 收到 5 条评论需要分析
+2025-05-07 09:34:53,529 - aspect_sentiment_service - ERROR - 批量分析过程中发生错误: name 'analyze_review' is not defined
+Traceback (most recent call last):
+  File "/Users/xiej/Documents/fullproject0/python/app.py", line 18, in analyze_batch
+    result = analyze_reviews_batch(reviews)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xiej/Documents/fullproject0/python/analyzer.py", line 30, in analyze_reviews_batch
+    result = analyze_review(review)
+             ^^^^^^^^^^^^^^
+NameError: name 'analyze_review' is not defined
+2025-05-07 09:34:53,548 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 09:34:53] "[35m[1mPOST /analyze_batch HTTP/1.1[0m" 500 -
+2025-05-07 09:36:02,672 - werkzeug - INFO -  * Detected change in '/Users/xiej/Documents/fullproject0/python/analyzer.py', reloading
+2025-05-07 09:36:03,693 - werkzeug - INFO -  * Restarting with stat
+2025-05-07 09:36:04,779 - aspect_sentiment_service - INFO - 使用设备: mps
