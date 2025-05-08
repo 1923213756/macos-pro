@@ -29,12 +29,13 @@
         last_updated = NOW()
     </insert>
 
-    <!-- 保存方面情感证据 -->
-    <insert id="saveAspectEvidence">
-        INSERT INTO aspect_summary_evidence
-            (summary_id, review_id, aspect, sentiment, evidence_text, confidence)
-        VALUES
-            (#{summaryId}, #{reviewId}, #{aspect}, #{sentiment}, #{evidenceText}, #{confidence})
-    </insert>
+    <update id="markReviewsAsAnalyzed">
+        UPDATE reviews
+        SET analyzed = 1
+        WHERE id IN
+        <foreach collection="reviewIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

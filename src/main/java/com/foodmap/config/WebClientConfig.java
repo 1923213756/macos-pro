@@ -9,6 +9,6 @@ public class WebClientConfig {
 
     @Bean
     public WebClient webClient(WebClient.Builder builder) {
-        return builder.baseUrl("http://localhost:8000").build(); // 外部服务的基础 URL
+        return builder.baseUrl("http://localhost:5001").build(); // 外部服务的基础 URL
     }
 }

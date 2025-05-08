@@ -126,20 +126,18 @@
 
     <select id="findUnanalyzedReviews" resultType="java.util.Map">
         SELECT id, content, restaurant_id
-        FROM review
+        FROM reviews
         WHERE sentiment_analyzed = 0
-          AND status = 1
+          AND status = 'ACTIVE'
           AND content IS NOT NULL
           AND content != ''
         ORDER BY created_time DESC
             LIMIT #{limit}
     </select>
 
-    <!-- 标记评论已分析，更灵活的实现方式 -->
     <update id="markReviewsAsAnalyzed">
-        UPDATE review
-        SET sentiment_analyzed = 1,
-        analyzed_at = NOW()
+        UPDATE reviews
+        SET sentiment_analyzed = 1
         WHERE id IN
         <foreach collection="reviewIds" item="id" open="(" separator="," close=")">
             #{id}

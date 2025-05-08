@@ -103,9 +103,6 @@ public class AspectSentimentService {
     /**
      * 处理评论列表
      */
-    /**
-     * 处理评论列表
-     */
     private Map<String, Object> processReviews(List<Map<String, Object>> reviewMaps) {
         if (reviewMaps.isEmpty()) {
             System.out.println("没有需要分析的评论，跳过处理");
@@ -151,18 +148,11 @@ public class AspectSentimentService {
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody)
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
-                    })
-                    .block(java.time.Duration.ofSeconds(500)); // 增加超时时间到60秒，大批量评论需要更长时间
-
-            //测试用
-            System.out.println("请求内容: " + requestBody);
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .block(java.time.Duration.ofSeconds(500));
 
             long endTime = System.currentTimeMillis();
             System.out.println("Python服务响应耗时: " + (endTime - startTime) + "ms");
-
-            System.out.println("===== 收到Python服务响应 =====");
-            System.out.println("响应耗时: " + (endTime - startTime) + "ms");
 
             // 检查响应内容
             if (response == null) {
@@ -172,132 +162,62 @@ public class AspectSentimentService {
 
             System.out.println("Python服务响应包含的键: " + response.keySet());
 
-            // 验证响应结构
-            if (!response.containsKey("aspect_stats") || !response.containsKey("individual_results")) {
-                System.err.println("Python服务返回的数据结构不完整，缺少必要字段");
+            // 获取餐厅ID (假设所有评论都来自同一餐厅)
+            Long restaurantId = null;
+            if (!reviewMaps.isEmpty()) {
+                restaurantId = Long.valueOf(reviewMaps.get(0).get("restaurantId").toString());
+            }
+
+            // 验证响应结构 - 使用新的结构字段
+            if (!response.containsKey("phrase_stats")) {
+                System.err.println("Python服务返回的数据结构不完整，缺少phrase_stats字段");
                 return Map.of("status", "error", "message", "Python服务返回数据结构不符合预期");
             }
 
             // 处理分析结果
             System.out.println("开始处理Python返回的分析结果...");
-            if (response.containsKey("aspect_stats")) {
-                // 按餐厅分组更新方面统计
-                Map<Long, Map<String, Map<String, Integer>>> restaurantAspectStats = new HashMap<>();
-
-                // 从个别结果中获取方面情感数据
-                List<Map<String, Object>> individualResults =
-                        (List<Map<String, Object>>) response.get("individual_results");
-
-                System.out.println("收到" + individualResults.size() + "条评论的个别分析结果");
-
-                // 用于存储每个餐厅的摘要文本
-                Map<Long, String> restaurantSummaries = new HashMap<>();
-
-                // 处理每条评论的分析结果
-                for (int i = 0; i < individualResults.size(); i++) {
-                    Map<String, Object> result = individualResults.get(i);
-                    Long reviewId = reviewIds.get(i);
-                    Long restaurantId = restaurantIdMap.get(reviewId.toString());
-
-                    // 获取分析结果
-                    Map<String, Object> analysis = (Map<String, Object>) result.get("analysis");
-
-                    // 提取并保存摘要文本
-                    if (analysis.containsKey("summary") && analysis.get("summary") != null) {
-                        String summary = (String) analysis.get("summary");
-                        // 更新餐厅的摘要文本（可能多个评论，取最后一个或合并）
-                        restaurantSummaries.put(restaurantId, summary);
-                    }
-
-                    List<Map<String, Object>> aspectResults =
-                            (List<Map<String, Object>>) analysis.get("unique_aspect_results");
-
-                    if (aspectResults == null || aspectResults.isEmpty()) {
-                        System.out.println("警告：评论ID " + reviewId + " 没有提取到方面情感结果");
-                        continue;
-                    }
-
-                    // 确保餐厅的统计数据初始化
-                    if (!restaurantAspectStats.containsKey(restaurantId)) {
-                        restaurantAspectStats.put(restaurantId, new HashMap<>());
-                    }
-
-                    // 更新该餐厅的方面统计
-                    for (Map<String, Object> aspectResult : aspectResults) {
-                        String aspect = (String) aspectResult.get("aspect");
-                        String sentiment = (String) aspectResult.get("sentiment");
-                        String text = (String) aspectResult.get("text");
-                        Double confidence = Double.valueOf(aspectResult.get("confidence").toString());
-
-                        // 更新统计计数
-                        Map<String, Map<String, Integer>> aspectStats = restaurantAspectStats.get(restaurantId);
-                        if (!aspectStats.containsKey(aspect)) {
-                            aspectStats.put(aspect, new HashMap<>());
-                            aspectStats.get(aspect).put("好", 0);
-                            aspectStats.get(aspect).put("差", 0);
-                        }
-
-                        // 增加对应情感计数
-                        aspectStats.get(aspect).put(sentiment,
-                                aspectStats.get(aspect).get(sentiment) + 1);
-
-                        // 保存证据文本到数据库（这部分代码可以实现）
-                        // TODO: 实现证据文本的存储
-                        System.out.println("餐厅ID " + restaurantId + " 方面[" + aspect + "] 情感[" + sentiment +
-                                "] 证据文本: " + text + " 置信度: " + confidence);
-                    }
-                }
-
-                // 更新数据库中的方面统计数据
-                System.out.println("开始更新数据库中的情感分析结果...");
-                int restaurantCount = 0;
-                int aspectCount = 0;
-
-                for (Map.Entry<Long, Map<String, Map<String, Integer>>> entry : restaurantAspectStats.entrySet()) {
-                    Long restaurantId = entry.getKey();
-                    Map<String, Map<String, Integer>> aspectStats = entry.getValue();
-
-                    // 转换为数据库更新所需格式
-                    List<Map<String, Object>> dbAspectStats = new ArrayList<>();
-
-                    for (Map.Entry<String, Map<String, Integer>> aspectEntry : aspectStats.entrySet()) {
-                        String aspect = aspectEntry.getKey();
-                        Map<String, Integer> counts = aspectEntry.getValue();
-
-                        Map<String, Object> stat = new HashMap<>();
-                        stat.put("aspect", aspect);
-                        stat.put("positive", counts.get("好"));
-                        stat.put("negative", counts.get("差"));
-                        stat.put("total", counts.get("好") + counts.get("差"));
-
-                        dbAspectStats.add(stat);
-                        aspectCount++;
-                    }
-
-                    // 更新数据库
-                    aspectSummaryMapper.batchUpsertAspectStatistics(restaurantId, dbAspectStats);
-
-
-                    restaurantCount++;
-                }
-
-                System.out.println("已更新" + restaurantCount + "家餐厅的" + aspectCount + "项方面情感统计");
-
+            
+            // 获取摘要
+            String summary = (String) response.getOrDefault("summary", "无法生成摘要");
+            System.out.println("获取到摘要: " + (summary.length() > 50 ? summary.substring(0, 50) + "..." : summary));
+            
+            // 获取短语统计
+            List<Map<String, Object>> phraseStats = (List<Map<String, Object>>) response.get("phrase_stats");
+            System.out.println("获取到短语统计: " + phraseStats.size() + " 项");
+            
+            // 获取总评论数
+            int totalReviews = ((Number) response.getOrDefault("total_reviews", reviewMaps.size())).intValue();
+            
+            if (restaurantId != null) {
+                // 将短语统计转换为方面情感统计并保存到数据库
+                List<Map<String, Object>> aspectStats = convertPhraseStatsToAspectStats(phraseStats);
+                System.out.println("准备更新 " + aspectStats.size() + " 条方面统计数据");
+                
+                // 更新数据库
+                int updatedRows = aspectSummaryMapper.batchUpsertAspectStatistics(restaurantId, aspectStats);
+                System.out.println("成功更新 " + updatedRows + " 行方面统计数据");
+                
+                // 可选：保存摘要到review_summaries表（如果有对应表和mapper）
+                // saveReviewSummary(restaurantId, summary, totalReviews);
+                
                 // 标记评论为已分析
-                String reviewIdList = reviewIds.stream()
-                        .map(String::valueOf)
-                        .collect(Collectors.joining(","));
-                int updatedCount = reviewMapper.markReviewsAsAnalyzed(reviewIdList);
-                System.out.println("已将" + updatedCount + "条评论标记为已分析");
 
+                int updatedCount = reviewMapper.markReviewsAsAnalyzed(reviewIds);
+                System.out.println("已将" + updatedCount + "条评论标记为已分析");
+                
                 return Map.of(
                         "status", "success",
-                        "message", "成功分析" + reviewIds.size() + "条评论，更新了" + restaurantCount + "家餐厅的情感统计"
+                        "message", "成功分析" + reviewIds.size() + "条评论，更新了餐厅的方面统计",
+                        "summary", summary,
+                        "aspectStats", aspectStats,
+                        "totalReviews", totalReviews
+                );
+            } else {
+                return Map.of(
+                        "status", "error",
+                        "message", "无法确定评论所属餐厅"
                 );
             }
-
-            System.err.println("Python服务返回无效结果，缺少aspect_stats字段");
-            return Map.of("status", "error", "message", "Python服务返回无效结果");
 
         } catch (Exception e) {
             System.err.println("评论分析过程中发生异常: " + e.getMessage());
@@ -416,5 +336,48 @@ public class AspectSentimentService {
             );
         }
     }
+    /**
+     * 将短语统计转换为方面情感统计
+     */
+    private List<Map<String, Object>> convertPhraseStatsToAspectStats(List<Map<String, Object>> phraseStats) {
+        List<Map<String, Object>> aspectStats = new ArrayList<>();
 
+        for (Map<String, Object> phraseStat : phraseStats) {
+            String phrase = (String) phraseStat.get("phrase");
+            int count = ((Number) phraseStat.get("count")).intValue();
+            String sentiment = (String) phraseStat.get("sentiment");
+            double confidence = ((Number) phraseStat.get("confidence")).doubleValue();
+
+            // 创建方面统计对象
+            Map<String, Object> aspectStat = new HashMap<>();
+            aspectStat.put("aspect", phrase);  // 使用短语作为方面名称
+
+            int positiveCount = 0;
+            int negativeCount = 0;
+
+            // 根据情感确定正面/负面计数
+            if ("好".equals(sentiment)) {
+                positiveCount = count;
+            } else if ("差".equals(sentiment)) {
+                negativeCount = count;
+            } else {
+                // 中性评价，可以选择如何处理
+                // 这里我们将中性计为一半正面一半负面
+                positiveCount = count / 2;
+                negativeCount = count / 2;
+            }
+
+            aspectStat.put("positive", positiveCount);
+            aspectStat.put("negative", negativeCount);
+            aspectStat.put("total", count);
+
+            // 计算百分比 (正面评价占总数的百分比)
+            double percentage = (count > 0) ? ((double) positiveCount / count) * 100.0 : 0.0;
+            aspectStat.put("positivePercentage", percentage);
+
+            aspectStats.add(aspectStat);
+        }
+
+        return aspectStats;
+    }
 }

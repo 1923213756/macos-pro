@@ -33,24 +33,6 @@ public interface AspectSummaryMapper extends BaseMapper<AspectSummary> {
     int batchUpsertAspectStatistics(@Param("restaurantId") Long restaurantId,
                                     @Param("aspectStats") List<Map<String, Object>> aspectStats);
 
-    /**
-     * 保存方面情感证据
-     */
-    int saveAspectEvidence(@Param("summaryId") Long summaryId,
-                           @Param("reviewId") Long reviewId,
-                           @Param("aspect") String aspect,
-                           @Param("sentiment") String sentiment,
-                           @Param("evidenceText") String evidenceText,
-                           @Param("confidence") Double confidence);
-
-    /**
-     * 获取特定方面的前N条高置信度证据
-     */
-    @Select("SELECT * FROM aspect_summary_evidence WHERE summary_id = #{summaryId} " +
-            "AND aspect = #{aspect} ORDER BY confidence DESC LIMIT #{limit}")
-    List<Map<String, Object>> getTopEvidenceForAspect(@Param("summaryId") Long summaryId,
-                                                      @Param("aspect") String aspect,
-                                                      @Param("limit") int limit);
-
+    int markReviewsAsAnalyzed(@Param("reviewIds") List<Long> reviewIds);
 
 }

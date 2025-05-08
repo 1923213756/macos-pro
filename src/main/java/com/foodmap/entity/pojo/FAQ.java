@@ -20,12 +20,9 @@ public class FAQ {
 
     private String keywords;
 
-    @TableField("vector_id")
-    private String vectorId;
-
-    @TableField("created_at")
+    @TableField("createdAt")
     private LocalDateTime createdAt;
 
-    @TableField("updated_at")
+    @TableField("updatedAt")
     private LocalDateTime updatedAt;
 }

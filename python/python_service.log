@@ -1131,3 +1131,773 @@ ZeroDivisionError: Weights sum to zero, can't be normalized
 2025-05-07 21:24:26,160 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
 2025-05-07 21:24:26,166 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:33.44秒
 2025-05-07 21:24:26,174 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:24:26] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 21:37:36,438 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 21:37:36,453 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 21:37:36,459 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.02秒
+2025-05-07 21:37:36,462 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:37:36] "GET /health HTTP/1.1" 200 -
+2025-05-07 21:38:34,632 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 21:38:34,639 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 21:38:34,639 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 21:38:34,639 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 21:38:34,640 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 21:38:34,706 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 21:38:34,706 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 21:38:34,706 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 21:38:34,706 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 21:38:34,709 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T21:38:34.708544', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:38:34,710 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T21:38:34.710170', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:38:34,711 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 21:38:34,711 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 21:38:34,711 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T21:38:34.711670', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:38:34,714 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 21:38:34,714 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 21:38:34,717 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T21:38:34.717635', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 21:38:34,717 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T21:38:34.717855', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:38:34,722 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 1785 effective words/s
+2025-05-07 21:38:34,723 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 40764 effective words/s
+2025-05-07 21:38:34,724 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 20151 effective words/s
+2025-05-07 21:38:34,724 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 55453 effective words/s
+2025-05-07 21:38:34,725 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 35573 effective words/s
+2025-05-07 21:38:34,725 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 2763 effective words/s', 'datetime': '2025-05-07T21:38:34.725319', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:38:34,725 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T21:38:34.725540', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 21:38:34,769 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 21:39:03,983 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 29.34秒
+2025-05-07 21:39:03,992 - aspect_sentiment_service - INFO - 生成摘要: **餐厅评价摘要**
+
+总共有5条评论，显示了不同方面的细微差异。
+
+**主要优点**
+
+大多数评论者表示服务态度不错（40.0%），表明服务质量在这个餐厅是可以信赖的。同时，位置好（20.0%）也被...
+2025-05-07 21:39:03,992 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 21:39:03,995 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 21:39:03,995 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 21:39:03,995 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 21:39:04,027 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:29.40秒
+2025-05-07 21:39:04,058 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:39:04] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 21:47:49,478 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 21:47:49,496 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 21:47:49,499 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.02秒
+2025-05-07 21:47:49,502 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:47:49] "GET /health HTTP/1.1" 200 -
+2025-05-07 21:47:51,962 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 21:47:51,967 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 21:47:51,967 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 21:47:51,967 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 21:47:51,968 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 21:47:52,026 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 21:47:52,026 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 21:47:52,026 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 21:47:52,026 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 21:47:52,028 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T21:47:52.027747', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:47:52,028 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T21:47:52.028157', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:47:52,029 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 21:47:52,029 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 21:47:52,029 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T21:47:52.029931', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:47:52,032 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 21:47:52,032 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 21:47:52,035 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T21:47:52.035596', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 21:47:52,035 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T21:47:52.035935', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:47:52,045 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 804 effective words/s
+2025-05-07 21:47:52,045 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 38462 effective words/s
+2025-05-07 21:47:52,046 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 10354 effective words/s
+2025-05-07 21:47:52,047 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 10195 effective words/s
+2025-05-07 21:47:52,048 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 34934 effective words/s
+2025-05-07 21:47:52,048 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 1649 effective words/s', 'datetime': '2025-05-07T21:47:52.048259', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:47:52,048 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T21:47:52.048466', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 21:47:52,090 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 21:48:20,702 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 28.73秒
+2025-05-07 21:48:20,725 - aspect_sentiment_service - INFO - 生成摘要: 根据5条评论，餐厅总体评价中性，但有明显的优缺点。
+
+在味道方面，3条评论表示食物“还行”，这表明大部分顾客对餐品满意，尽管没有达到理想水平。两条评论提到服务态度和服务质量也不错，这是餐厅的一个主要亮...
+2025-05-07 21:48:20,725 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 21:48:20,725 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 21:48:20,725 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 21:48:20,726 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 21:48:20,740 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:28.78秒
+2025-05-07 21:48:20,769 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:48:20] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 21:57:19,114 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 21:57:19,174 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 21:57:19,189 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.08秒
+2025-05-07 21:57:19,205 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:57:19] "GET /health HTTP/1.1" 200 -
+2025-05-07 21:57:25,126 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 21:57:25,132 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 21:57:25,133 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 21:57:25,133 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 21:57:25,133 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 21:57:25,206 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 21:57:25,206 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 21:57:25,207 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 21:57:25,207 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 21:57:25,209 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T21:57:25.208480', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:57:25,209 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T21:57:25.209395', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:57:25,210 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 21:57:25,210 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 21:57:25,210 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T21:57:25.210629', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:57:25,211 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 21:57:25,212 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 21:57:25,214 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T21:57:25.214187', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 21:57:25,214 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T21:57:25.214584', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:57:25,219 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 1886 effective words/s
+2025-05-07 21:57:25,219 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 41612 effective words/s
+2025-05-07 21:57:25,219 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 41365 effective words/s
+2025-05-07 21:57:25,220 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 57720 effective words/s
+2025-05-07 21:57:25,220 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 31621 effective words/s
+2025-05-07 21:57:25,220 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 3584 effective words/s', 'datetime': '2025-05-07T21:57:25.220380', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:57:25,220 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T21:57:25.220630', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 21:57:25,249 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 21:57:50,000 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 24.86秒
+2025-05-07 21:57:50,028 - aspect_sentiment_service - INFO - 生成摘要: 根据5条评论的统计结果，我们可以得出以下结论：
+
+在服务方面，餐厅表现出良好的态度，但存在上菜速度的 bottleneck。其中，服务态度不错、服务不错、服务一般这三种评价占比分别为 40%、20% ...
+2025-05-07 21:57:50,028 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 21:57:50,028 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 21:57:50,028 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 21:57:50,028 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 21:57:50,070 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:24.94秒
+2025-05-07 21:57:50,095 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:57:50] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 21:59:51,666 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 21:59:51,672 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 21:59:51,676 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-07 21:59:51,698 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 21:59:51] "GET /health HTTP/1.1" 200 -
+2025-05-07 21:59:54,242 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 21:59:54,246 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 21:59:54,246 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 21:59:54,246 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 21:59:54,247 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 21:59:54,348 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 21:59:54,349 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 21:59:54,349 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 21:59:54,349 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 21:59:54,352 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T21:59:54.351247', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:59:54,354 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T21:59:54.354534', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:59:54,356 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 21:59:54,356 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 21:59:54,356 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T21:59:54.356317', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 21:59:54,358 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 21:59:54,359 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 21:59:54,362 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T21:59:54.362691', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 21:59:54,362 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T21:59:54.362920', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:59:54,373 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 1453 effective words/s
+2025-05-07 21:59:54,374 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 42685 effective words/s
+2025-05-07 21:59:54,374 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 11754 effective words/s
+2025-05-07 21:59:54,375 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 78740 effective words/s
+2025-05-07 21:59:54,375 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 36199 effective words/s
+2025-05-07 21:59:54,375 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 1596 effective words/s', 'datetime': '2025-05-07T21:59:54.375531', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 21:59:54,375 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T21:59:54.375572', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 21:59:54,523 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 22:00:23,389 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 29.13秒
+2025-05-07 22:00:23,407 - aspect_sentiment_service - INFO - 生成摘要: 餐厅总体评价较为平衡，总共5条评论中有3条是正面的。
+
+正面方面，服务态度被认为不错，而量比较小也受到认可。此外，位置好也是许多顾客的赞赏。然而，服务速度上菜慢并被视为一个短处，仅占比例较低的一部分。...
+2025-05-07 22:00:23,407 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 22:00:23,407 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 22:00:23,407 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 22:00:23,407 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 22:00:23,418 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:29.18秒
+2025-05-07 22:00:23,423 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 22:00:23] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 22:14:13,211 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 22:14:13,215 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 22:14:13,216 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-07 22:14:13,218 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 22:14:13] "GET /health HTTP/1.1" 200 -
+2025-05-07 22:14:30,940 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 22:14:30,947 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 22:14:30,947 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 22:14:30,948 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 22:14:30,948 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 22:14:31,004 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 22:14:31,004 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 22:14:31,004 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 22:14:31,004 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 22:14:31,008 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T22:14:31.007427', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 22:14:31,009 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T22:14:31.009379', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 22:14:31,010 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 22:14:31,011 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 22:14:31,011 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T22:14:31.011516', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 22:14:31,015 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 22:14:31,015 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 22:14:31,022 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T22:14:31.022135', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 22:14:31,022 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T22:14:31.022352', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 22:14:31,029 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 1502 effective words/s
+2025-05-07 22:14:31,030 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 32598 effective words/s
+2025-05-07 22:14:31,030 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 23135 effective words/s
+2025-05-07 22:14:31,031 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 115942 effective words/s
+2025-05-07 22:14:31,031 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 31468 effective words/s
+2025-05-07 22:14:31,031 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 2213 effective words/s', 'datetime': '2025-05-07T22:14:31.031592', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 22:14:31,031 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T22:14:31.031625', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 22:14:31,093 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 22:14:53,333 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 22.38秒
+2025-05-07 22:14:53,353 - aspect_sentiment_service - INFO - 生成摘要: **餐厅评价总结**
+
+总共有 5 条评论，其中 60.0% 的评论认为餐厅的味道还行，但并没有被称为特别出色。
+
+**服务方面**
+服务态度和质量占据了其中的一半，虽然有的评论说服务不错或服务态度不...
+2025-05-07 22:14:53,353 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 22:14:53,354 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 22:14:53,354 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 22:14:53,354 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 22:14:53,404 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:22.46秒
+2025-05-07 22:14:53,426 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 22:14:53] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 22:24:33,907 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 22:24:33,910 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 22:24:33,912 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-07 22:24:33,915 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 22:24:33] "GET /health HTTP/1.1" 200 -
+2025-05-07 22:25:03,639 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 22:25:03,645 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 22:25:03,646 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 22:25:03,646 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 22:25:03,646 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 22:25:03,716 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 22:25:03,717 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 22:25:03,717 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 22:25:03,717 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 22:25:03,720 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T22:25:03.718803', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 22:25:03,721 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T22:25:03.721184', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 22:25:03,722 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 22:25:03,722 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 22:25:03,722 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T22:25:03.722919', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 22:25:03,727 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 22:25:03,727 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 22:25:03,732 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T22:25:03.732012', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 22:25:03,732 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T22:25:03.732454', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 22:25:03,742 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 1193 effective words/s
+2025-05-07 22:25:03,742 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 34707 effective words/s
+2025-05-07 22:25:03,743 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 17331 effective words/s
+2025-05-07 22:25:03,743 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 48466 effective words/s
+2025-05-07 22:25:03,744 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 34648 effective words/s
+2025-05-07 22:25:03,744 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 1747 effective words/s', 'datetime': '2025-05-07T22:25:03.744331', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 22:25:03,744 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T22:25:03.744367', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 22:25:03,799 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 22:25:31,532 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 27.88秒
+2025-05-07 22:25:31,552 - aspect_sentiment_service - INFO - 生成摘要: 根据提供的评论数据，我们对该餐厅做出了以下客观评价：
+
+在味道方面，餐厅呈现了比较可取的表现，多数顾客认为菜肴风度还行。然而，存在一定比例的问题，也有一些顾客表示菜量较少，这可能导致价格效益不佳。
+
+...
+2025-05-07 22:25:31,557 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 22:25:31,559 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 22:25:31,566 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 22:25:31,568 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 22:25:31,640 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:28.00秒
+2025-05-07 22:25:31,652 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 22:25:31] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-07 23:18:51,268 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-07 23:18:51,279 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-07 23:18:51,284 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.02秒
+2025-05-07 23:18:51,287 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 23:18:51] "GET /health HTTP/1.1" 200 -
+2025-05-07 23:19:01,800 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-07 23:19:01,806 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-07 23:19:01,806 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-07 23:19:01,806 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-07 23:19:01,807 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-07 23:19:01,974 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-07 23:19:01,974 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-07 23:19:01,975 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-07 23:19:01,977 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-07 23:19:01,988 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-07T23:19:01.983465', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 23:19:01,989 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-07T23:19:01.989755', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 23:19:01,992 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-07 23:19:01,992 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-07 23:19:01,992 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-07T23:19:01.992776', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-07 23:19:01,996 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-07 23:19:01,997 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-07 23:19:02,001 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-07T23:19:02.001472', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-07 23:19:02,001 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-07T23:19:02.001549', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 23:19:02,024 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (3 effective words) took 0.0s, 2105 effective words/s
+2025-05-07 23:19:02,026 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (4 effective words) took 0.0s, 32075 effective words/s
+2025-05-07 23:19:02,027 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (5 effective words) took 0.0s, 6501 effective words/s
+2025-05-07 23:19:02,030 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (5 effective words) took 0.0s, 57471 effective words/s
+2025-05-07 23:19:02,030 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (3 effective words) took 0.0s, 33818 effective words/s
+2025-05-07 23:19:02,030 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (20 effective words) took 0.0s, 688 effective words/s', 'datetime': '2025-05-07T23:19:02.030808', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-07 23:19:02,030 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-07T23:19:02.030850', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-07 23:19:02,155 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-07 23:19:27,542 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 25.72秒
+2025-05-07 23:19:27,581 - aspect_sentiment_service - INFO - 生成摘要: 综上所述，这家餐厅的整体评价相对平衡，但有其自身的优缺之处。来自 5 条评论的顾客中，3 条表示菜品味道还行，2 条认为服务态度不错，一条觉得服务也不错。然而，1 条评论指出菜量较少，而1 条提到位置...
+2025-05-07 23:19:27,581 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-07 23:19:27,584 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-07 23:19:27,584 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-07 23:19:27,585 - aspect_sentiment_service - INFO - Top 3 短语: 服务不错 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-07 23:19:27,737 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:25.94秒
+2025-05-07 23:19:27,750 - werkzeug - INFO - 127.0.0.1 - - [07/May/2025 23:19:27] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-08 00:02:40,163 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 00:02:45,165 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 00:02:48,341 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 00:02:48,341 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 00:02:53,206 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 00:02:53,284 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-08 00:02:53,284 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 00:03:01,748 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-08 00:03:01,750 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-08 00:03:01,750 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-08 00:03:01,750 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-08 00:03:01,751 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-08 00:03:01,753 - jieba - DEBUG - Building prefix dict from the default dictionary ...
+2025-05-08 00:03:01,753 - jieba - DEBUG - Loading model from cache /var/folders/88/4pbss5z96qv41gl06jswbsn40000gn/T/jieba.cache
+2025-05-08 00:03:02,141 - jieba - DEBUG - Loading model cost 0.388 seconds.
+2025-05-08 00:03:02,142 - jieba - DEBUG - Prefix dict has been built successfully.
+2025-05-08 00:03:02,152 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-08 00:03:02,152 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-08 00:03:02,152 - gensim.models.word2vec - INFO - collected 22 word types from a corpus of 34 raw words and 20 sentences
+2025-05-08 00:03:02,152 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-08 00:03:02,177 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 22 unique words (100.00% of original 22, drops 0)', 'datetime': '2025-05-08T00:03:02.152969', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 00:03:02,177 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 34 word corpus (100.00% of original 34, drops 0)', 'datetime': '2025-05-08T00:03:02.177465', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 00:03:02,178 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 22 items
+2025-05-08 00:03:02,179 - gensim.models.word2vec - INFO - sample=0.001 downsamples 22 most-common words
+2025-05-08 00:03:02,179 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.625765976305836 word corpus (16.5%% of prior 34)', 'datetime': '2025-05-08T00:03:02.179755', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 00:03:02,181 - gensim.models.word2vec - INFO - estimated required memory for 22 words and 100 dimensions: 28600 bytes
+2025-05-08 00:03:02,181 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-08 00:03:02,183 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-08T00:03:02.183739', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-08 00:03:02,183 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 22 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-08T00:03:02.183832', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 00:03:02,187 - gensim.models.word2vec - INFO - EPOCH 0: training on 34 raw words (6 effective words) took 0.0s, 3434 effective words/s
+2025-05-08 00:03:02,188 - gensim.models.word2vec - INFO - EPOCH 1: training on 34 raw words (5 effective words) took 0.0s, 37163 effective words/s
+2025-05-08 00:03:02,188 - gensim.models.word2vec - INFO - EPOCH 2: training on 34 raw words (8 effective words) took 0.0s, 75000 effective words/s
+2025-05-08 00:03:02,189 - gensim.models.word2vec - INFO - EPOCH 3: training on 34 raw words (5 effective words) took 0.0s, 49875 effective words/s
+2025-05-08 00:03:02,189 - gensim.models.word2vec - INFO - EPOCH 4: training on 34 raw words (4 effective words) took 0.0s, 43577 effective words/s
+2025-05-08 00:03:02,189 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 170 raw words (28 effective words) took 0.0s, 4830 effective words/s', 'datetime': '2025-05-08T00:03:02.189670', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 00:03:02,189 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=22, vector_size=100, alpha=0.025>', 'datetime': '2025-05-08T00:03:02.189711', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-08 00:03:02,194 - aspect_sentiment_service - WARNING - 短语'上菜'的所有权重为0，使用简单平均
+2025-05-08 00:03:02,198 - aspect_sentiment_service - INFO - 密度聚类找到 14 个聚类，噪声点数量: 0
+2025-05-08 00:03:27,310 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 25.56秒
+2025-05-08 00:03:27,313 - aspect_sentiment_service - INFO - 生成摘要: 根据5条评论数据，餐厅的总体评价比较中性。以下是针对各方面的细致分析：
+
+**饮食品质**: 60.0% 的评论者认为菜肴味道还行，这说明餐厅的饮食品质基本有序和可接受。然而，没有很多正面评价，说明饮...
+2025-05-08 00:03:27,313 - aspect_sentiment_service - INFO - 识别短语统计: 14 个短语
+2025-05-08 00:03:27,313 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-08 00:03:27,313 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-08 00:03:27,314 - aspect_sentiment_service - INFO - Top 3 短语: 量比较小 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-08 00:03:27,324 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:25.58秒
+2025-05-08 00:03:27,370 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 00:03:27] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-08 08:06:03,411 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-08 08:06:03,415 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-08 08:06:03,415 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-08 08:06:03,415 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-08 08:06:03,416 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-08 08:06:03,565 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-08 08:06:03,566 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-08 08:06:03,566 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-08 08:06:03,566 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-08 08:06:03,571 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-08T08:06:03.570578', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:06:03,571 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-08T08:06:03.571958', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:06:03,574 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-08 08:06:03,574 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-08 08:06:03,574 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-08T08:06:03.574741', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:06:03,579 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-08 08:06:03,579 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-08 08:06:03,585 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-08T08:06:03.585048', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-08 08:06:03,585 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-08T08:06:03.585094', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:06:03,590 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (4 effective words) took 0.0s, 1980 effective words/s
+2025-05-08 08:06:03,593 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (5 effective words) took 0.0s, 1995 effective words/s
+2025-05-08 08:06:03,594 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (6 effective words) took 0.0s, 63858 effective words/s
+2025-05-08 08:06:03,594 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (9 effective words) took 0.0s, 33520 effective words/s
+2025-05-08 08:06:03,594 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (4 effective words) took 0.0s, 48681 effective words/s
+2025-05-08 08:06:03,594 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (28 effective words) took 0.0s, 2922 effective words/s', 'datetime': '2025-05-08T08:06:03.594885', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:06:03,594 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-08T08:06:03.594920', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-08 08:06:03,664 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-08 08:06:27,475 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 24.06秒
+2025-05-08 08:06:27,478 - aspect_sentiment_service - INFO - 生成摘要: **餐厅评价.summary**
+
+总共收到5条评论，其中3条为正面评价占了60.0%，两条为负面评价占了20.0%，一条为中性评价占了20.0%。
+
+**主要优点：**
+
+*   味道还行，许多用户...
+2025-05-08 08:06:27,478 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-08 08:06:27,478 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-08 08:06:27,478 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-08 08:06:27,478 - aspect_sentiment_service - INFO - Top 3 短语: 量比较小 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-08 08:06:27,486 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:24.08秒
+2025-05-08 08:06:27,492 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:06:27] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-08 08:13:46,481 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 08:13:46,491 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 08:13:46,493 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 08:13:46,506 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:13:46] "GET /health HTTP/1.1" 200 -
+2025-05-08 08:13:46,679 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 08:13:46,680 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 08:13:46,680 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.00秒
+2025-05-08 08:13:46,680 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:13:46] "GET /health HTTP/1.1" 200 -
+2025-05-08 08:13:50,932 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-08 08:13:50,934 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-08 08:13:50,934 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-08 08:13:50,934 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-08 08:13:50,934 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-08 08:13:50,974 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-08 08:13:50,974 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-08 08:13:50,974 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-08 08:13:50,974 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-08 08:13:50,975 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-08T08:13:50.975429', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:13:50,975 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-08T08:13:50.975671', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:13:50,976 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-08 08:13:50,976 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-08 08:13:50,976 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-08T08:13:50.976470', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:13:50,977 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-08 08:13:50,977 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-08 08:13:50,980 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-08T08:13:50.980242', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-08 08:13:50,980 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-08T08:13:50.980440', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:13:50,985 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (4 effective words) took 0.0s, 3364 effective words/s
+2025-05-08 08:13:50,986 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (5 effective words) took 0.0s, 20725 effective words/s
+2025-05-08 08:13:50,986 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (6 effective words) took 0.0s, 56693 effective words/s
+2025-05-08 08:13:50,988 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (9 effective words) took 0.0s, 5501 effective words/s
+2025-05-08 08:13:50,988 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (4 effective words) took 0.0s, 45155 effective words/s
+2025-05-08 08:13:50,988 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (28 effective words) took 0.0s, 3559 effective words/s', 'datetime': '2025-05-08T08:13:50.988494', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:13:50,988 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-08T08:13:50.988530', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-08 08:13:51,015 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-08 08:14:14,363 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 23.43秒
+2025-05-08 08:14:14,371 - aspect_sentiment_service - INFO - 生成摘要: 总体而言，该餐厅的评定并不算太好，但也有一些积极 Feedback。其中，64%的评论者认为味道还行，这是最常见的评价。另外，还有40%的人觉得服务态度不错，这也是一项比较积极的评价。
+
+然而，在食物...
+2025-05-08 08:14:14,371 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-08 08:14:14,371 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-08 08:14:14,372 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-08 08:14:14,372 - aspect_sentiment_service - INFO - Top 3 短语: 量比较小 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-08 08:14:14,390 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:23.46秒
+2025-05-08 08:14:14,401 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:14:14] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-08 08:16:24,629 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 08:16:24,632 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 08:16:24,633 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.00秒
+2025-05-08 08:16:24,635 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:16:24] "GET /health HTTP/1.1" 200 -
+2025-05-08 08:16:27,362 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-08 08:16:27,376 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-08 08:16:27,376 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-08 08:16:27,376 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-08 08:16:27,376 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-08 08:16:27,425 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-08 08:16:27,425 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-08 08:16:27,425 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-08 08:16:27,425 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-08 08:16:27,426 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-08T08:16:27.426142', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:16:27,426 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-08T08:16:27.426426', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:16:27,427 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-08 08:16:27,427 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-08 08:16:27,427 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-08T08:16:27.427652', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:16:27,429 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-08 08:16:27,429 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-08 08:16:27,433 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-08T08:16:27.433009', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-08 08:16:27,433 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-08T08:16:27.433058', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:16:27,437 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (4 effective words) took 0.0s, 2002 effective words/s
+2025-05-08 08:16:27,438 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (5 effective words) took 0.0s, 43368 effective words/s
+2025-05-08 08:16:27,438 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (6 effective words) took 0.0s, 61460 effective words/s
+2025-05-08 08:16:27,439 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (9 effective words) took 0.0s, 99861 effective words/s
+2025-05-08 08:16:27,439 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (4 effective words) took 0.0s, 38354 effective words/s
+2025-05-08 08:16:27,439 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (28 effective words) took 0.0s, 4433 effective words/s', 'datetime': '2025-05-08T08:16:27.439405', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:16:27,439 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-08T08:16:27.439442', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-08 08:16:27,464 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-08 08:17:17,769 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 50.39秒
+2025-05-08 08:17:17,847 - aspect_sentiment_service - INFO - 生成摘要: 根据给出的评论数据，我们总结了这个餐厅的基本情况。
+
+**菜单品质**: 味道有其特点，但大多数评论者表示它还行。这表明，菜单中的口味没有绝对吸引人，但是不至于令所有客人失望。其中有一条评论提到量比较...
+2025-05-08 08:17:17,848 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-08 08:17:17,858 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-08 08:17:17,858 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-08 08:17:17,858 - aspect_sentiment_service - INFO - Top 3 短语: 量比较小 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-08 08:17:17,879 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:50.52秒
+2025-05-08 08:17:17,906 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:17:17] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-08 08:22:44,968 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 08:22:44,975 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 08:22:44,976 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 08:22:44,977 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:22:44] "GET /health HTTP/1.1" 200 -
+2025-05-08 08:22:47,665 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-08 08:22:47,668 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-08 08:22:47,668 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-08 08:22:47,668 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-08 08:22:47,668 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-08 08:22:47,724 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-08 08:22:47,724 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-08 08:22:47,724 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-08 08:22:47,724 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-08 08:22:47,726 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-08T08:22:47.725838', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:22:47,726 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-08T08:22:47.726382', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:22:47,728 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-08 08:22:47,728 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-08 08:22:47,728 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-08T08:22:47.728276', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 08:22:47,731 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-08 08:22:47,731 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-08 08:22:47,735 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-08T08:22:47.735365', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-08 08:22:47,735 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-08T08:22:47.735448', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:22:47,742 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (4 effective words) took 0.0s, 1868 effective words/s
+2025-05-08 08:22:47,742 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (5 effective words) took 0.0s, 18648 effective words/s
+2025-05-08 08:22:47,742 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (6 effective words) took 0.0s, 61486 effective words/s
+2025-05-08 08:22:47,743 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (9 effective words) took 0.0s, 95787 effective words/s
+2025-05-08 08:22:47,743 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (4 effective words) took 0.0s, 50078 effective words/s
+2025-05-08 08:22:47,743 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (28 effective words) took 0.0s, 3409 effective words/s', 'datetime': '2025-05-08T08:22:47.743702', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 08:22:47,743 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-08T08:22:47.743737', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-08 08:22:47,781 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-08 08:23:12,854 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 25.19秒
+2025-05-08 08:23:12,857 - aspect_sentiment_service - INFO - 生成摘要: 根据给出的评论数据，我们可以看到餐厅有着多方面的反应。其中，大部分评论者认为味道还行，总共占得60.0%，这是餐厅的一个主要优势。
+
+服务态度也不错，占得40.0%的评论中也提到了一些正面 feedb...
+2025-05-08 08:23:12,857 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-08 08:23:12,857 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-08 08:23:12,857 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-08 08:23:12,857 - aspect_sentiment_service - INFO - Top 3 短语: 量比较小 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-08 08:23:12,861 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:25.20秒
+2025-05-08 08:23:12,863 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 08:23:12] "POST /analyze_batch HTTP/1.1" 200 -
+2025-05-08 10:24:57,864 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 10:25:02,324 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 10:25:05,897 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 10:25:05,897 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 10:25:16,715 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 10:25:16,743 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.36.85.1:5001
+2025-05-08 10:25:16,743 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 10:30:15,868 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 10:30:19,909 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 10:30:22,566 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 10:30:22,567 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 10:30:27,698 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 10:30:27,764 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.36.85.1:5001
+2025-05-08 10:30:27,764 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 10:30:31,455 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 10:30:31,456 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 10:30:31,456 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.00秒
+2025-05-08 10:30:31,457 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 10:30:31] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:04:36,838 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:04:37,765 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:04:37,769 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:04:37,770 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 11:04:37,785 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:04:37] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:04:40,370 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:04:42,988 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:04:42,989 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:04:48,858 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:10:43,084 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:10:43,124 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:10:43,152 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.07秒
+2025-05-08 11:10:43,154 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:10:43] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:10:44,270 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:10:47,249 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:10:49,897 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:10:49,898 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:10:55,402 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:25:17,913 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:25:19,622 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:25:19,626 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:25:19,629 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 11:25:19,634 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:25:19] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:25:21,974 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:25:24,877 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:25:25,088 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:25:30,124 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:29:04,596 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:29:07,623 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:29:09,646 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:29:09,647 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:29:14,267 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:30:17,283 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:30:19,979 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:30:21,965 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:30:21,966 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:30:26,893 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:30:26,969 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.36.85.1:5001
+2025-05-08 11:30:26,970 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 11:32:48,921 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:32:51,968 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:32:55,297 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:32:58,265 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:32:58,343 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:33:04,174 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:33:04,198 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.36.85.1:5001
+2025-05-08 11:33:04,199 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 11:34:17,924 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:34:17,927 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:34:17,931 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 11:34:17,938 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:34:17] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:34:32,268 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:34:32,277 - jieba - DEBUG - Building prefix dict from the default dictionary ...
+2025-05-08 11:34:32,278 - jieba - DEBUG - Loading model from cache /var/folders/88/4pbss5z96qv41gl06jswbsn40000gn/T/jieba.cache
+2025-05-08 11:34:32,626 - jieba - DEBUG - Loading model cost 0.349 seconds.
+2025-05-08 11:34:32,626 - jieba - DEBUG - Prefix dict has been built successfully.
+2025-05-08 11:34:32,648 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:34:35,134 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:2.87秒
+2025-05-08 11:34:35,135 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:34:35] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:35:47,708 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:35:47,710 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:35:47,711 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.00秒
+2025-05-08 11:35:47,711 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:35:47] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:36:04,792 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:36:04,804 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 11:36:04,832 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:36:06,464 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:1.67秒
+2025-05-08 11:36:06,464 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:36:06] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:36:14,356 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:36:14,359 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 11:36:14,361 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:36:14,671 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.31秒
+2025-05-08 11:36:14,671 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:36:14] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:37:12,718 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:37:12,727 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:37:12,727 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 11:37:12,727 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:37:12] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:37:17,601 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:37:17,606 - aspect_sentiment_service - WARNING - 无法从'iui'提取短语，使用原文片段
+2025-05-08 11:37:17,608 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:37:18,012 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.41秒
+2025-05-08 11:37:18,014 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:37:18] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:37:34,424 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:37:34,427 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 11:37:34,429 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:37:34,758 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.33秒
+2025-05-08 11:37:34,758 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:37:34] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:39:20,547 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:39:20,562 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:39:21,544 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:1.00秒
+2025-05-08 11:39:21,544 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:39:21] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:43:22,055 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 11:43:22,059 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 11:43:22,067 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 11:43:22,086 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:43:22] "GET /health HTTP/1.1" 200 -
+2025-05-08 11:43:34,445 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:43:34,467 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 11:43:34,474 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:43:40,321 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:5.88秒
+2025-05-08 11:43:40,322 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:43:40] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:43:55,178 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:43:55,215 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:43:56,529 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:1.35秒
+2025-05-08 11:43:56,530 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:43:56] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:44:47,006 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:44:47,022 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:44:47,780 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.77秒
+2025-05-08 11:44:47,781 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:44:47] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:45:15,456 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:45:15,462 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:45:15,876 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.42秒
+2025-05-08 11:45:15,876 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:45:15] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:45:40,397 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:45:40,405 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:45:40,771 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.37秒
+2025-05-08 11:45:40,772 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:45:40] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:46:48,293 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 11:46:48,295 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 11:46:48,297 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 11:46:48,691 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.40秒
+2025-05-08 11:46:48,692 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 11:46:48] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 11:55:15,966 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 11:55:19,328 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 11:55:22,140 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 11:55:22,140 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 11:55:27,081 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 11:55:27,168 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.36.85.1:5001
+2025-05-08 11:55:27,168 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 12:52:26,880 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 12:52:31,330 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 12:52:34,288 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 12:52:34,289 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 12:52:39,328 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 12:52:39,361 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-08 12:52:39,361 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 12:52:43,574 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 12:52:43,575 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 12:52:43,576 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.00秒
+2025-05-08 12:52:43,579 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 12:52:43] "GET /health HTTP/1.1" 200 -
+2025-05-08 12:52:53,170 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 12:52:53,172 - jieba - DEBUG - Building prefix dict from the default dictionary ...
+2025-05-08 12:52:53,172 - jieba - DEBUG - Loading model from cache /var/folders/88/4pbss5z96qv41gl06jswbsn40000gn/T/jieba.cache
+2025-05-08 12:52:53,534 - jieba - DEBUG - Loading model cost 0.362 seconds.
+2025-05-08 12:52:53,534 - jieba - DEBUG - Prefix dict has been built successfully.
+2025-05-08 12:52:53,540 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 12:52:53,541 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 12:52:54,465 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:1.30秒
+2025-05-08 12:52:54,466 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 12:52:54] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 12:53:12,846 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 12:53:12,852 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 12:53:13,322 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.48秒
+2025-05-08 12:53:13,323 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 12:53:13] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 12:53:32,928 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 12:53:33,052 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 12:53:36,172 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:3.25秒
+2025-05-08 12:53:36,173 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 12:53:36] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 12:56:18,075 - aspect_sentiment_service - INFO - 使用设备: mps
+2025-05-08 12:56:20,983 - datasets - INFO - PyTorch version 2.7.0 available.
+2025-05-08 12:56:22,879 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: mps
+2025-05-08 12:56:22,879 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: paraphrase-multilingual-MiniLM-L12-v2
+2025-05-08 12:56:27,773 - aspect_sentiment_service - INFO - 启动服务器: 监听 0.0.0.0:5001
+2025-05-08 12:56:27,805 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.44.93.33:5001
+2025-05-08 12:56:27,805 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-08 12:59:37,766 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 12:59:37,771 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 12:59:37,774 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.01秒
+2025-05-08 12:59:37,806 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 12:59:37] "GET /health HTTP/1.1" 200 -
+2025-05-08 13:04:06,245 - aspect_sentiment_service - INFO - 接收请求: GET /health
+2025-05-08 13:04:06,270 - aspect_sentiment_service - INFO - 收到健康检查请求
+2025-05-08 13:04:06,274 - aspect_sentiment_service - INFO - 请求完成: GET /health - 状态:200, 耗时:0.03秒
+2025-05-08 13:04:06,279 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 13:04:06] "GET /health HTTP/1.1" 200 -
+2025-05-08 13:12:16,372 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 13:12:16,390 - jieba - DEBUG - Building prefix dict from the default dictionary ...
+2025-05-08 13:12:16,402 - jieba - DEBUG - Loading model from cache /var/folders/88/4pbss5z96qv41gl06jswbsn40000gn/T/jieba.cache
+2025-05-08 13:12:16,772 - jieba - DEBUG - Loading model cost 0.371 seconds.
+2025-05-08 13:12:16,774 - jieba - DEBUG - Prefix dict has been built successfully.
+2025-05-08 13:12:16,823 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 13:12:21,193 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:4.82秒
+2025-05-08 13:12:21,197 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 13:12:21] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 13:12:39,366 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 13:12:39,471 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 13:12:40,434 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:1.07秒
+2025-05-08 13:12:40,435 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 13:12:40] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 13:15:33,535 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 13:15:33,563 - aspect_sentiment_service - WARNING - 无法从'你好'提取短语，使用原文片段
+2025-05-08 13:15:33,572 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 13:15:36,216 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:2.68秒
+2025-05-08 13:15:36,218 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 13:15:36] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 13:16:24,527 - aspect_sentiment_service - INFO - 接收请求: POST /api/match_faq
+2025-05-08 13:16:24,592 - aspect_sentiment_service - WARNING - 无法从'推荐一下好吃的菜呗'提取短语，使用原文片段
+2025-05-08 13:16:24,637 - aspect_sentiment_service - INFO - 短语数量不足，使用 SentenceTransformer
+2025-05-08 13:16:25,512 - aspect_sentiment_service - INFO - 请求完成: POST /api/match_faq - 状态:200, 耗时:0.99秒
+2025-05-08 13:16:25,512 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 13:16:25] "POST /api/match_faq HTTP/1.1" 200 -
+2025-05-08 13:17:12,819 - aspect_sentiment_service - INFO - 接收请求: POST /analyze_batch
+2025-05-08 13:17:12,822 - aspect_sentiment_service - INFO - 收到批量分析请求 - 5 条评论
+2025-05-08 13:17:12,822 - aspect_sentiment_service - INFO - 样本评论: 感觉服务态度不错，但是量比较小，味道还行...
+2025-05-08 13:17:12,822 - aspect_sentiment_service - INFO - 开始评论分析流程...
+2025-05-08 13:17:12,823 - aspect_sentiment_service - INFO - 开始处理5条评论
+2025-05-08 13:17:12,889 - gensim.models.word2vec - INFO - collecting all words and their counts
+2025-05-08 13:17:12,889 - gensim.models.word2vec - INFO - PROGRESS: at sentence #0, processed 0 words, keeping 0 word types
+2025-05-08 13:17:12,889 - gensim.models.word2vec - INFO - collected 21 word types from a corpus of 32 raw words and 18 sentences
+2025-05-08 13:17:12,890 - gensim.models.word2vec - INFO - Creating a fresh vocabulary
+2025-05-08 13:17:13,014 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 retains 21 unique words (100.00% of original 21, drops 0)', 'datetime': '2025-05-08T13:17:12.891718', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 13:17:13,034 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'effective_min_count=1 leaves 32 word corpus (100.00% of original 32, drops 0)', 'datetime': '2025-05-08T13:17:13.034223', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 13:17:13,036 - gensim.models.word2vec - INFO - deleting the raw counts dictionary of 21 items
+2025-05-08 13:17:13,052 - gensim.models.word2vec - INFO - sample=0.001 downsamples 21 most-common words
+2025-05-08 13:17:13,053 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'downsampling leaves estimated 5.151145866563709 word corpus (16.1%% of prior 32)', 'datetime': '2025-05-08T13:17:13.053352', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'prepare_vocab'}
+2025-05-08 13:17:13,055 - gensim.models.word2vec - INFO - estimated required memory for 21 words and 100 dimensions: 27300 bytes
+2025-05-08 13:17:13,055 - gensim.models.word2vec - INFO - resetting layer weights
+2025-05-08 13:17:13,058 - gensim.utils - INFO - Word2Vec lifecycle event {'update': False, 'trim_rule': 'None', 'datetime': '2025-05-08T13:17:13.058671', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'build_vocab'}
+2025-05-08 13:17:13,059 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training model with 4 workers on 21 vocabulary and 100 features, using sg=0 hs=0 sample=0.001 negative=5 window=5 shrink_windows=True', 'datetime': '2025-05-08T13:17:13.059007', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 13:17:13,072 - gensim.models.word2vec - INFO - EPOCH 0: training on 32 raw words (4 effective words) took 0.0s, 1746 effective words/s
+2025-05-08 13:17:13,072 - gensim.models.word2vec - INFO - EPOCH 1: training on 32 raw words (6 effective words) took 0.0s, 58088 effective words/s
+2025-05-08 13:17:13,073 - gensim.models.word2vec - INFO - EPOCH 2: training on 32 raw words (4 effective words) took 0.0s, 48242 effective words/s
+2025-05-08 13:17:13,073 - gensim.models.word2vec - INFO - EPOCH 3: training on 32 raw words (9 effective words) took 0.0s, 102418 effective words/s
+2025-05-08 13:17:13,073 - gensim.models.word2vec - INFO - EPOCH 4: training on 32 raw words (5 effective words) took 0.0s, 61224 effective words/s
+2025-05-08 13:17:13,073 - gensim.utils - INFO - Word2Vec lifecycle event {'msg': 'training on 160 raw words (28 effective words) took 0.0s, 1971 effective words/s', 'datetime': '2025-05-08T13:17:13.073679', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'train'}
+2025-05-08 13:17:13,073 - gensim.utils - INFO - Word2Vec lifecycle event {'params': 'Word2Vec<vocab=21, vector_size=100, alpha=0.025>', 'datetime': '2025-05-08T13:17:13.073887', 'gensim': '4.3.3', 'python': '3.11.11 (main, Feb 25 2025, 11:21:06) [Clang 16.0.0 (clang-1600.0.26.6)]', 'platform': 'macOS-15.4.1-arm64-arm-64bit', 'event': 'created'}
+2025-05-08 13:17:13,119 - aspect_sentiment_service - INFO - 密度聚类找到 12 个聚类，噪声点数量: 0
+2025-05-08 13:17:33,288 - aspect_sentiment_service - INFO - 分析完成! 处理时间: 20.46秒
+2025-05-08 13:17:33,300 - aspect_sentiment_service - INFO - 生成摘要: 基于给出的评论数据，我们对该餐厅进行了总体评估。
+
+在味道方面，客户有80.0%的满意度，描述为“还行”，这表明主要菜品口感合适，但没有过出色之处。服务态度也是一个强项，占65.0%的 custome...
+2025-05-08 13:17:33,300 - aspect_sentiment_service - INFO - 识别短语统计: 12 个短语
+2025-05-08 13:17:33,300 - aspect_sentiment_service - INFO - Top 1 短语: 味道还行 - 情感:好, 占比:60.0%, 出现:3次
+2025-05-08 13:17:33,300 - aspect_sentiment_service - INFO - Top 2 短语: 服务态度不错 - 情感:好, 占比:40.0%, 出现:2次
+2025-05-08 13:17:33,300 - aspect_sentiment_service - INFO - Top 3 短语: 量比较小 - 情感:好, 占比:20.0%, 出现:1次
+2025-05-08 13:17:33,317 - aspect_sentiment_service - INFO - 请求完成: POST /analyze_batch - 状态:200, 耗时:20.50秒
+2025-05-08 13:17:33,326 - werkzeug - INFO - 127.0.0.1 - - [08/May/2025 13:17:33] "POST /analyze_batch HTTP/1.1" 200 -

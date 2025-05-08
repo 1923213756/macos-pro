@@ -519,39 +519,49 @@
             font-size: 12px;
             color: var(--text-light);
         }
-
-        /* 情感分析相关样式 */
-        .aspect-item {
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+        /* 标签式情感分析显示 */
+        .aspect-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
         }
 
-        .aspect-name {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .aspect-tag {
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 13px;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .sentiment-bar-container {
-            height: 10px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            overflow: hidden;
+
+        .aspect-tag .count {
+            margin-left: 5px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 0 6px;
+            font-size: 11px;
         }
 
-        .sentiment-bar {
-            height: 100%;
-            background-color: #4CAF50;
-            border-radius: 5px;
+        .aspect-tag.positive {
+            background-color: #4CAF50; /* 绿色 */
         }
 
-        .sentiment-stats {
+        .aspect-tag.negative {
+            background-color: #f44336; /* 红色 */
+        }
+
+        .sentiment-section-header {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-light);
+            align-items: center;
+            margin-bottom: 10px;
         }
+
 
         .sentiment-summary {
             padding: 10px;
@@ -568,98 +578,7 @@
             text-align: center;
         }
 
-        /* 情感分析组件样式优化 */
-        .sentiment-analysis-section {
-        margin: 10px 0;
-        padding: 8px 10px;
-        background-color: #f9f9f9;
-        border-radius: 6px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
 
-        .sentiment-section-title {
-        font-size: 15px;
-        margin-bottom: 8px;
-        color: #333;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        }
-
-        .aspect-item {
-        margin-bottom: 8px;
-        padding: 5px 0;
-        border-bottom: 1px solid #f0f0f0;
-        }
-
-        .aspect-item:last-child {
-        border-bottom: none;
-        }
-
-        .aspect-name {
-        font-weight: 500;
-        font-size: 13px;
-        margin-bottom: 3px;
-        color: #444;
-        }
-
-        /* 情感分析图表样式优化 */
-        /* 情感分析图表样式优化 - 仅显示好评 */
-        .sentiment-bar-container {
-            height: 12px; /* 减小高度，因为只需要显示一个条形图 */
-            background-color: #f1f1f1; /* 灰色底色，让好评更加突出 */
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            margin-bottom: 6px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .sentiment-bar.positive {
-            background-color: #4CAF50; /* 好评条使用绿色 */
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%; /* 填充整个容器高度 */
-            border-radius: 2px;
-            transition: width 0.5s ease-out;
-        }
-
-        /* 移除不再需要的负面评价条样式 */
-        .sentiment-bar.negative {
-            display: none; /* 隐藏差评条 */
-        }
-
-        .sentiment-bar {
-            transition: width 0.5s ease-out;
-        }
-
-        .sentiment-stats {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #666;
-        }
-
-        .sentiment-stats-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2px;
-        }
-
-        .positive-stat {
-        color: #388E3C;
-        font-weight: 500;
-        font-size: 11px;
-        }
-
-        .negative-stat {
-        color: #D32F2F;
-        font-weight: 500;
-        font-size: 11px;
-        }
 
         .sentiment-summary {
         padding: 10px;
@@ -670,7 +589,87 @@
         line-height: 1.4;
         border-radius: 3px;
         }
-                        @keyframes pulse {
+
+
+                /* FAQ相关样式 */
+        .faq-list {
+            margin-top: 15px;
+        }
+
+        .faq-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background-color: #f9f9f9;
+            padding: 12px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+
+        .faq-toggle {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-answer-content {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            white-space: pre-line;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0;
+            max-height: 500px;
+        }
+
+        .faq-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0 15px 15px;
+            gap: 10px;
+        }
+
+        .faq-edit, .faq-delete {
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .faq-edit:hover {
+            color: var(--primary-color);
+            background-color: #e8f5e9;
+        }
+
+        .faq-delete:hover {
+            color: #f44336;
+            background-color: #ffebee;
+        }
+
+                @keyframes pulse {
                     0% { opacity: 0.6; }
                     50% { opacity: 1; }
                     100% { opacity: 0.6; }
@@ -719,6 +718,15 @@
         </div>
 
         <!-- 评论区域 -->
+         <!-- 情感分析摘要部分 -->
+        <div class="detail-section" style="margin-top: 20px;">
+            <div class="sentiment-section-header">
+                <h3>评论分析摘要</h3>
+                <button id="analyze-sentiment-btn" class="btn" style="font-size: 12px; padding: 3px 8px; display: none;">分析评论</button>
+            </div>
+            <div id="sentiment-summary" class="sentiment-summary"></div>
+            <div id="aspect-sentiment-container" class="aspect-tags"></div>
+        </div>
         <!-- 评论引导功能 -->
         <div id="review-guide-section" style="margin-top: 20px;">
             <h3>AI 生成评论引导</h3>
@@ -746,6 +754,44 @@
             <div id="shop-reviews-pagination" class="pagination"></div>
         </div>
 
+        <!-- FAQ部分 -->
+        <div class="faq-section">
+            <h3>常见问题</h3>
+            
+            <!-- FAQ搜索与提问功能 -->
+            <div class="faq-question-form">
+                <div class="form-group">
+                    <textarea id="faq-question-input" placeholder="有问题？在这里输入您的问题..." style="width: 100%; padding: 10px; margin-bottom: 10px; height: 60px;"></textarea>
+                    <div class="question-actions" style="display: flex; justify-content: space-between; align-items: center;">
+                        <button id="ask-question-btn" class="btn">提交问题</button>
+                        <span id="question-char-count" style="color: #999; font-size: 12px;">0/200</span>
+                    </div>
+                </div>
+                <div id="faq-answer-display" class="message" style="display: none; margin-top: 15px;">
+                    <!-- 这里会显示回答 -->
+                </div>
+            </div>
+
+            <!-- FAQ列表区域 -->
+            <div id="shop-faqs">
+                <h4 style="margin-top: 20px;">热门问答</h4>
+                <div id="faq-list" class="faq-list">
+                    <div class="loading">加载常见问题...</div>
+                </div>
+            </div>
+            
+            <!-- 商家专用FAQ管理功能 -->
+            <div id="faq-management" style="margin-top: 25px; display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>FAQ管理</h4>
+                    <div>
+                        <button id="add-faq-btn" class="btn" style="background-color: #4CAF50; margin-right: 10px;">添加FAQ</button>
+                        <button id="auto-generate-faq-btn" class="btn" style="background-color: #2196F3;">自动生成FAQ</button>
+                    </div>
+                </div>
+                <div id="faq-management-message" class="message" style="display: none; margin-top: 10px;"></div>
+            </div>
+        </div>
         <!-- 操作按钮区域 -->
         <div id="shop-detail-actions" style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
             <button id="favorite-shop-btn" class="btn" style="background-color: #ff9800;">收藏商铺</button>
@@ -1099,7 +1145,34 @@
         </div>
     </div>
 </div>
+<!-- FAQ编辑模态框 -->
+<div id="faq-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
+    <div style="background-color: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 600px; border-radius: 8px; position: relative;">
+        <span id="close-faq-modal" style="position: absolute; right: 20px; top: 15px; font-size: 24px; font-weight: bold; cursor: pointer;">&times;</span>
+        <h2 id="faq-modal-title">添加FAQ</h2>
+        <div id="faq-modal-message" class="message" style="display: none;"></div>
+        <form id="faq-form">
+            <input type="hidden" id="faq-id">
+            <input type="hidden" id="faq-restaurant-id">
 
+            <div class="form-group">
+                <label for="faq-question">问题</label>
+                <textarea id="faq-question" required placeholder="输入FAQ问题" style="height: 80px;"></textarea>
+                <div style="color: #999; font-size: 12px; text-align: right;">字数限制: <span id="faq-question-count">0</span>/200</div>
+            </div>
+
+            <div class="form-group">
+                <label for="faq-answer">答案</label>
+                <textarea id="faq-answer" required placeholder="输入FAQ答案" style="height: 150px;"></textarea>
+                <div style="color: #999; font-size: 12px; text-align: right;">字数限制: <span id="faq-answer-count">0</span>/500</div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">保存FAQ</button>
+            </div>
+        </form>
+    </div>
+</div>
 <script>
     let currentUser = null;
     let currentShop = null;
@@ -1614,6 +1687,16 @@
                 console.error('获取商铺详情错误:', error);
                 alert(`错误: ${error.message}`);
             });
+            const originalViewShopDetails = viewShopDetails;
+            viewShopDetails = function(shopId) {
+                // 调用原始函数
+                originalViewShopDetails(shopId);
+                
+                // 在加载评论后加载FAQ
+                setTimeout(() => {
+                    loadShopFAQs(shopId);
+                }, 100);
+        };
     }
 
     // 生成星级评分的HTML
@@ -2841,8 +2924,7 @@
     });
 
     // 加载情感分析数据
-// 加载情感分析数据
-function loadSentimentAnalysis(shopId) {
+    function loadSentimentAnalysis(shopId) {
     const sentimentContainer = document.getElementById('aspect-sentiment-container');
     const summaryElement = document.getElementById('sentiment-summary');
     
@@ -2859,77 +2941,75 @@ function loadSentimentAnalysis(shopId) {
     }
     
     // 获取情感分析数据
-    fetchWithTokenHandling(`/api/sentiment/restaurant/${shopId}`)
-        .then(data => {
-            if (data.status === 'empty') {
-                sentimentContainer.innerHTML = `
-                    <div class="no-data-message" style="text-align: center; padding: 5px; color: #888; font-size: 12px;">
-                        <p>暂无情感分析数据</p>
-                        ${currentShop && currentShop.shopId == shopId ? 
-                            '<p>点击"重新分析"按钮生成结果</p>' : ''}
-                    </div>`;
-                summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">暂无总结</p>';
-                return;
-            }
-            
-            // 显示总结文本
-            if (data.summaryText) {
-                summaryElement.innerHTML = `
-                    <div class="sentiment-summary">
-                        ${data.summaryText}
-                    </div>`;
-            } else {
-                summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">暂无总结</p>';
-            }
-            
-            // 显示各方面的情感分析结果
-            if (data.aspects && data.aspects.length > 0) {
-                let html = '';
+        // 获取情感分析数据
+        fetchWithTokenHandling(`/api/sentiment/restaurant/${shopId}`)
+            .then(data => {
+                if (data.status === 'empty') {
+                    // ... 保留原有代码 ...
+                    return;
+                }
 
-// 修复情感分析数据渲染函数
-                data.aspects.forEach(aspect => {
-                    // 确保兼容不同字段命名
-                    const totalCount = aspect.totalCount || aspect.total || 0;
-                    const positiveCount = aspect.positiveCount || aspect.positive || 0;
-                    const negativeCount = totalCount - positiveCount;
+                // 显示摘要文本 - 移除百分比文本
+                if (data.summaryText) {
+                    // 移除百分比格式的文本(如"速度:0%好评"这样的文本)
+                    let summaryText = data.summaryText;
+                    summaryText = summaryText.replace(/[^，。；：！？、]+:\d+%好评[，。；：！？、]?/g, '');
+                    summaryElement.innerHTML = summaryText;
+                } else {
+                    summaryElement.innerHTML = '<p style="color: var(--text-light);">暂无评论摘要</p>';
+                }
 
-                    // 确保百分比计算正确
-                    const positivePercentage = totalCount > 0 ?
-                        Math.round((positiveCount / totalCount) * 100) : 0;
+                // 显示各方面的情感分析结果 - 使用标签形式
+                if (data.aspects && data.aspects.length > 0) {
+                    let html = '';
 
-                    html += `
-        <div class="aspect-item">
-            <div class="aspect-name">${aspect.aspect}</div>
-            <div class="sentiment-bar-container">
-                <div class="sentiment-bar positive" style="width: ${positivePercentage}%"></div>
-                <!-- 移除负面评价条 -->
-            </div>
-            <div class="sentiment-stats">
-                <div class="sentiment-stats-row">
-                    <span class="positive-stat">好评: ${positiveCount}</span>
-                    <span style="font-size: 11px;">${positivePercentage}%</span>
-                </div>
-                <div class="sentiment-stats-row">
-                    <span class="negative-stat">差评: ${negativeCount}</span>
-                    <span style="font-size: 11px;">${100-positivePercentage}%</span>
-                </div>
-            </div>
-        </div>
-    `;
-                });
-                
-                sentimentContainer.innerHTML = html;
-            } else {
-                sentimentContainer.innerHTML = '<div class="no-data-message" style="text-align: center; padding: 5px; color: #888; font-size: 12px;">暂无方面情感数据</div>';
-            }
-        })
+                    data.aspects.forEach(aspect => {
+                        // 确保兼容后端可能的不同字段命名方式
+                        const totalCount = aspect.totalCount || aspect.total_count || 0;
+
+                        // 字段名修正 - 确保获取正确的字段
+                        let positiveCount = 0;
+                        if (typeof aspect.positiveCount !== 'undefined') {
+                            positiveCount = aspect.positiveCount;
+                        } else if (typeof aspect.positive_count !== 'undefined') {
+                            positiveCount = aspect.positive_count;
+                        } else if (typeof aspect.positive !== 'undefined') {
+                            positiveCount = aspect.positive;
+                        }
+
+                        // 直接使用后端返回的百分比(如果有)
+                        let positivePercentage;
+                        if (typeof aspect.positivePercentage !== 'undefined') {
+                            positivePercentage = aspect.positivePercentage;
+                        } else if (typeof aspect.positive_percentage !== 'undefined') {
+                            positivePercentage = aspect.positive_percentage;
+                        } else {
+                            // 计算好评率 - 防止除零错误
+                            positivePercentage = totalCount > 0 ? (positiveCount / totalCount) * 100 : 0;
+                        }
+
+                        // 根据好评率决定标签颜色 - 修复显示判断逻辑
+                        const tagClass = positivePercentage > 50 ? 'positive' : 'negative';
+
+                        html += `
+                        <span class="aspect-tag ${tagClass}">
+                            ${aspect.aspect}
+                            <span class="count">${totalCount}</span>
+                        </span>
+                    `;
+                    });
+
+                    sentimentContainer.innerHTML = html;
+                } else {
+                    sentimentContainer.innerHTML = '<div class="no-data-message">暂无方面情感数据</div>';
+                }
+            })
         .catch(error => {
             sentimentContainer.innerHTML = `<div class="error" style="font-size: 12px;">加载失败: ${error.message || '未知错误'}</div>`;
-            summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">加载失败</p>';
+            summaryElement.innerHTML = '<p style="color: var(--text-light);">加载失败</p>';
         });
 }
 
-// 触发情感分析
 function triggerSentimentAnalysis(shopId) {
     const sentimentContainer = document.getElementById('aspect-sentiment-container');
     const summaryElement = document.getElementById('sentiment-summary');
@@ -2937,8 +3017,8 @@ function triggerSentimentAnalysis(shopId) {
     
     analyzeBtn.disabled = true;
     analyzeBtn.textContent = '分析中...';
-    sentimentContainer.innerHTML = '<div class="loading" style="font-size: 12px;">正在分析，请稍候...</div>';
-    summaryElement.innerHTML = '<p style="color: var(--text-light); font-size: 12px;">分析中...</p>';
+    sentimentContainer.innerHTML = '<div class="loading">正在分析，请稍候...</div>';
+    summaryElement.innerHTML = '<p style="color: var(--text-light);">分析中...</p>';
     
     fetchWithTokenHandling(`/api/sentiment/analyze/restaurant/${shopId}`, {
         method: 'POST'
@@ -2948,10 +3028,11 @@ function triggerSentimentAnalysis(shopId) {
             analyzeBtn.textContent = '重新分析';
             
             sentimentContainer.innerHTML = `
-                <div class="message success" style="font-size: 12px; padding: 5px;">
+                <div class="message success" style="padding: 5px;">
                     ${data.message || '分析完成'}
                 </div>`;
             
+            // 2秒后刷新分析结果
             setTimeout(() => {
                 loadSentimentAnalysis(shopId);
             }, 2000);
@@ -2961,9 +3042,403 @@ function triggerSentimentAnalysis(shopId) {
             analyzeBtn.textContent = '重新分析';
             
             sentimentContainer.innerHTML = `
-                <div class="error" style="font-size: 12px; padding: 5px;">
+                <div class="error" style="padding: 5px;">
                     分析失败: ${error.message || '未知错误'}
                 </div>`;
         });
+}
+
+//faq功能相关javascript代码
+// FAQ相关功能
+document.addEventListener('DOMContentLoaded', function() {
+    // 绑定提问按钮事件
+    document.getElementById('ask-question-btn').addEventListener('click', askQuestion);
+    
+    // 绑定FAQ表单提交事件
+    document.getElementById('faq-form').addEventListener('submit', saveFAQ);
+    
+    // 绑定添加FAQ按钮事件
+    document.getElementById('add-faq-btn').addEventListener('click', showAddFAQModal);
+    
+    // 绑定自动生成FAQ按钮事件
+    document.getElementById('auto-generate-faq-btn').addEventListener('click', autoGenerateFAQs);
+    
+    // 绑定关闭模态框事件
+    document.getElementById('close-faq-modal').addEventListener('click', function() {
+        document.getElementById('faq-modal').style.display = 'none';
+    });
+    
+    // 点击模态框外部区域关闭
+    document.getElementById('faq-modal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            this.style.display = 'none';
+        }
+    });
+    
+    // 字数限制检查
+    document.getElementById('faq-question-input').addEventListener('input', function() {
+        const count = this.value.length;
+        document.getElementById('question-char-count').textContent = count + '/200';
+        this.style.borderColor = count > 200 ? '#f44336' : '';
+    });
+    
+    document.getElementById('faq-question').addEventListener('input', function() {
+        document.getElementById('faq-question-count').textContent = this.value.length;
+    });
+    
+    document.getElementById('faq-answer').addEventListener('input', function() {
+        document.getElementById('faq-answer-count').textContent = this.value.length;
+    });
+});
+
+// 查看商铺详情时加载FAQ
+function loadShopFAQs(shopId) {
+    const faqList = document.getElementById('faq-list');
+    faqList.innerHTML = '<div class="loading">加载常见问题中...</div>';
+    
+    // 设置FAQ表单的餐厅ID
+    document.getElementById('faq-restaurant-id').value = shopId;
+    
+    // 检查是否为店铺所有者，显示/隐藏FAQ管理功能
+    const shopInfo = localStorage.getItem('shopInfo');
+    let isOwner = false;
+    
+    if (shopInfo) {
+        const currentShopInfo = JSON.parse(shopInfo);
+        isOwner = (currentShopInfo.shopId == shopId);
+    }
+    
+    document.getElementById('faq-management').style.display = isOwner ? 'block' : 'none';
+    
+    // 获取FAQ列表
+    fetchWithTokenHandling(`/api/faqs/${shopId}`)
+        .then(faqs => {
+            if (!faqs || faqs.length === 0) {
+                faqList.innerHTML = '<div class="no-data-message">暂无常见问题</div>';
+                return;
+            }
+            
+            // 渲染FAQ列表
+            faqList.innerHTML = '';
+            faqs.forEach(faq => {
+                const faqElement = document.createElement('div');
+                faqElement.className = 'faq-item';
+                faqElement.dataset.id = faq.id;
+                
+                faqElement.innerHTML = `
+                    <div class="faq-question">
+                        <span>${faq.question}</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">${faq.answer}</div>
+                        ${isOwner ? `
+                        <div class="faq-actions">
+                            <span class="faq-edit" onclick="editFAQ(${faq.id})">编辑</span>
+                            <span class="faq-delete" onclick="deleteFAQ(${faq.id})">删除</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // 添加点击事件切换FAQ答案显示
+                const questionElement = faqElement.querySelector('.faq-question');
+                questionElement.addEventListener('click', function() {
+                    faqElement.classList.toggle('active');
+                });
+                
+                faqList.appendChild(faqElement);
+            });
+        })
+        .catch(error => {
+            if (error !== 'Session expired') {
+                faqList.innerHTML = `<div class="error">加载FAQ失败: ${error.message || error}</div>`;
+            }
+        });
+}
+
+// 提交问题
+function askQuestion() {
+    const questionInput = document.getElementById('faq-question-input');
+    const question = questionInput.value.trim();
+    const answerDisplay = document.getElementById('faq-answer-display');
+    
+    if (!question) {
+        answerDisplay.className = 'message error';
+        answerDisplay.textContent = '请输入您的问题';
+        answerDisplay.style.display = 'block';
+        return;
+    }
+    
+    if (question.length > 200) {
+        answerDisplay.className = 'message error';
+        answerDisplay.textContent = '问题内容过长，请限制在200字以内';
+        answerDisplay.style.display = 'block';
+        return;
+    }
+    
+    // 获取当前商铺ID
+    const restaurantId = document.getElementById('detail-shop-name').getAttribute('data-shop-id');
+    
+    // 显示加载状态
+    answerDisplay.className = 'message';
+    answerDisplay.textContent = '正在处理您的问题，请稍候...';
+    answerDisplay.style.display = 'block';
+    
+    // 生成会话ID
+    let sessionId = sessionStorage.getItem('faq_session_id');
+    if (!sessionId) {
+        sessionId = generateUUID();
+        sessionStorage.setItem('faq_session_id', sessionId);
+    }
+    
+    // 发送问题到后端
+    fetchWithTokenHandling('/api/faqs/ask', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            restaurantId: parseInt(restaurantId),
+            question: question,
+            sessionId: sessionId
+        })
+    })
+        .then(response => {
+            // 显示回答
+            answerDisplay.className = 'message success';
+            answerDisplay.style.display = 'block';
+            
+            // 回答格式化处理，支持换行
+            answerDisplay.innerHTML = `<strong>回答:</strong><br><p style="white-space: pre-line;">${response}</p>`;
+            
+            // 清空输入
+            questionInput.value = '';
+            document.getElementById('question-char-count').textContent = '0/200';
+        })
+        .catch(error => {
+            answerDisplay.className = 'message error';
+            answerDisplay.textContent = `获取回答失败: ${error.message || '服务器错误'}`;
+        });
+}
+
+// 显示添加FAQ模态框
+function showAddFAQModal() {
+    // 重置表单
+    document.getElementById('faq-form').reset();
+    document.getElementById('faq-id').value = '';
+    document.getElementById('faq-question-count').textContent = '0';
+    document.getElementById('faq-answer-count').textContent = '0';
+    
+    // 修改标题
+    document.getElementById('faq-modal-title').textContent = '添加FAQ';
+    
+    // 显示模态框
+    document.getElementById('faq-modal').style.display = 'block';
+}
+
+// 编辑FAQ
+function editFAQ(faqId) {
+    // 获取要编辑的FAQ
+    fetchWithTokenHandling(`/api/faqs/${faqId}`)
+        .then(faq => {
+            // 填充表单
+            document.getElementById('faq-id').value = faq.id;
+            document.getElementById('faq-restaurant-id').value = faq.restaurantId;
+            document.getElementById('faq-question').value = faq.question;
+            document.getElementById('faq-answer').value = faq.answer;
+            
+            // 更新字数统计
+            document.getElementById('faq-question-count').textContent = faq.question.length;
+            document.getElementById('faq-answer-count').textContent = faq.answer.length;
+            
+            // 修改标题
+            document.getElementById('faq-modal-title').textContent = '编辑FAQ';
+            
+            // 显示模态框
+            document.getElementById('faq-modal').style.display = 'block';
+        })
+        .catch(error => {
+            if (error !== 'Session expired') {
+                alert(`获取FAQ详情失败: ${error.message || error}`);
+            }
+        });
+}
+
+// 保存FAQ
+function saveFAQ(event) {
+    event.preventDefault();
+    
+    const faqId = document.getElementById('faq-id').value;
+    const restaurantId = document.getElementById('faq-restaurant-id').value;
+    const question = document.getElementById('faq-question').value.trim();
+    const answer = document.getElementById('faq-answer').value.trim();
+    
+    // 表单验证
+    if (!question || !answer) {
+        showFAQModalMessage('error', '问题和答案都不能为空');
+        return;
+    }
+    
+    if (question.length > 200) {
+        showFAQModalMessage('error', '问题内容过长，请限制在200字以内');
+        return;
+    }
+    
+    if (answer.length > 500) {
+        showFAQModalMessage('error', '答案内容过长，请限制在500字以内');
+        return;
+    }
+    
+    // 构建请求数据
+    const requestData = {
+        restaurantId: parseInt(restaurantId),
+        question: question,
+        answer: answer
+    };
+    
+    let url, method;
+    if (faqId) {
+        // 更新FAQ
+        url = `/api/faqs/${faqId}`;
+        method = 'PUT';
+    } else {
+        // 创建新FAQ
+        url = '/api/faqs';
+        method = 'POST';
+    }
+    
+    // 显示加载状态
+    showFAQModalMessage('', '正在保存...');
+    
+    // 发送请求
+    fetchWithTokenHandling(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+        .then(() => {
+            showFAQModalMessage('success', faqId ? 'FAQ更新成功!' : 'FAQ添加成功!');
+            
+            // 重新加载FAQ列表
+            const shopId = document.getElementById('detail-shop-name').getAttribute('data-shop-id');
+            loadShopFAQs(shopId);
+            
+            // 延迟关闭模态框
+            setTimeout(() => {
+                document.getElementById('faq-modal').style.display = 'none';
+            }, 1500);
+        })
+        .catch(error => {
+            showFAQModalMessage('error', `操作失败: ${error.message || '服务器错误'}`);
+        });
+}
+
+// 删除FAQ
+function deleteFAQ(faqId) {
+    if (!confirm('确定要删除这条FAQ吗？')) {
+        return;
+    }
+    
+    fetchWithTokenHandling(`/api/faqs/${faqId}`, {
+        method: 'DELETE'
+    })
+        .then(() => {
+            // 从DOM中移除FAQ
+            const faqElement = document.querySelector(`.faq-item[data-id="${faqId}"]`);
+            if (faqElement) {
+                faqElement.remove();
+            }
+            
+            // 显示成功消息
+            const messageElement = document.getElementById('faq-management-message');
+            messageElement.className = 'message success';
+            messageElement.textContent = 'FAQ删除成功';
+            messageElement.style.display = 'block';
+            
+            // 5秒后隐藏消息
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+            
+            // 重新加载FAQ列表
+            const shopId = document.getElementById('detail-shop-name').getAttribute('data-shop-id');
+            loadShopFAQs(shopId);
+        })
+        .catch(error => {
+            if (error !== 'Session expired') {
+                document.getElementById('faq-management-message').className = 'message error';
+                document.getElementById('faq-management-message').textContent = `删除失败: ${error.message || error}`;
+                document.getElementById('faq-management-message').style.display = 'block';
+            }
+        });
+}
+
+// 自动生成FAQ
+function autoGenerateFAQs() {
+    const shopId = document.getElementById('detail-shop-name').getAttribute('data-shop-id');
+    const messageElement = document.getElementById('faq-management-message');
+    
+    // 显示加载状态
+    messageElement.className = 'message';
+    messageElement.textContent = '正在分析评论并生成FAQ，这可能需要一些时间...';
+    messageElement.style.display = 'block';
+    
+    // 发送请求
+    fetchWithTokenHandling(`/api/faqs/auto-generate/${shopId}`, {
+        method: 'POST'
+    })
+        .then(faqs => {
+            messageElement.className = 'message success';
+            messageElement.textContent = `成功生成 ${faqs.length} 条FAQ!`;
+            
+            // 重新加载FAQ列表
+            loadShopFAQs(shopId);
+        })
+        .catch(error => {
+            if (error !== 'Session expired') {
+                messageElement.className = 'message error';
+                
+                // 改进错误信息处理
+                let errorMessage = '服务器错误';
+                if (typeof error === 'string') {
+                    errorMessage = error;
+                } else if (error && typeof error === 'object') {
+                    // 尝试各种可能的错误格式
+                    errorMessage = error.message || error.error || error.detail || 
+                                  (error.response && error.response.data) || 
+                                  JSON.stringify(error);
+                }
+                
+                messageElement.textContent = `生成FAQ失败: ${errorMessage}`;
+                console.error('FAQ生成错误详情:', error); // 在控制台输出完整错误
+            }
+        });
+}
+
+// 显示FAQ模态框消息
+function showFAQModalMessage(type, message) {
+    const messageElement = document.getElementById('faq-modal-message');
+    messageElement.textContent = message;
+    
+    if (type === 'success') {
+        messageElement.className = 'message success';
+    } else if (type === 'error') {
+        messageElement.className = 'message error';
+    } else {
+        messageElement.className = 'message';
+    }
+    
+    messageElement.style.display = message ? 'block' : 'none';
+}
+
+// 生成UUID函数
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
 </script>
